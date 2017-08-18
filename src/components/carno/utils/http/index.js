@@ -2,6 +2,7 @@ import axios from 'axios'
 import qs from 'qs'
 import { Modal } from 'antd'
 import { session } from '../storage'
+const domains = require('configs/domains')
 
 const loginUrl = '/#/login'
 const tokenName = 'token'
@@ -12,9 +13,8 @@ function setHeader(header) {
   token && (header.token = token)
   return header
 }
-
 // 设置全局axios默认值
-axios.defaults.baseURL = process.env.BASEURL || ''
+axios.defaults.baseURL = domains[process.env.NODE_ENV] || ''
 // axios.defaults.timeout = 20000 // 5000的超时验证
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 

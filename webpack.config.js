@@ -1,8 +1,6 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const domains = require('./src/configs/domains')
-
 module.exports = (webpackConfig, env) => {
   // 环境判断
   // process.env.NODE_ENV == 'development'
@@ -72,7 +70,6 @@ module.exports = (webpackConfig, env) => {
   }
 
   // 插件增加
-
   // 开发环境插件
   let isExtractTextPlugin = false
   for (const x in webpackConfig.plugins) {
@@ -82,7 +79,6 @@ module.exports = (webpackConfig, env) => {
         const pluginsDefinitions = {
           IS_DEV: JSON.stringify((env === 'development')),
           NODE_ENV: JSON.stringify(env),
-          BASEURL: JSON.stringify(domains[env] || ''),
         }
         webpackConfig.plugins[x].definitions = _.assign({}, webpackConfig.plugins[x].definitions, pluginsDefinitions)
       }

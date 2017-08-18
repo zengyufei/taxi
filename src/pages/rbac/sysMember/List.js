@@ -160,12 +160,6 @@ const fields = [
     key: 'roleId',
     name: '角色',
     type: 'roleId',
-    /*render(text) {
-      return getFieldValue(text, {
-        key: 'id',
-        type: 'roleId',
-      })
-    },*/
   },
   {
     key: 'locked',
@@ -182,7 +176,6 @@ const fields = [
     key: 'available',
     name: '是否有效',
     type: 'invalid',
-
   },
   {
     key: 'realName',
@@ -191,7 +184,7 @@ const fields = [
   {
     key: 'orgNo',
     name: '机构',
-    type: 'orgNo',
+    type: 'parentOrgNo',
   },
 ]
 

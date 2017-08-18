@@ -9,7 +9,7 @@ const { roles, orgContant: { firstOrgs, secondOrgs, threeOrgs } } = require('../
 const orgNos = _.assign(R.values(firstOrgs), R.values(secondOrgs), R.values(threeOrgs))
 
 const prefix = 'sysRole'
-const queryPageOption = ['roleName']
+const queryPageOption = ['orgNo', 'roleName', 'sysMemberId', 'relyRoleId', 'createTime']
 const timeOut = 1000
 
 const queryAllUrl = `GET /${prefix}/queryAll.htm`

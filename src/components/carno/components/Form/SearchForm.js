@@ -60,7 +60,7 @@ const HSearchForm = option => {
           </Col>),
         )}
         <Col {...formItemLayout.btnCol} key={'itemKeySubmit'}>
-          <FormItem style={{ marginBottom: 15 }}>
+          <FormItem style={{ marginBottom: 15, marginLeft: 30 }}>
             <Button type="primary" htmlType="submit" onClick={handleSubmit}>查询</Button>
           </FormItem>
           {showReset &&

@@ -2,10 +2,11 @@ import { connect } from 'dva'
 import { Button, Popconfirm, Table } from 'antd'
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
-import { getFields } from 'FormUtils'
+import { getFields, getSearchFields } from 'FormUtils'
+import { local } from 'utils/storage'
 
 const List = option => {
-  const { loading, methods, sysRoleStore } = option
+  const { loading, form, methods, sysRoleStore } = option
   const { openAddPage, openUpdatePage, onSearch, onShowSizeChange, onChange, handlerDelete } = methods
   const { page: { pageNo = 1, pageSize = 10, dataList = [], totalCount = 0 } } = sysRoleStore
 
@@ -16,10 +17,13 @@ const List = option => {
   )
 
   const searchBarProps = {
+    form,
     showLabel: true,
     showReset: true,
     btns,
-    fields: getFields(fields, ['roleName']).values(),
+    searchCacheKey: 'sysRole_condin',
+    searchFields: getSearchFields(fields, ['orgNo', 'roleName', 'relyRoleId', 'createTime']).values(),
+    fields: getFields(fields, local.get('sysRole_condin') || ['roleName']).values(),
     onSearch,
     onReset: onSearch,
   }
@@ -80,6 +84,7 @@ const mapStateToProps = ({ loading, sysRoleStore }) => {
 
 const mapDispatchToProps = (dispatch, { form }) => {
   return {
+    form,
     methods: {
       openAddPage() {
         dispatch({
@@ -111,6 +116,13 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
 
       onSearch(values) {
+        if (values && values.length > 0) {
+          if (values.createTime) {
+            values.beginTime = values.createTime[0].format('YYYY-MM-DD hh:mm:ss')
+            values.endTime = values.createTime[1].format('YYYY-MM-DD hh:mm:ss')
+            delete values.createTime
+          }
+        }
         dispatch({
           type: 'sysRoleStore/queryPage',
           ...values,
@@ -144,7 +156,7 @@ const fields = [
   {
     key: 'orgNo',
     name: '组织机构',
-    type: 'orgNo',
+    type: 'parentOrgNo',
   }, {
     key: 'roleName',
     name: '角色名称',
@@ -163,6 +175,7 @@ const fields = [
   }, {
     key: 'createTime',
     name: '创建时间',
+    type: 'datetimeRange',
   }, {
     key: 'updateTime',
     name: '修改时间',

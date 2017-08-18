@@ -17,12 +17,21 @@ export default extend({
     },
     page: {},
     [prefix]: {
-      resourceList: '1,2,3,4,5,6,7,8,9,10,11,12,13,14,'.split(','),
+      resourceList: [],
     },
   },
   effects: {
 
-    * queryPage(payload, { get, getMessage, update, tableBindType, _, sessionCache }) {
+    * init({}, { tableBindType, sessionCache }) {
+      yield tableBindType({
+        sysMemberId: id => {
+          const cache = sessionCache.getIds('sysMemberIds', id)
+          return cache && cache.account
+        },
+      })
+    },
+
+    * queryPage(payload, { get, getMessage, update, _, sessionCache }) {
       const { result } = yield getMessage(queryPageUrl, payload, `${moduleName}列表`)
 
       if (result) {
@@ -32,12 +41,6 @@ export default extend({
           const sysMemberList = yield get('/sysMember/queryByIds.htm', { ids: sysMemberIds.join(',') })
           sessionCache.setIds('sysMemberIds', sysMemberList.result, 'id')
         }
-        yield tableBindType({
-          sysMemberId: id => {
-            const cache = sessionCache.getIds('sysMemberIds', id)
-            return cache && cache.account
-          },
-        })
       }
 
       yield update({ page: result })
@@ -93,6 +96,9 @@ export default extend({
       listen(`/${prefix}`, () => {
         dispatch({
           type: 'queryPage',
+        })
+        dispatch({
+          type: 'init',
         })
       })
     },

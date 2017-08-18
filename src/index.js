@@ -1,6 +1,6 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-04 14:20:07 
+ * @Author: zengyufei
+ * @Date: 2017-08-04 14:20:07
  * @Last Modified by: zengyufei
  * @Last Modified time: 2017-08-11 11:03:10
  */
@@ -11,7 +11,12 @@ import { createHashHistory } from 'history'
 import { useRouterHistory } from 'dva/router'
 import { message } from 'antd'
 import 'babel-polyfill'
+import moment from 'moment'
 
+// 推荐在入口文件全局设置 locale
+import 'moment/locale/zh-cn'
+
+moment.locale('zh-cn')
 
 // 1. Initialize
 const app = dva({
