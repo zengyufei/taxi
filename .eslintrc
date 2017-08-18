@@ -1,0 +1,98 @@
+{
+  "extends": "airbnb", // 继承eslint-config-airbnb里面提供的lint规则
+  "globals": {
+    "React": true,
+    "assets": true,
+    "PropTypes": true,
+    "projectConfig": true,
+    "ZMsg": true,
+    "ZButton": true,
+    "local": true,
+    "session": true,
+    "_": true,
+    "R": true,
+    "utils": true
+  },
+  "rules": {
+    "no-plusplus": 0,
+    "no-nested-ternary": 0,
+    "no-named-as-default": 0,
+    "no-named-as-default-member": 0,
+    "no-empty-pattern": 0,
+    "linebreak-style": 0,
+    "no-use-before-define": 0,
+    "quotes": [2, "single", { "allowTemplateLiterals": true }],
+    "indent": [2, 2, { "SwitchCase": 1 }], // 用 空格还是 tab 圣战
+    "arrow-parens": [2, "as-needed", { "requireForBlockBody": false }],
+    "space-before-function-paren": 0,
+    "no-duplicate-imports": ["error", { "includeExports": true }],
+    "no-tabs": 2,
+    "disallowTabs": 0,
+    "semi": [2, "never"],
+    "no-console": 0,
+    "no-mixed-spaces-and-tabs": 2,
+    "comma-dangle": [2, "always-multiline"],
+    "max-len": 0,
+    "react/jsx-indent": [2, 2],
+    "react/jsx-first-prop-new-line": 0,
+    "react/jsx-filename-extension": 0,
+    "no-unused-expressions": [0, {
+      "allowShortCircuit": true,
+      "allowTernary": true
+    }],
+    "arrow-body-style": [0, "never"],
+    "func-names": 0,
+    "prefer-const": 0,
+    "no-extend-native": 0,
+    "no-param-reassign": 0,
+    "no-restricted-syntax": 0,
+    "no-eval": 0,
+    "no-continue": 0,
+    "react/jsx-no-bind": 0,
+    "no-unused-vars": [2, { "ignoreRestSiblings": true }],
+    "no-underscore-dangle": 0,
+    "global-require": 0,
+    "import/no-unresolved": 0,
+    "import/extensions": 0,
+    "import/no-duplicates": 0,
+    "jsx-a11y/href-no-hash": 0,
+    "react/no-array-index-key": 0,
+    "react/require-default-props": 0,
+    "react/forbid-prop-types": 0,
+    "react/no-string-refs": 0,
+    "react/no-find-dom-node": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/prefer-default-export": 0,
+    "react/no-danger": 0,
+    "jsx-a11y/no-static-element-interactions": 0
+  },
+  "parser": "babel-eslint", //使用babel-eslint来作为eslint的解析器
+  "env": { //环境定义了预定义的全局变量。
+    //"es6": true,//支持除模块外所有 ECMAScript 6 特性（该选项会自动设置 ecmaVersion 解析器选项为 6）
+    "browser": true,
+    "node": true, //Node.js 全局变量和 Node.js 作用域。
+    "amd": true
+  },
+  "parserOptions": {
+    "sourceType": "module", // 设置为 "script" (默认) 或 "module"（如果你的代码是 ECMAScript 模块)。
+    "ecmaVersion": 8, // 设置为 3， 5 (默认)， 6、7 或 8 指定你想要使用的 ECMAScript 版本。
+    "ecmaFeatures": {
+      "jsx": true, // 启用 JSX
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "plugins": [
+    "import",
+    "react",
+    "jsx-a11y"
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": true,
+      "webpack": {
+        "config": "E:\\work\\front\\taxi\\webpack.config.js"
+      }
+    }
+  }
+  
+}
