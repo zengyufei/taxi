@@ -1,19 +1,37 @@
 /*
  * @Author: zengyufei 
  * @Date: 2017-08-17 09:52:50 
- * @Last Modified by: zengyufei 
- * @Last Modified time: 2017-08-17 09:52:50 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-22 10:34:10
  */
 import { connect } from 'dva'
+import { Form } from 'antd'
 
 import ZForm from 'ZForm'
 import ZModal from 'ZModal'
 import { getFields, validate } from 'FormUtils'
 
 let UpdatePage = option => {
-  const { form, sysMemberStore } = option
+  const { form, dispatch, sysMemberStore } = option
   const { confirmLoading, visible: { update }, sysMember = {} } = sysMemberStore
-  const { onOk, onCancel } = option
+
+  const onOk = () => {
+    validate(form, fields)(values => {
+      dispatch({
+        type: 'sysMemberStore/update',
+        ...values,
+      })
+    })
+  }
+
+  const onCancel = () => {
+    dispatch({
+      type: 'sysMemberStore/updateState',
+      visible: {
+        update: false,
+      },
+    })
+  }
 
   const updatePageModalProps = {
     maskClosable: false,
@@ -45,34 +63,6 @@ let UpdatePage = option => {
 function mapStateToProps({ sysMemberStore }) {
   return {
     sysMemberStore,
-  }
-}
-
-/**
- * @param dispatch 从 connect 获得
- * @param form 从上层建筑获得
- */
-function mapDispatchToProps(dispatch, { form }) {
-  return {
-
-    onOk() {
-      validate(form, fields)(values => {
-        dispatch({
-          type: 'sysMemberStore/update',
-          ...values,
-        })
-      })
-    },
-
-    onCancel() {
-      dispatch({
-        type: 'sysMemberStore/updateState',
-        visible: {
-          update: false,
-        },
-      })
-    },
-
   }
 }
 
@@ -153,4 +143,4 @@ const fields = [
   },
 ]
 
-export default connect(mapStateToProps, mapDispatchToProps)(UpdatePage)
+export default connect(mapStateToProps)(Form.create()(UpdatePage))

@@ -19,8 +19,8 @@ const FormItem = Form.Item
  *
  */
 const HSearchForm = option => {
-  const { fields, search = {}, form, showLabel, showReset, onSearch, onReset } = option
-  const formItemLayout = {
+  const { fields, search = {}, form, showLabel, showReset, onSearch, onReset, formItemLayout = {} } = option
+  const assginFormItemLayout = {
     itemCol: {
       span: 6,
     },
@@ -53,13 +53,13 @@ const HSearchForm = option => {
     <Form layout="inline" >
       <Row>
         {fields.map((field, index) =>
-          (<Col {...formItemLayout.itemCol} key={`itemKey${index}`}>
-            <FormItem className={styles.formItem} label={getLabelName(field)} help={field.help} key={field.key} labelCol={formItemLayout.labelCol} wrapperCol={formItemLayout.wrapperCol} >
+          (<Col {...assginFormItemLayout.itemCol} key={`itemKey${index}`}>
+            <FormItem className={styles.formItem} label={getLabelName(field)} help={field.help} key={field.key} labelCol={formItemLayout.labelCol} wrapperCol={assginFormItemLayout.wrapperCol} >
               {FormUtil.createFieldDecorator(field, search, form.getFieldDecorator)}
             </FormItem>
           </Col>),
         )}
-        <Col {...formItemLayout.btnCol} key={'itemKeySubmit'}>
+        <Col {...assginFormItemLayout.btnCol} key={'itemKeySubmit'}>
           <FormItem style={{ marginBottom: 15, marginLeft: 30 }}>
             <Button type="primary" htmlType="submit" onClick={handleSubmit}>查询</Button>
           </FormItem>

@@ -175,6 +175,7 @@ const fields = [
   }, {
     key: 'orgName',
     name: '组织名称',
+    required: false,
   }, {
     key: 'priority',
     name: '排序',

@@ -1,4 +1,3 @@
-import { connect } from 'dva'
 import { Form } from 'antd'
 
 import List from './List'
@@ -10,11 +9,11 @@ let SysMember = option => {
 
   return (
     <div>
-      <Add form={form} />
-      <Update form={form} />
+      <Add />
+      <Update />
       <List form={form} />
     </div>
   )
 }
 
-export default connect()(Form.create()(SysMember))
+export default Form.create()(SysMember)

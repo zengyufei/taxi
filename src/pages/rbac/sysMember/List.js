@@ -1,7 +1,7 @@
 import { connect } from 'dva'
 import { Button, Popconfirm, Table } from 'antd'
 import ZSearch from 'ZSearch'
-import { getFieldValue, getColumns } from 'TableUtils'
+import { getColumns } from 'TableUtils'
 import { getFields, getSearchFields } from 'FormUtils'
 import { local } from 'utils/storage'
 

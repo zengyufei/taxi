@@ -1,7 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Router } from 'dva/router'
-import App from './pages/app'
+import App from 'pages/app'
+import { auth } from 'utils'
 
 const Routers = function({ history, app }) {
   const routes = [
@@ -10,18 +11,16 @@ const Routers = function({ history, app }) {
       component: App,
       getIndexRoute(nextState, cb) {
         require.ensure([], require => {
-          cb(null, { component: require('./pages/home') })
+          cb(null, { component: require('pages/home') })
         }, 'home')
       },
-      onEnter(e){
-        // console.log('enter', e)
-      },
       childRoutes: [
-        ...require('./routes/rbac')(app),
+        ...require('./rbac')(app, auth),
+        ...require('./car')(app, auth),
       ],
     },
-    require('./routes/login')(app),
-    require('./routes/404'),
+    require('./login')(app),
+    require('./404'),
   ]
 
   return <Router history={history} routes={routes} />

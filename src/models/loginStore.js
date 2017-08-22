@@ -11,8 +11,8 @@ export default extend({
   subscriptions: {},
   effects: {
     * login(payload, { postMessage, put, sessionCache }) {
-      const res = yield postMessage(loginUrl, payload, { successMsg: '登录成功' })
-      const { code, result } = res
+      console.log('login')
+      const { code = 0, result = {} } = yield postMessage(loginUrl, payload, { successMsg: '登录成功' })
       if (+code === 200) {
         sessionCache.set(tokenNameKey, result)
         yield put('appStore/loadRole')

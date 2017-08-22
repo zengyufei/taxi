@@ -1,4 +1,5 @@
 import { connect } from 'dva'
+import { Form } from 'antd'
 
 import ZForm from 'ZForm'
 import ZModal from 'ZModal'
@@ -9,9 +10,26 @@ import Permission from './Permission'
 import styles from './Update.less'
 
 const Add = option => {
-  const { form, sysRoleStore } = option
+  const { form, dispatch, sysRoleStore } = option
   const { confirmLoading, visible: { add } } = sysRoleStore
-  const { onOk, onCancel } = option
+
+  const onOk = () => {
+    validate(form, fields)(values => {
+      dispatch({
+        type: 'sysRoleStore/add',
+        ...values,
+      })
+    })
+  }
+
+  const onCancel = () => {
+    dispatch({
+      type: 'sysRoleStore/updateState',
+      visible: {
+        add: false,
+      },
+    })
+  }
 
   const addPageModalProps = {
     maskClosable: false,
@@ -63,34 +81,6 @@ function mapStateToProps({ sysRoleStore }) {
   }
 }
 
-/**
- * @param dispatch 从 connect 获得
- * @param form 从上层建筑获得
- */
-function mapDispatchToProps(dispatch, { form }) {
-  return {
-
-    onOk() {
-      validate(form, fields)(values => {
-        dispatch({
-          type: 'sysRoleStore/add',
-          ...values,
-        })
-      })
-    },
-
-    onCancel() {
-      dispatch({
-        type: 'sysRoleStore/updateState',
-        visible: {
-          add: false,
-        },
-      })
-    },
-
-  }
-}
-
 const fields = [
   {
     key: 'orgNo',
@@ -114,5 +104,5 @@ const fields = [
   },
 ]
 
-export default connect(mapStateToProps, mapDispatchToProps)(Add)
+export default connect(mapStateToProps)(Form.create()(Add))
 

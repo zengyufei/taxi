@@ -116,7 +116,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
 
       onSearch(values) {
-        if (values && values.length > 0) {
+        if (values) {
           if (values.createTime) {
             values.beginTime = values.createTime[0].format('YYYY-MM-DD hh:mm:ss')
             values.endTime = values.createTime[1].format('YYYY-MM-DD hh:mm:ss')

@@ -66,7 +66,7 @@ class FilterBox extends React.Component {
               placement="bottom"
               content={
                 <CheckboxGroup defaultValue={newFields.map(e => e.key)} onChange={e => this.handleChangeFilter(e, searchCacheKey, searchFields)} >
-                  <Row style={{ width: '100px' }}>
+                  <Row style={{ width: formProps.width || '100px' }}>
                     {
                       searchFields.map(e => {
                         return <Col key={e.key} style={{ margin: '3px' }} span={24}><Checkbox value={e.key}>{e.name}</Checkbox></Col>

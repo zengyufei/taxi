@@ -3,8 +3,8 @@ import { extend } from 'ModelUtils'
 import { session } from 'utils/storage'
 
 const prefix = 'app'
-const currentRoleKey = 'currentRole'
-const currentPermissionKey = 'currentPermission'
+
+const { roleSessionKey, resourceSessionKey } = constant
 
 const getRoleUrl = '/sysRole/getRole'
 const getResourceUrl = '/sysResource/getResource'
@@ -13,19 +13,19 @@ export default extend({
   namespace: `${prefix}Store`,
   state: {
     sysMember: {},
-    sysRole: session.get(currentRoleKey) || {},
-    currentPermission: session.get(currentPermissionKey) || {},
+    sysRole: session.get(roleSessionKey) || {},
+    currentPermission: session.get(resourceSessionKey) || {},
     sysResource: {},
   },
   subscriptions: {},
   effects: {
 
     * loadRole({}, { getMessage, put, update, sessionCache }) {
-      let currentRole = session.get(currentRoleKey)
+      let currentRole = session.get(roleSessionKey)
       if (!currentRole) {
         const { result } = yield getMessage(getRoleUrl)
         if (result) {
-          sessionCache.set(currentRoleKey, currentRole = result)
+          sessionCache.set(roleSessionKey, currentRole = result)
         }
       }
       yield [
@@ -35,11 +35,11 @@ export default extend({
     },
 
     * loadResource({}, { getMessage, put, update, sessionCache }) {
-      let currentPermission = session.get(currentPermissionKey)
+      let currentPermission = session.get(resourceSessionKey)
       if (!currentPermission) {
         const { result } = yield getMessage(getResourceUrl)
         if (result) {
-          sessionCache.set(currentPermissionKey, currentPermission = result)
+          sessionCache.set(resourceSessionKey, currentPermission = result)
         }
       }
       yield update({ currentPermission })

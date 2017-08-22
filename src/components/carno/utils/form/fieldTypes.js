@@ -21,6 +21,9 @@ const fieldTypes = {
       initialValue: initialValue ? moment(parseInt(initialValue, 10)) : null,
     }
   },
+  dateRange: ({ inputProps }) => {
+    return <RangePicker showTime format="YYYY-MM-DD" {...inputProps} />
+  },
   datetimeRange: ({ inputProps }) => {
     return <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" {...inputProps} />
   },

@@ -22,13 +22,17 @@ export default extend({
   },
   effects: {
 
-    * init({}, { tableBindType, sessionCache }) {
-      yield tableBindType({
-        sysMemberId: id => {
-          const cache = sessionCache.getIds('sysMemberIds', id)
-          return cache && cache.account
-        },
-      })
+    * init({}, { update, tableBindType, sessionCache, select }) {
+      const { init } = yield select(({ sysRoleStore }) => sysRoleStore)
+      if (!init) {
+        yield tableBindType({
+          sysMemberId: id => {
+            const cache = sessionCache.getIds('sysMemberIds', id)
+            return cache && cache.account
+          },
+        })
+        yield update({ init: true })
+      }
     },
 
     * queryPage(payload, { get, getMessage, update, _, sessionCache }) {
@@ -57,11 +61,13 @@ export default extend({
     * add(payload, { postConfirmLoading, put, select }) {
       const { page: { pageNo, pageSize }, sysRole } = yield select(({ sysRoleStore }) => sysRoleStore)
       const { code, msg } = yield postConfirmLoading(addUrl, { ...payload, resourceList: sysRole.resourceList })
-      if (code === 200) { ZMsg.success(msg) }
-      yield [
-        put('reload', { pageNo, pageSize }), // 刷新列表
-        put('hideVisible', { key: 'add' }), // 控制弹窗
-      ]
+      if (code === 200) {
+        ZMsg.success(msg)
+        yield [
+          put('reload', { pageNo, pageSize }), // 刷新列表
+          put('hideVisible', { key: 'add' }), // 控制弹窗
+        ]
+      }
     },
 
     * update(payload, { postConfirmLoading, put, diff, select }) {
@@ -69,11 +75,13 @@ export default extend({
       const newSysMember = { ...sysRole, ...payload }
       if (diff(sysRole, newSysMember)) {
         const { code, msg } = yield postConfirmLoading(updateUrl, newSysMember)
-        if (code === 200) { ZMsg.success(msg) }
-        yield [
-          put('reload', { pageNo, pageSize }), // 刷新列表
-          put('hideVisible', { key: 'update' }), // 控制弹窗
-        ]
+        if (code === 200) {
+          ZMsg.success(msg)
+          yield [
+            put('reload', { pageNo, pageSize }), // 刷新列表
+            put('hideVisible', { key: 'update' }), // 控制弹窗
+          ]
+        }
       }
     },
 

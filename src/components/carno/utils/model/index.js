@@ -46,6 +46,7 @@ const getDefaultModel = () => {
   return {
     // 为了兼容旧版本，初始值依旧为false.如果应用中需要多个控制状态，则在model中覆盖初始属性
     state: {
+      init: false,
       visible: false,
       spinning: false,
       loading: false,

@@ -4,15 +4,17 @@ const registerModel = (app, model) => {
   }
 }
 
-module.exports = app => {
+module.exports = (app, auth) => {
   return [
     {
       path: 'sysOrg',
       getComponent(nextState, cb) {
         require.ensure([], require => {
-          registerModel(app, require('models/rbacStore'))
-          registerModel(app, require('models/rbac/sysOrgStore'))
-          cb(null, require('pages/rbac/sysOrg'))
+          if (auth('rbac:sysOrg:*')) {
+            registerModel(app, require('models/rbacStore'))
+            registerModel(app, require('models/rbac/sysOrgStore'))
+            cb(null, require('pages/rbac/sysOrg'))
+          }
         }, 'sysOrg')
       },
     },
@@ -20,9 +22,11 @@ module.exports = app => {
       path: 'sysMember',
       getComponent(nextState, cb) {
         require.ensure([], require => {
-          registerModel(app, require('models/rbacStore'))
-          registerModel(app, require('models/rbac/sysMemberStore'))
-          cb(null, require('pages/rbac/sysMember'))
+          if (auth('rbac:sysMember:*')) {
+            registerModel(app, require('models/rbacStore'))
+            registerModel(app, require('models/rbac/sysMemberStore'))
+            cb(null, require('pages/rbac/sysMember'))
+          }
         }, 'sysMember')
       },
     },
@@ -30,19 +34,26 @@ module.exports = app => {
       path: 'sysRole',
       getComponent(nextState, cb) {
         require.ensure([], require => {
-          registerModel(app, require('models/rbacStore'))
-          registerModel(app, require('models/rbac/sysRoleStore'))
-          cb(null, require('pages/rbac/sysRole'))
+          if (auth('rbac:sysRole:*')) {
+            registerModel(app, require('models/rbacStore'))
+            registerModel(app, require('models/rbac/sysRoleStore'))
+            cb(null, require('pages/rbac/sysRole'))
+          }
         }, 'sysRole')
       },
     },
     {
       path: 'sysResource',
+      onEnter() {
+        auth('rbac:sysResource:*')
+      },
       getComponent(nextState, cb) {
         require.ensure([], require => {
-          registerModel(app, require('models/rbacStore'))
-          registerModel(app, require('models/rbac/sysResourceStore'))
-          cb(null, require('pages/rbac/sysResource'))
+          if (auth('rbac:sysRole:*')) {
+            registerModel(app, require('models/rbacStore'))
+            registerModel(app, require('models/rbac/sysResourceStore'))
+            cb(null, require('pages/rbac/sysResource'))
+          }
         }, 'sysResource')
       },
     },

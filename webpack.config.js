@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const domains = require('./src/configs/domains')
 
 module.exports = (webpackConfig, env) => {
   // 环境判断
@@ -76,9 +77,16 @@ module.exports = (webpackConfig, env) => {
     if (Object.prototype.hasOwnProperty.call(webpackConfig.plugins, x)) {
       const constructorName = webpackConfig.plugins[x].constructor.name
       if (constructorName === 'DefinePlugin') {
-        const pluginsDefinitions = {
+        let pluginsDefinitions = {
           IS_DEV: JSON.stringify((env === 'development')),
           NODE_ENV: JSON.stringify(env),
+        }
+        if (domains[env]) {
+          domains[env].baseUrl && (pluginsDefinitions.BASE_URL = JSON.stringify(domains[env].baseUrl))
+          const uploadUrl = domains[env].uploadUrl
+          if (uploadUrl) {
+            if (/\/$/.test(uploadUrl)) { pluginsDefinitions.UPLOAD_URL = JSON.stringify(uploadUrl) } else { pluginsDefinitions.UPLOAD_URL = JSON.stringify(`${uploadUrl}/`) }
+          }
         }
         webpackConfig.plugins[x].definitions = _.assign({}, webpackConfig.plugins[x].definitions, pluginsDefinitions)
       }
@@ -117,6 +125,10 @@ module.exports = (webpackConfig, env) => {
       ZButton: 'ZButton',
       R: 'ramda',
       _: 'lodash',
+      moment: 'moment',
+      local: `${__dirname}/src/components/carno/utils/storage/localStorage`,
+      session: `${__dirname}/src/components/carno/utils/storage/sessionStorage`,
+      constant: `${__dirname}/src/configs/constant`, // 常量,
       projectConfig: `${__dirname}/src/configs/projectConfig`, // 一般配置,
     }),
   )

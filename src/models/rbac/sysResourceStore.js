@@ -30,11 +30,13 @@ export default extend({
 
     * add(payload, { postConfirmLoading, put }) {
       const { code, msg } = yield postConfirmLoading(addUrl, payload)
-      if (code === 200) { ZMsg.success(msg) }
-      yield [
-        put('reload'), // 刷新列表
-        put('hideVisible', { key: 'add' }), // 控制弹窗
-      ]
+      if (code === 200) {
+        ZMsg.success(msg)
+        yield [
+          put('reload'), // 刷新列表
+          put('hideVisible', { key: 'add' }), // 控制弹窗
+        ]
+      }
     },
 
     * update(payload, { postConfirmLoading, put, diff, select }) {
@@ -42,11 +44,13 @@ export default extend({
       const newSysMember = { ...sysResource, ...payload }
       if (diff(sysResource, newSysMember)) {
         const { code, msg } = yield postConfirmLoading(updateUrl, newSysMember)
-        if (code === 200) { ZMsg.success(msg) }
-        yield [
-          put('reload'), // 刷新列表
-          put('hideVisible', { key: 'update' }), // 控制弹窗
-        ]
+        if (code === 200) {
+          ZMsg.success(msg)
+          yield [
+            put('reload'), // 刷新列表
+            put('hideVisible', { key: 'update' }), // 控制弹窗
+          ]
+        }
       }
     },
 

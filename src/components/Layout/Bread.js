@@ -26,13 +26,6 @@ const Bread = option => {
       name: projectConfig.breadName,
     })
   } else {
-    /* const getPathArray = item => {
-      pathArray.unshift(item)
-      if (item.bpid) {
-        getPathArray(queryArray(menus, item.bpid, 'id'))
-      }
-    }
-    getPathArray(current) */
     // 在树结构中查找
     const getPathArray = (array, currentObj, id) => {
       let stop = false

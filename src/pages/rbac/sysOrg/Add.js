@@ -1,4 +1,5 @@
 import { connect } from 'dva'
+import { Form } from 'antd'
 
 import ZForm from 'ZForm'
 import ZModal from 'ZModal'
@@ -6,9 +7,29 @@ import ZModal from 'ZModal'
 import { getFields, validate } from 'FormUtils'
 
 const Add = option => {
-  const { form, sysOrgStore } = option
+  const { form, dispatch, sysOrgStore } = option
   const { confirmLoading, visible: { add } } = sysOrgStore
-  const { onOk, onCancel } = option
+
+  const onOk = () => {
+    validate(form, fields)(values => {
+      const { provinceAndCity: [province, city] } = values
+      values.province = province
+      values.city = city
+      dispatch({
+        type: 'sysOrgStore/add',
+        ...values,
+      })
+    })
+  }
+
+  const onCancel = () => {
+    dispatch({
+      type: 'sysOrgStore/updateState',
+      visible: {
+        add: false,
+      },
+    })
+  }
 
   const addPageModalProps = {
     maskClosable: false,
@@ -119,5 +140,5 @@ const fields = [
 
 ]
 
-export default connect(mapStateToProps, mapDispatchToProps)(Add)
+export default connect(mapStateToProps)(Form.create()(Add))
 

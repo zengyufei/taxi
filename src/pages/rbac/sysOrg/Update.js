@@ -1,13 +1,34 @@
 import { connect } from 'dva'
+import { Form } from 'antd'
 
 import ZForm from 'ZForm'
 import ZModal from 'ZModal'
 import { getFields, validate } from 'FormUtils'
 
 let UpdatePage = option => {
-  const { form, sysOrgStore } = option
+  const { form, dispatch, sysOrgStore } = option
   const { confirmLoading, visible: { update }, sysOrg = {} } = sysOrgStore
-  const { onOk, onCancel } = option
+
+  const onOk = () => {
+    validate(form, fields)(values => {
+      const { provinceAndCity: [province, city] } = values
+      values.province = province
+      values.city = city
+      dispatch({
+        type: 'sysOrgStore/update',
+        ...values,
+      })
+    })
+  }
+
+  const onCancel = () => {
+    dispatch({
+      type: 'sysOrgStore/updateState',
+      visible: {
+        update: false,
+      },
+    })
+  }
 
   const updatePageModalProps = {
     maskClosable: false,
@@ -42,37 +63,6 @@ let UpdatePage = option => {
 function mapStateToProps({ sysOrgStore }) {
   return {
     sysOrgStore,
-  }
-}
-
-/**
- * @param dispatch 从 connect 获得
- * @param form 从上层建筑获得
- */
-function mapDispatchToProps(dispatch, { form }) {
-  return {
-
-    onOk() {
-      validate(form, fields)(values => {
-        const { provinceAndCity: [province, city] } = values
-        values.province = province
-        values.city = city
-        dispatch({
-          type: 'sysOrgStore/update',
-          ...values,
-        })
-      })
-    },
-
-    onCancel() {
-      dispatch({
-        type: 'sysOrgStore/updateState',
-        visible: {
-          update: false,
-        },
-      })
-    },
-
   }
 }
 
@@ -126,4 +116,4 @@ const fields = [
 
 ]
 
-export default connect(mapStateToProps, mapDispatchToProps)(UpdatePage)
+export default connect(mapStateToProps)(Form.create()(UpdatePage))

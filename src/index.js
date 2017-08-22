@@ -32,7 +32,7 @@ app.model(require('./models/appStore'))
 app.model(require('./models/commonStore'))
 
 // 3. Router
-app.router(require('./router'))
+app.router(require('./routes'))
 
 // 4. Start
 app.start('#root')

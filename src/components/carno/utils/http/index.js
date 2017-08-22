@@ -2,19 +2,22 @@ import axios from 'axios'
 import qs from 'qs'
 import { Modal } from 'antd'
 import { session } from '../storage'
+
 const domains = require('configs/domains')
 
-const loginUrl = '/#/login'
-const tokenName = 'token'
+const baseUrl = domains[process.env.NODE_ENV] && domains[process.env.NODE_ENV].baseUrl
+
+
+const { tokenSessionKey, redirectLoginUrl } = constant
 
 function setHeader(header) {
   // 每次发送请求之前检测都vuex存有token,那么都要放在请求头发送给服务器
-  const token = session.get(tokenName)
+  const token = session.get(tokenSessionKey)
   token && (header.token = token)
   return header
 }
 // 设置全局axios默认值
-axios.defaults.baseURL = domains[process.env.NODE_ENV] || ''
+axios.defaults.baseURL = baseUrl || ''
 // axios.defaults.timeout = 20000 // 5000的超时验证
 // axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 
@@ -44,12 +47,19 @@ axios.interceptors.request.use(config => {
 
 // 添加响应拦截器
 axios.interceptors.response.use(response => {
+  const token = session.get(tokenSessionKey)
+  if (!token) {
+    window.location.href = redirectLoginUrl
+  }
+
   let resData = response.data
-  if (resData && resData.code && +resData.code !== 200) {
-    Modal.error({ title: '出错', content: resData.msg ? resData.msg : '出现异常，但系统没有对此异常的说明', okText: '确定', maskClosable: true })
-    return Promise.reject(response)
-  } else if (resData && resData.code && +resData.code === 200) {
-    resData.code = +resData.code
+  if (resData && resData.code) {
+    if (+resData.code !== 200) {
+      Modal.error({ title: '错误提示', content: resData.msg ? resData.msg : '出现异常，但系统没有对此异常的说明', okText: '确定', maskClosable: true })
+      // return Promise.reject(response)
+    } else if (+resData.code === 200) {
+      resData.code = +resData.code
+    }
   }
   /*
   else if (resData && resData.code && +resData.code === 200) {
@@ -62,7 +72,7 @@ axios.interceptors.response.use(response => {
   if (error.response) {
     switch (error.response.status) {
       case 401:
-        window.location.href = loginUrl
+        window.location.href = redirectLoginUrl
         break
       case 403:
         console.error('无权限')
@@ -72,7 +82,7 @@ axios.interceptors.response.use(response => {
         break
       default:
         if (!/^dev/.test(process.env.NODE_ENV)) {
-          const token = session.get(tokenName)
+          const token = session.get(tokenSessionKey)
           if (token) {
             Modal.error({
               title: '异常',

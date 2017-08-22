@@ -41,7 +41,6 @@
     "eslint-plugin-import": "^2.6.1",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.1.0",
-    "jsonp": "^0.2.1",
     "less-vars-to-js": "^1.1.2",
     "mockjs": "^1.0.1-beta3",
     "path-to-regexp": "^1.7.0",
@@ -56,7 +55,12 @@
   "scripts": {
     "dev": "set BROWSER=none&&set HOST=0.0.0.0&&roadhog server --debug",
     "remote": "npm run dev-remote",
+    "local": "npm run dev-local",
+    "localIp": "npm run dev-localIp",
     "dev-remote": "set BROWSER=none&&set NODE_ENV=remote&&roadhog server",
+    "dev-local": "set BROWSER=none&&set NODE_ENV=local&&roadhog server",
+    "dev-localIp": "set BROWSER=none&&set NODE_ENV=localIp&&roadhog server",
+
     "lint": "eslint --fix --ext .js src",
     "build": "roadhog build"
   }

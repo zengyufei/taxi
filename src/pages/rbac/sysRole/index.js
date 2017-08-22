@@ -9,8 +9,8 @@ const SysRole = option => {
 
   return (
     <div>
-      <Add form={form} />
-      <Update form={form} />
+      <Add />
+      <Update />
       <List form={form} />
     </div>
   )
