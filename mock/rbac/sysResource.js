@@ -28,7 +28,7 @@ const mockOption = {
     'parentId|1-100': 1,
     'resName|+1': resNames,
     hierarchy() {
-      return firstResources[this.resName] ? 1 : secondResources[this.resName] ? 2 : 3
+      return firstResources[this.resName] ? 'one' : secondResources[this.resName] ? 'two' : 'three'
     },
     resNo() {
       return finalResources[this.resName]

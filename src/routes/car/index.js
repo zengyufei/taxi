@@ -6,6 +6,8 @@ const registerModel = (app, model) => {
 
 module.exports = (app, auth) => {
   return [
+
+
     {
       path: 'car',
       getComponent(nextState, cb) {
@@ -17,6 +19,8 @@ module.exports = (app, auth) => {
         }, 'car')
       },
     },
+
+
     {
       path: 'annualVerification',
       getComponent(nextState, cb) {
@@ -28,5 +32,43 @@ module.exports = (app, auth) => {
         }, 'annualVerification')
       },
     },
+
+    {
+      path: 'maintain',
+      getComponent(nextState, cb) {
+        require.ensure([], require => {
+          if (auth('car:maintain:*')) {
+            registerModel(app, require('models/car/maintainStore'))
+            cb(null, require('pages/car/maintain/Maintain'))
+          }
+        }, 'maintain')
+      },
+    },
+
+    {
+      path: 'insurance',
+      getComponent(nextState, cb) {
+        require.ensure([], require => {
+          if (auth('car:insurance:*')) {
+            registerModel(app, require('models/car/insuranceStore'))
+            cb(null, require('pages/car/insurance/Insurance'))
+          }
+        }, 'insurance')
+      },
+    },
+
+    {
+      path: 'carOperateLog',
+      getComponent(nextState, cb) {
+        require.ensure([], require => {
+          if (auth('car:carOperateLog:*')) {
+            registerModel(app, require('models/car/carOperateLogStore'))
+            cb(null, require('pages/car/carOperateLog/CarOperateLog'))
+          }
+        }, 'carOperateLog')
+      },
+    },
+
+
   ]
 }

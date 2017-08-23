@@ -1,9 +1,11 @@
-import { queryPage, insert, update, updateNotNull, deleteById } from 'services/car/insuranceService';
-import { Modal } from 'antd';
+import { extend } from 'ModelUtils'
+import { Modal } from 'antd'
 
-export default {
+const prefix = 'insurance'
 
-  namespace: 'insuranceStore',
+export default extend({
+
+  namespace: `${prefix}Store`,
 
   state: {
 
@@ -30,7 +32,7 @@ export default {
       totalCount: 0,
       dataList: [],
     } }) {
-      return { ...state, page, pageState: false };
+      return { ...state, page, pageState: false }
     },
     // 异步跳转页面
     toAdd(state, action) {
@@ -43,16 +45,16 @@ export default {
         businessInsuranceFile: '',
         trafficInsuranceList: [],
         trafficInsuranceFile: '',
-      };
+      }
     },
     toEdit(state, action) {
-      let insuranceList = [];
+      let insuranceList = []
       if (action.insurance.insuranceFile != null) {
-        insuranceList = [{ uid: 0, url: UPLOADPATH + action.insurance.insuranceFile, status: 'done' }];
+        insuranceList = [{ uid: 0, url: UPLOAD_URL + action.insurance.insuranceFile, status: 'done' }]
       }
-      let plateList = [];
+      let plateList = []
       if (action.insurance.plateImage != null) {
-        plateList = [{ uid: 0, url: UPLOADPATH + action.insurance.plateImage, status: 'done' }];
+        plateList = [{ uid: 0, url: UPLOAD_URL + action.insurance.plateImage, status: 'done' }]
       }
       return { ...state,
         pageState: true,
@@ -60,168 +62,173 @@ export default {
         insurance: action.insurance,
         insuranceList,
         insuranceFile: '',
-        plateList };
+        plateList }
     },
     toInfo(state, action) {
-      let insuranceList = [];
+      let insuranceList = []
       if (action.insurance.insuranceFile != null) {
-        insuranceList = [{ uid: 0, url: UPLOADPATH + action.insurance.insuranceFile, status: 'done' }];
+        insuranceList = [{ uid: 0, url: UPLOAD_URL + action.insurance.insuranceFile, status: 'done' }]
       }
-      let plateList = [];
+      let plateList = []
       if (action.insurance.plateImage != null) {
-        plateList = [{ uid: 0, url: UPLOADPATH + action.insurance.plateImage, status: 'done' }];
+        plateList = [{ uid: 0, url: UPLOAD_URL + action.insurance.plateImage, status: 'done' }]
       }
       return { ...state,
         pageState: true,
         res: action.res,
         insurance: action.insurance,
         insuranceList,
-        plateList };
+        plateList }
     },
     traffic(state, actioin) {
-      return { ...state, trafficState: actioin.trafficState };
+      return { ...state, trafficState: actioin.trafficState }
     },
     business(state, actioin) {
-      return { ...state, businessState: actioin.businessState };
+      return { ...state, businessState: actioin.businessState }
     },
 
     insuranceChange(state, { insuranceList }) {
-      return { ...state, insuranceList, insuranceFile: insuranceList.length >= 1 ? insuranceList[0].response : '' };
+      return { ...state, insuranceList, insuranceFile: insuranceList.length >= 1 ? insuranceList[0].response : '' }
     },
     businessInsuranceChange(state, { businessInsuranceList }) {
-      return { ...state, businessInsuranceList, businessInsuranceFile: businessInsuranceList.length >= 1 ? businessInsuranceList[0].response : '' };
+      return { ...state, businessInsuranceList, businessInsuranceFile: businessInsuranceList.length >= 1 ? businessInsuranceList[0].response : '' }
     },
     trafficInsuranceChange(state, { trafficInsuranceList }) {
-      return { ...state, trafficInsuranceList, trafficInsuranceFile: trafficInsuranceList.length >= 1 ? trafficInsuranceList[0].response : '' };
+      return { ...state, trafficInsuranceList, trafficInsuranceFile: trafficInsuranceList.length >= 1 ? trafficInsuranceList[0].response : '' }
     },
     lookPreview(state, { previewImage, previewVisible }) {
-      return { ...state, previewImage, previewVisible };
+      return { ...state, previewImage, previewVisible }
     },
     unlookPreview(state) {
-      return { ...state, previewVisible: false };
+      return { ...state, previewVisible: false }
     },
 
   },
 
   effects: {
-    *queryPage(playload, {call, put}) {  // eslint-disable-line
-      const response = yield call(queryPage, { ...playload });
-      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false });
+
+    * init({}, { update, tableBindType, formBindType, select }) {
+      const { init } = yield select(({ insuranceStore }) => insuranceStore)
+      if (!init) {
+        yield tableBindType({
+        })
+
+        yield formBindType({
+        })
+        yield update({ init: true })
+      }
     },
-    *exportInsurance(playload, { call, put }) {
-      const response = yield call(exportInsurance, { ...playload });
-      yield put({ type: 'exportInsuranceSuccess' });
+
+    *queryPage(playload, {get, put}) {  // eslint-disable-line
+      const response = yield get(`${prefix}/queryPage`, playload)
+      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
     },
-    *importInsurance(playload, { call, put }) {
-      const response = yield call(importInsurance, { ...playload });
-      yield put({ type: 'importInsuranceSuccess' });
-    },
+
     // 新增
-    *insert(playload, { call, put, select }) {
-      const insurances = { ...playload };
-      let insertState = true;
-      if (insurances.trafficBoolean) {
+    * insert(playload, { post, put, select }) {
+      let insertState = true
+      if (playload.trafficBoolean) {
         const insurance = {
-          plateImage: insurances.plateImage,
-          carNo: insurances.carNo,
-          plateNumber: insurances.plateNumber,
-          carId: insurances.carId,
+          plateImage: playload.plateImage,
+          carNo: playload.carNo,
+          plateNumber: playload.plateNumber,
+          carId: playload.carId,
           insuranceType: 'TRAFFIC',
-          insuranceName: insurances.trafficInsuranceName,
-          insuranceCompany: insurances.trafficInsuranceCompany,
-          policyNo: insurances.trafficPolicyNo,
-          insuranceMoney: insurances.trafficInsuranceMoney,
-          insuranceBuyDate: insurances.trafficInsuranceBuyDate,
-          insuranceExpireDate: insurances.trafficInsuranceExpireDate,
-          insuranceFile: insurances.trafficInsuranceFile,
-        };
-        const response = yield call(insert, insurance);
+          insuranceName: playload.trafficInsuranceName,
+          insuranceCompany: playload.trafficInsuranceCompany,
+          policyNo: playload.trafficPolicyNo,
+          insuranceMoney: playload.trafficInsuranceMoney,
+          insuranceBuyDate: playload.trafficInsuranceBuyDate,
+          insuranceExpireDate: playload.trafficInsuranceExpireDate,
+          insuranceFile: playload.trafficInsuranceFile,
+        }
+        const response = yield post(`${prefix}/insert`, insurance)
         if (+response.code !== 200) {
-          insertState = false;
+          insertState = false
           Modal.info({
             title: '温馨提示',
             content: (
               `交强险：${response.msg}`
             ),
-          });
-          return;
+          })
+          return
         }
-        ZMsg.info(`交强险：${response.msg}`);
+        ZMsg.info(`交强险：${response.msg}`)
       }
-      if (insurances.businessBoolean) {
+      if (playload.businessBoolean) {
         const insurance = {
-          plateImage: insurances.plateImage,
-          carNo: insurances.carNo,
-          plateNumber: insurances.plateNumber,
-          carId: insurances.carId,
+          plateImage: playload.plateImage,
+          carNo: playload.carNo,
+          plateNumber: playload.plateNumber,
+          carId: playload.carId,
           insuranceType: 'BUSINESS',
-          insuranceName: insurances.businessInsuranceName,
-          insuranceCompany: insurances.businessInsuranceCompany,
-          policyNo: insurances.businessPolicyNo,
-          insuranceMoney: insurances.businessInsuranceMoney,
-          insuranceBuyDate: insurances.businessInsuranceBuyDate,
-          insuranceExpireDate: insurances.businessInsuranceExpireDate,
-          insuranceFile: insurances.businessInsuranceFile,
-        };
-        const response = yield call(insert, insurance);
+          insuranceName: playload.businessInsuranceName,
+          insuranceCompany: playload.businessInsuranceCompany,
+          policyNo: playload.businessPolicyNo,
+          insuranceMoney: playload.businessInsuranceMoney,
+          insuranceBuyDate: playload.businessInsuranceBuyDate,
+          insuranceExpireDate: playload.businessInsuranceExpireDate,
+          insuranceFile: playload.businessInsuranceFile,
+        }
+        const response = yield post(`${prefix}/insert`, insurance)
         if (+response.code !== 200) {
-          insertState = false;
+          insertState = false
           Modal.info({
             title: '温馨提示',
             content: (
               `商业险：${response.msg}`
             ),
-          });
-          return;
+          })
+          return
         }
-        ZMsg.info(`商业险：${response.msg}`);
+        ZMsg.info(`商业险：${response.msg}`)
       }
       if (insertState) {
-        const page = yield select(state => state.insuranceStore.page);
-        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize });
+        const page = yield select(state => state.insuranceStore.page)
+        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       }
     },
     // 修改
-    *updateNotNull(playload, { call, put, select }) {
-      const response = yield call(updateNotNull, { ...playload });
+    * updateNotNull(playload, { post, put, select }) {
+      const response = yield post(`${prefix}/update`, playload)
       if (+response.code === 200) {
-        ZMsg.success(response.msg);
-        const page = yield select(state => state.insuranceStore.page);
-        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize });
+        ZMsg.success(response.msg)
+        const page = yield select(state => state.insuranceStore.page)
+        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       } else {
         Modal.info({
           title: '温馨提示',
           content: (
             response.msg
           ),
-        });
+        })
       }
     },
     // 删除
-    *deleteById({ id }, { call, put, select }) {
-      const response = yield call(deleteById, id);
-      if (+response.code == 200) {
-        ZMsg.success(response.msg);
-        const page = yield select(state => state.insuranceStore.page);
-        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize });
-      } else { ZMsg.error(response.msg); }
+    * deleteById({ id }, { get, put, select }) {
+      const response = yield get(`${prefix}/deleteById`, { id })
+      if (+response.code === 200) {
+        ZMsg.success(response.msg)
+        const page = yield select(state => state.insuranceStore.page)
+        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
+      } else { ZMsg.error(response.msg) }
     },
 
   },
 
   subscriptions: {
-    setup({dispatch, history}) {  // eslint-disable-line
-      history.listen(({ pathname }) => {
-        if (pathname === '/insurance') {
-          dispatch({
-            type: 'queryPage',
-            pageNo: 1,
-            pageSize: 10,
-          });
-        }
-      });
+    setup({ dispatch, listen }) {
+      listen(`/${prefix}`, () => {
+        dispatch({
+          type: 'init',
+        })
+        dispatch({
+          type: 'queryPage',
+          pageNo: 1,
+          pageSize: 10,
+        })
+      })
     },
+
   },
-
-
-};
+})

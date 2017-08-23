@@ -9,9 +9,7 @@ const List = option => {
   const { resourceTree = [] } = rbacStore
 
   const btns = (
-    <div style={{ marginBottom: '16px', width: '100%' }}>
-      <Button type="primary" icon="plus-circle-o" style={{ marginLeft: '10px' }} onClick={openAddPage}>新增资源</Button>
-    </div>
+    <Button type="primary" icon="plus-circle-o" onClick={openAddPage}>新增资源</Button>
   )
 
   const operatorColumn = [{

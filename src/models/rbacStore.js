@@ -161,7 +161,7 @@ export default extend({
           resourceMapByParentResNo = {}
           resourceMap = {}
           _.cloneDeep(result).forEach(e => {
-            if (e.hierarchy <= 2) {
+            if (e.hierarchy === 'one' || e.hierarchy === 'two') {
               resourceSecondArray.push(e)
             }
             resourceMap[e.resNo] = e

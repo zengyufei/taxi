@@ -11,9 +11,7 @@ const List = option => {
   const { page: { pageNo = 1, pageSize = 10, dataList = [], totalCount = 0 } } = sysRoleStore
 
   const btns = (
-    <div style={{ marginBottom: '16px', width: '100%' }}>
-      <Button type="primary" icon="plus-circle-o" style={{ marginLeft: '10px' }} onClick={openAddPage}>新增角色</Button>
-    </div>
+    <Button type="primary" icon="plus-circle-o" onClick={openAddPage}>新增角色</Button>
   )
 
   const searchBarProps = {

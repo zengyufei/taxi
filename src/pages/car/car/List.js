@@ -24,14 +24,25 @@ let Car = options => {
   const { loading, form, methods, page, res, pageState } = options
   const { toInfo, toEdit, exportCar, toAdd, onSearch, onShowSizeChange, onChange, upload } = methods
 
+  /**
+   * 上传文件
+   */
+  const importCar = {
+    name: 'file',
+    action: `${BASE_URL}/car/import.htm?token=${session.get(tokenSessionKey)}`,
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange: upload,
+  }
   const btns = (
-    <div style={{ marginBottom: '16px', width: '100%' }}>
-      <Button type="primary" icon="plus-circle-o" onClick={toAdd} style={{ marginLeft: '10px' }}>新增</Button>&nbsp;
+    <div>
+      <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
       <Popconfirm title="是否确定要导出" onConfirm={exportCar} >
-        <Button type="primary" icon="export" style={{ marginLeft: '3px' }}>导出</Button>&nbsp;
+        <Button type="primary" icon="export">导出</Button>&nbsp;
       </Popconfirm>
       <Upload {...importCar}>
-        <Button type="primary" icon="download" style={{ marginLeft: '3px' }}>导入</Button>
+        <Button type="primary" icon="download">导入</Button>
       </Upload>
     </div>
   )
@@ -44,22 +55,9 @@ let Car = options => {
     searchFields: getSearchFields(searchFields).values(),
     fields: getFields(searchFields, local.get('car_condin') || ['carNo', 'plateNumber', 'carType']).values(),
     item: {
-      roleId: '',
     },
     onSearch,
     onReset: onSearch,
-    width: '150px',
-    formItemLayout: {
-      labelCol: {
-        span: 8,
-      },
-      itemCol: {
-        span: 7,
-      },
-      wrapperCol: {
-        span: 16,
-      },
-    },
   }
 
   const operatorColumn = [{
@@ -80,19 +78,7 @@ let Car = options => {
   const tableColumns = getColumns(fields).enhance(operatorColumn).values()
 
 
-  /**
-   * 上传文件
-   * @type {{name: string, action: string, headers: {authorization: string}, onChange: ((info))}}
-   */
-  const token = session.get(tokenSessionKey)
-  const importCar = {
-    name: 'file',
-    action: `${BASE_URL}/car/import.htm?token=${token}`,
-    headers: {
-      authorization: 'authorization-text',
-    },
-    onChange: upload,
-  }
+
 
 
   let pageSwitch

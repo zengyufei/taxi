@@ -53,7 +53,6 @@ class PermissionComponet extends React.Component {
     const { rbacStore, updateState } = this.props
     const { resourceSecondTree = [] } = rbacStore
 
-
     const operatorColumn = [{
       key: 'operator',
       name: '操作',

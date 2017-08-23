@@ -22,13 +22,13 @@ const HSearchForm = option => {
   const { fields, search = {}, form, showLabel, showReset, onSearch, onReset, formItemLayout = {} } = option
   const assginFormItemLayout = {
     itemCol: {
-      span: 6,
+      span: 8,
     },
     labelCol: {
-      span: showLabel ? 6 : 0,
+      span: showLabel ? 7 : 0,
     },
     wrapperCol: {
-      span: showLabel ? 18 : 24,
+      span: showLabel ? 16 : 24,
     },
     btnCol: {
       span: 6,
@@ -54,7 +54,7 @@ const HSearchForm = option => {
       <Row>
         {fields.map((field, index) =>
           (<Col {...assginFormItemLayout.itemCol} key={`itemKey${index}`}>
-            <FormItem className={styles.formItem} label={getLabelName(field)} help={field.help} key={field.key} labelCol={formItemLayout.labelCol} wrapperCol={assginFormItemLayout.wrapperCol} >
+            <FormItem className={styles.formItem} label={getLabelName(field)} help={field.help} key={field.key} labelCol={assginFormItemLayout.labelCol} wrapperCol={assginFormItemLayout.wrapperCol} >
               {FormUtil.createFieldDecorator(field, search, form.getFieldDecorator)}
             </FormItem>
           </Col>),

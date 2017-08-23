@@ -17,6 +17,7 @@ const Routers = function({ history, app }) {
       childRoutes: [
         ...require('./rbac')(app, auth),
         ...require('./car')(app, auth),
+        ...require('./driver')(app, auth),
       ],
     },
     require('./login')(app),

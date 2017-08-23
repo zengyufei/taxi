@@ -1,0 +1,525 @@
+/**
+ * 依赖的摆放顺序是：
+ * 1. 非按需加载在最上面
+ * 2. 按需加载的在下面
+ * 3. 按长度从短到长
+ * 4. 从对象再获取对象点出来的在按需加载下面
+ * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+ */
+import TweenOne from 'rc-tween-one';
+import { connect } from 'dva';
+import CreateFormAreasCascader from 'components/select/CreateFormAreasCascader';
+import { Form, Input, Icon, Row, Col, Button, Card, Upload, Modal,
+  DatePicker, Radio, InputNumber, Cascader, AutoComplete } from 'antd';
+
+const TweenOneGroup = TweenOne.TweenOneGroup;
+const FormItem = Form.Item;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
+
+let Add = (props) => {
+  const { dispatch, form, driver,drivers,carNos,visible } = props;
+  const { getFieldDecorator } = form;
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 6 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 14 },
+    },
+  };
+  const tailFormItemLayout = {
+    wrapperCol: {
+      xs: {
+        span: 24,
+        offset: 0,
+      },
+      sm: {
+        span: 14,
+        offset: 6,
+      },
+    },
+  };
+
+  /* 提交事件 */
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        dispatch({
+          type: 'trafficAccidentStore/insert',
+          ...values,
+          accidentTime: form.getFieldValue('accidentTime') != undefined ? form.getFieldValue('accidentTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          closeDate: form.getFieldValue('closeDate') != undefined ? form.getFieldValue('closeDate').format('YYYY-MM-DD') : undefined,
+          areaCode: form.getFieldValue('areaCode')[2],
+        });
+      }
+    });
+  };
+
+  /* 返回分页 */
+  const toPage = (e) => {
+    dispatch({
+      type: 'trafficAccidentStore/toPage',
+    });
+  };
+
+  /** 模糊查询 车辆自编号 */
+  const handleSearch = (value) => {
+    dispatch({
+      type: 'driverCommonStore/queryLikeCarNo',
+      str: value,
+    });
+  };
+  /** 自编号查询车信息 */
+  const queryByCarNo = () => {
+    dispatch({
+      type: 'driverCommonStore/queryDriverListByOption',
+      carNo: form.getFieldValue('carNo'),
+    });
+  };
+  let carNo,rbs=[];
+  const onCancel = () => {
+    dispatch({
+      type: 'driverCommonStore/onCancel',
+      visible: false,
+      drivers: [],
+    });
+  }
+
+  if(drivers.length == 1) {
+    dispatch({
+      type: 'driverCommonStore/queryDriver',
+      drivers: drivers,
+      driver: driver,
+      index: 0,
+    });
+    onCancel();
+  } else if (drivers.length > 1) {
+    drivers.forEach((value, index) => {
+      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>);
+    })
+    // 弹出选择框
+    dispatch({
+      type: 'driverCommonStore/onCancel',
+      visible: true,
+      drivers: drivers,
+    });
+  }
+  const onOk = (e) => {
+    dispatch({
+      type: 'driverCommonStore/queryDriver',
+      drivers: drivers,
+      driver: driver,
+      index: e.target.value,
+    });
+    onCancel();
+  }
+  if(driver.features != undefined || driver.features != null){
+    carNo = JSON.parse(driver.features).carNo;
+  }
+
+  return (
+    <div>
+      <Modal
+        visible={visible}
+        title="驾驶员人员"
+        onCancel={onCancel}
+        footer={null}
+      >
+        <RadioGroup onChange={onOk} size="large">
+          {rbs}
+        </RadioGroup>
+      </Modal>
+      <TweenOneGroup>
+        <Row key="0">
+          <Col span={14}>
+            <Form onSubmit={handleSubmit} style={{ maxWidth: '100%', marginTop: '10px' }}>
+              <Card title="新增交通事故">
+                {getFieldDecorator('carId', { initialValue: driver != undefined ? driver.carId : '' })(<Input type="hidden"/>)}
+                {getFieldDecorator('driverId', { initialValue: driver != undefined ? driver.id : '' })(<Input type="hidden"/>)}
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        自编号&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  <Col span={18}>
+                    {getFieldDecorator('carNo', {
+                      rules: [{ required: true, message: '请输入自编号!', whitespace: true }],
+                    })(
+                      <AutoComplete
+                        dataSource={carNos}
+                        onSearch={handleSearch}
+                        placeholder="车辆自编号"
+                      />
+                    )}
+                  </Col>
+                  <Col span={4}>
+                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                  </Col>
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        车牌号&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('plateNumber', {
+                    initialValue: form.getFieldValue('carNo') == carNo && driver.features != undefined ? JSON.parse(driver.features).plateNumber : '',
+                  })(
+                    <Input disabled />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        从业资格证号&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  <Col span={18}>
+                    {getFieldDecorator('qualificationNo', {
+                      initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.qualificationNo : '',
+                    })(
+                      <Input disabled />
+                    )}
+                  </Col>
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        驾驶员姓名&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('userName', {
+                    initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.userName : '',
+                  })(
+                    <Input disabled />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        肇事时间&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('accidentTime', {
+                    rules: [{ required: true, message: '请输入肇事时间!' }],
+                  })(
+                    <DatePicker style={{ width: 200 }} format="YYYY-MM-DD HH:mm:ss" showTime />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        天气&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('weather', {
+                    rules: [{ required: true, whitespace: true, message: '请输入天气情况!' }],
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        接触对象&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('canDriverCar', {
+                    rules: [{ required: true, whitespace: true, message: '请输入接触对象!' }],
+                  })(<Input />)}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        出事地点类型&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('accidentPlace', {
+                    rules: [{ required: true, message: '请输入出事地点类型!' }],
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span className="ant-form-item-required">事发区域&nbsp;</span>
+                    )}
+                  className={form.getFieldError('areaCode') ? 'has-error' : ''}
+                  hasFeedback
+                >
+                  <CreateFormAreasCascader
+                    getFieldDecorator={
+                        getFieldDecorator('areaCode', {
+                          rules: [{
+                            validator(rule, value, callback) {
+                              if (value === undefined) {
+                                callback('请选择选择省市区');
+                              } else {
+                                value.length == 0 ?
+                                  callback('请选择选择省份和城市') :
+                                    value.length == 1 ? callback('请选择选择城市') :
+                                      value.length == 2 ? callback('请选择选择区县') : callback();
+                              }
+                            },
+                          }],
+                        })
+                      }
+                    placeholder="事发区域"
+                  />
+                  {form.getFieldError('areaCode') && <div className="ant-form-explain">{form.getFieldError('areaCode')}</div>}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        具体路段&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('accidentAddress', {
+                    rules: [{ required: true, whitespace: true, message: '请输入具体路段!' }],
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        事故原因&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('accidentCause', {
+                    rules: [{ required: true, whitespace: true, message: '请输入事故原因!' }],
+                  })(
+                    <Input />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        事故形态&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('accidentModel', {
+                    rules: [{ required: true, whitespace: true, message: '请选择事故形态!' }],
+                    initialValue: 'model_one',
+                  })(
+                    <RadioGroup>
+                      <Radio value={'model_one'}>同向侧面碰刮</Radio>
+                      <Radio value={'model_two'}>追尾相撞</Radio>
+                      <Radio value={'model_three'}>倒车相撞</Radio>
+                      <Radio value={'model_four'}>左转弯相撞</Radio>
+                      <Radio value={'model_five'}>右转弯相撞</Radio>
+                      <Radio value={'model_six'}>正面相撞</Radio>
+                      <Radio value={'model_seven'}>运行伤害人体</Radio>
+                      <Radio value={'model_eight'}>与其他物体相撞</Radio>
+                      <Radio value={'model_nine'}>其他</Radio>
+                    </RadioGroup>
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        摘要伤亡情况&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('accidentDesc', {
+                    rules: [{ required: true, whitespace: true, message: '事故摘要以及伤亡情况!' }],
+                  })(
+                    <Input type="textarea" rows={4} />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        受伤人数&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('injuredNumber', {
+                    rules: [{ required: true, message: '请填写受伤人数!' }],
+                  })(
+                    <InputNumber min={0} max={10000} />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        死亡人数&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('deathNumber', {
+                    rules: [{ required: true, message: '请填写死亡人数!' }],
+                  })(
+                    <InputNumber min={0} max={10000} />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        对方资料&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('otherInfoDesc', {
+                    rules: [{ required: true, whitespace: true, message: '请输入对方资料摘要!' }],
+                  })(
+                    <Input type="textarea" rows={4} />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        事故性质&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('accidentNature', {
+                    rules: [{ required: true, whitespace: true, message: '请输入事故性质!' }],
+                    initialValue: 'PROPERTY_LOSS',
+                  })(
+                    <RadioGroup>
+                      <Radio value={'PROPERTY_LOSS'}>财产损失事故</Radio>
+                      <Radio value={'INJURED'}>伤人事故</Radio>
+                      <Radio value={'DEATH'}>死亡事故</Radio>
+                    </RadioGroup>
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        责任&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('dutyType', {
+                    rules: [{ required: true, whitespace: true, message: '请选择责任!' }],
+                  })(
+                    <RadioGroup>
+                      <Radio value={'FULL_DUTY'}>全责</Radio>
+                      <Radio value={'MAIN_DUTY'}>主责</Radio>
+                      <Radio value={'SAME_DUTY'}>同责</Radio>
+                      <Radio value={'LESS_DUTY'}>次责</Radio>
+                      <Radio value={'NO_DUTY'}>无责</Radio>
+                    </RadioGroup>
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        事故档案编号&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('documentNo', {})(<Input />)}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        总经损&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('totalLoss', {initialValue:0})(
+                    <InputNumber min={0} max={9999999999}/>
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        结案日期&nbsp;
+                      </span>
+                    )}
+                  hasFeedback
+                >
+                  {getFieldDecorator('closeDate', {})(
+                    <DatePicker />
+                  )}
+                </FormItem>
+
+                <FormItem {...tailFormItemLayout}>
+                  <ZButton permission="driver:accident:insert">
+                    <Button key="registerButton" type="primary" htmlType="submit" size="large">保存</Button>
+                  </ZButton>
+                  <Button
+                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    onClick={toPage}
+                  >返回</Button>
+                </FormItem>
+              </Card>
+            </Form>
+          </Col>
+        </Row>
+      </TweenOneGroup>
+    </div>
+  );
+};
+
+function mapStateToProps({ driverCommonStore }) {
+  return {
+    carNos: driverCommonStore.carNos,
+    driver: driverCommonStore.driver,
+    drivers: driverCommonStore.drivers,
+    visible: driverCommonStore.visible,
+  };
+}
+
+Add = Form.create()(Add);
+export default connect(mapStateToProps)(Add);

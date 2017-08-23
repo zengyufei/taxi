@@ -120,7 +120,7 @@ const config = {
         {
           id: _.uniqueId(),
           name: '普通表扬',
-          url: '/common',
+          url: '/commonPraise',
           permission: 'driver:common:*',
         },
         {

@@ -20,7 +20,8 @@
     "recharts": "^0.22.4",
     "sync-request": "^4.1.0",
     "tree-flatten": "^1.0.0",
-    "tree-transform": "^1.0.0"
+    "tree-transform": "^1.0.0",
+    "un-flatten-tree": "^2.0.11"
   },
   "devDependencies": {
     "axios": "^0.16.2",
@@ -60,7 +61,6 @@
     "dev-remote": "set BROWSER=none&&set NODE_ENV=remote&&roadhog server",
     "dev-local": "set BROWSER=none&&set NODE_ENV=local&&roadhog server",
     "dev-localIp": "set BROWSER=none&&set NODE_ENV=localIp&&roadhog server",
-
     "lint": "eslint --fix --ext .js src",
     "build": "roadhog build"
   }

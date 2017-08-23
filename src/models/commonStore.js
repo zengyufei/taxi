@@ -22,6 +22,7 @@ export default extend({
     * queryAreas({}, { get, update, localCache, arrayToTree, arrayToMap, tableBindType, _, formBindType }) {
       let areaCache = localCache.get(areakey)
       let areaMap = localCache.get(areaMapkey)
+      let areaTree = localCache.get(areaTreekey)
       let areaCityTree = localCache.get(areaCityTreekey)
 
       if (!areaCache) {
@@ -39,7 +40,7 @@ export default extend({
         })
 
         areaMap = yield arrayToMap(res, e => e.code)
-        const areaTree = yield arrayToTree(cascaderArray, {
+        areaTree = yield arrayToTree(cascaderArray, {
           id: 'code',
           parent: 'parentCode',
           children: 'children',
@@ -84,6 +85,23 @@ export default extend({
           initialValue && (result.initialValue = initialValue)
           return result
         },
+        // 参数：初始值,meta(字段meta数据，例如: rows,min,max 等), field字段定义对象
+        area: ({ initialValue }) => {
+          let result = {
+            input: (
+              <Cascader
+                key="provinceAndCityCascaderForm"
+                allowClear
+                changeOnSelect
+                expandTrigger="hover"
+                options={areaTree}
+                placeholder="请选择省市"
+              />
+            ),
+          }
+          initialValue && (result.initialValue = initialValue)
+          return result
+        },
       })
     },
   },
@@ -93,6 +111,11 @@ export default extend({
       // 支持对多个path的监听
       listen({
         '/sysOrg': () => {
+          dispatch({
+            type: 'queryAreas',
+          })
+        },
+        '/driver': () => {
           dispatch({
             type: 'queryAreas',
           })

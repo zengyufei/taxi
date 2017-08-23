@@ -9,6 +9,7 @@ export default extend({
   namespace: `${prefix}Store`,
 
   state: {
+
     page: {
       pn: 0,
       ps: 10,

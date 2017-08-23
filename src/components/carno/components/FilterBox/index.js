@@ -66,7 +66,7 @@ class FilterBox extends React.Component {
               placement="bottom"
               content={
                 <CheckboxGroup defaultValue={newFields.map(e => e.key)} onChange={e => this.handleChangeFilter(e, searchCacheKey, searchFields)} >
-                  <Row style={{ width: formProps.width || '100px' }}>
+                  <Row style={{ width: formProps.width || '150px' }}>
                     {
                       searchFields.map(e => {
                         return <Col key={e.key} style={{ margin: '3px' }} span={24}><Checkbox value={e.key}>{e.name}</Checkbox></Col>
@@ -85,7 +85,7 @@ class FilterBox extends React.Component {
               >过滤条件<Icon type={filterIcon ? 'down' : 'up'} /></Button>
             </Popover>
           }
-          <span style={{ float: 'left' }}>
+          <span style={{ float: 'left', marginLeft: '10px' }}>
             {btns}
           </span>
         </div>
