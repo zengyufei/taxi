@@ -5,7 +5,7 @@
  * @Last Modified time: 2017-08-09 15:43:20
  */
 import { connect } from 'dva'
-import { Sider, Header, Footer, Bread, styles } from 'components/Layout'
+import { Sider, Header, Footer, Bread, styles } from 'components/layout'
 import { menus } from 'src/menus'
 import { Helmet } from 'react-helmet'
 import classnames from 'classnames'

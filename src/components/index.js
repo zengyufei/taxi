@@ -1,4 +1,4 @@
-import * as Layout from './Layout/index.js'
+import * as Layout from './layout'
 
 export {
   Layout,
