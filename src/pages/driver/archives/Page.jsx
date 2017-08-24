@@ -1,15 +1,15 @@
 import { connect } from 'dva';
 import { Form, Input, Select, Button, Icon, Popconfirm, Alert, Table, message } from 'antd';
 import styles from './Page.css';
-import Update from './Update.jsx';
-import Detail from './Detail.jsx';
+import Update from './Update';
+import Detail from './Detail';
 import moment from 'moment';
 
 const Option = Select.Option;
 const FormItem = Form.Item;
 
 let Index = (option) => {
-  const { page, dispatch, form, res, register } = option;
+  const { loading, page, dispatch, form, res, register } = option;
   const { getFieldDecorator } = form;
 
   /* 详情 */
@@ -147,9 +147,7 @@ let Index = (option) => {
   return (
     <div>
       {
-        register ? a
-          :
-        <div>
+        register ? a          :        <div>
           <div>
             <Button type="primary" icon="clock-circle-o" onClick={accidentring}>保险即将到期</Button>&nbsp;
             <Button type="primary" icon="close-circle-o" onClick={accident}>保险已到期</Button>&nbsp;
@@ -231,6 +229,7 @@ let Index = (option) => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
             pagination={{  // 分页
               total: (page && +page.totalCount) || 0, // 总数量
@@ -268,8 +267,9 @@ let Index = (option) => {
   );
 };
 
-function mapStateToProps({ driverStore }) {
+function mapStateToProps({ loading, driverStore }) {
   return {
+    loading: loading.models.driverStore,
     register: driverStore.register,
     res: driverStore.res,
     page: driverStore.page,

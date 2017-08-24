@@ -1,9 +1,9 @@
 import { connect } from 'dva'
 import { Form, Input, Button, Icon, Popconfirm, Alert, Table, Upload, Modal, Select } from 'antd'
 import styles from './Page.css'
-import Add from './Add.jsx'
-import Update from './Update.jsx'
-import Detail from './Detail.jsx'
+import Add from './Add'
+import Update from './Update'
+import Detail from './Detail'
 import qs from 'qs'
 
 const FormItem = Form.Item
@@ -11,7 +11,7 @@ const { TOKEN_KEY } = constant
 const Option = Select.Option
 
 let Index = option => {
-  const { dispatch, form, res, register, page } = option
+  const { loading, dispatch, form, res, register, page } = option
   const { getFieldDecorator } = form
 
   /* 详情 */
@@ -303,6 +303,7 @@ let Index = option => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
             pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量
@@ -340,8 +341,9 @@ let Index = option => {
   )
 }
 
-function mapStateToProps({ complainStore }) {
+function mapStateToProps({ loading, complainStore }) {
   return {
+    loading: loading.models.complainStore,
     register: complainStore.register,
     res: complainStore.res,
     page: complainStore.page,

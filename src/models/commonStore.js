@@ -90,12 +90,12 @@ export default extend({
           let result = {
             input: (
               <Cascader
-                key="provinceAndCityCascaderForm"
+                key="areaCascaderForm"
                 allowClear
                 changeOnSelect
                 expandTrigger="hover"
                 options={areaTree}
-                placeholder="请选择省市"
+                placeholder="请选择省市区"
               />
             ),
           }
@@ -116,6 +116,11 @@ export default extend({
           })
         },
         '/driver': () => {
+          dispatch({
+            type: 'queryAreas',
+          })
+        },
+        '/trafficAccident': () => {
           dispatch({
             type: 'queryAreas',
           })

@@ -1,26 +1,40 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
- */
-import TweenOne from 'rc-tween-one';
-import { connect } from 'dva';
-import CreateFormAreasCascader from 'components/select/CreateFormAreasCascader';
+import TweenOne from 'rc-tween-one'
+import { connect } from 'dva'
+import ZFormItem from 'ZFormItem'
+import { getFields } from 'FormUtils'
 import { Form, Input, Icon, Row, Col, Button, Card, Upload, Modal,
-  DatePicker, Radio, InputNumber, Cascader } from 'antd';
-import moment from 'moment';
+  DatePicker, Radio, InputNumber, Cascader } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioGroup = Radio.Group
 
+const fields = [
+  {
+    key: 'areaCode',
+    name: '事发区域',
+    type: 'area',
+    rules: [
+      { required: true, message: '请选择事发区域!' },
+      {
+        validator(rule, value, callback) {
+          if (value === undefined) {
+            callback()
+          } else {
+            value.length === 0 ?
+              callback() :
+              value.length === 1 ? callback('请选择选择城市') :
+                value.length === 2 ? callback('请选择选择区县') : callback()
+          }
+        },
+      }],
+  },
+]
 
-let Update = (props) => {
-  const { dispatch, form, trafficAccident } = props;
-  const { getFieldDecorator } = form;
+let Update = options => {
+  const { dispatch, form, trafficAccident } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -31,7 +45,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -43,11 +57,18 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
+
+  const itemProps = { form,
+    item: {
+      areaCode: [trafficAccident.provinceCode, trafficAccident.cityCode, trafficAccident.areaCode],
+    },
+    ...formItemLayout }
+  const fieldMap = getFields(fields).toMapValues()
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
@@ -56,17 +77,17 @@ let Update = (props) => {
           accidentTime: form.getFieldValue('accidentTime') != undefined ? form.getFieldValue('accidentTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
           closeDate: form.getFieldValue('closeDate') != undefined ? form.getFieldValue('closeDate').format('YYYY-MM-DD') : undefined,
           areaCode: form.getFieldValue('areaCode')[2],
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'trafficAccidentStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -81,8 +102,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('qualificationNo', {
@@ -96,8 +117,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
@@ -111,8 +132,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('carNo', {
@@ -126,8 +147,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
@@ -141,8 +162,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         肇事时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentTime', {
@@ -157,8 +178,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         天气&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('weather', {
@@ -173,8 +194,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         接触对象&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('canDriverCar', {
@@ -189,8 +210,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         出事地点类型&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentPlace', {
@@ -200,43 +221,14 @@ let Update = (props) => {
                     <Input />
                   )}
                 </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span className="ant-form-item-required">事发区域&nbsp;</span>
-                    )}
-                  className={form.getFieldError('areaCode') ? 'has-error' : ''}
-                  hasFeedback
-                >
-                  <CreateFormAreasCascader
-                    getFieldDecorator={
-                        getFieldDecorator('areaCode', {
-                          initialValue: [trafficAccident.provinceCode, trafficAccident.cityCode, trafficAccident.areaCode],
-                          rules: [{
-                            validator(rule, value, callback) {
-                              if (value === undefined) {
-                                callback('请选择选择省市区');
-                              } else {
-                                value.length == 0 ?
-                                  callback('请选择选择省份和城市') :
-                                    value.length == 1 ? callback('请选择选择城市') :
-                                      value.length == 2 ? callback('请选择选择区县') : callback();
-                              }
-                            },
-                          }],
-                        })
-                      }
-                    placeholder="事发区域"
-                  />
-                  {form.getFieldError('areaCode') && <div className="ant-form-explain">{form.getFieldError('areaCode')}</div>}
-                </FormItem>
+                <ZFormItem {...itemProps} field={fieldMap.areaCode} />
                 <FormItem
                   {...formItemLayout}
                   label={(
                     <span>
                         具体路段&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentAddress', {
@@ -251,8 +243,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         事故原因&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentCause', {
@@ -267,8 +259,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         事故形态&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentModel', {
@@ -293,8 +285,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         事故摘要以及伤亡情况&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentDesc', {
@@ -309,8 +301,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         受伤人数&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('injuredNumber', {
@@ -325,8 +317,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         死亡人数&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('deathNumber', {
@@ -341,8 +333,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         对方资料&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('otherInfoDesc', {
@@ -357,8 +349,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         事故性质&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentNature', {
@@ -377,8 +369,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         责任&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('dutyType', {
@@ -399,25 +391,25 @@ let Update = (props) => {
                   label={(
                     <span>
                         事故档案编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
-                  {getFieldDecorator('documentNo', {initialValue: trafficAccident.documentNo,})(<Input />)}
+                  {getFieldDecorator('documentNo', { initialValue: trafficAccident.documentNo })(<Input />)}
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
                   label={(
                     <span>
                         总经损&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('totalLoss', {
                     initialValue: trafficAccident.totalLoss,
                   })(
-                    <InputNumber min={0} max={9999999999}/>
+                    <InputNumber min={0} max={9999999999} />
                   )}
                 </FormItem>
                 <FormItem
@@ -425,8 +417,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         结案日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('closeDate', {
@@ -448,14 +440,14 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ trafficAccidentStore }) {
   return {
     trafficAccident: trafficAccidentStore.trafficAccident,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+Update = Form.create()(Update)
+export default connect(mapStateToProps)(Update)

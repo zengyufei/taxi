@@ -72,7 +72,7 @@ let CarOperateLog = option => {
     },
   ]
 
-  const { form, page, dispatch, res, pageState, UPLOAD_URL } = option
+  const { loading, form, page, dispatch, res, pageState, UPLOAD_URL } = option
   const { getFieldDecorator } = form
 
   function queryPage() {
@@ -205,6 +205,7 @@ let CarOperateLog = option => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
             pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量
@@ -236,8 +237,9 @@ let CarOperateLog = option => {
   )
 }
 
-function mapStateToProps({ carOperateLogStore }) {
+function mapStateToProps({ loading, carOperateLogStore }) {
   return {
+    loading: loading.models.carOperateLogStore,
     UPLOAD_URL: carOperateLogStore.UPLOAD_URL,
     page: carOperateLogStore.page,
     pageState: carOperateLogStore.pageState,

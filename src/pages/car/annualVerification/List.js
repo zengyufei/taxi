@@ -19,7 +19,7 @@ import Info from './Info.js'
 const { tokenSessionKey } = constant
 
 const List = options => {
-  const { form, page, methods, res, pageState } = options
+  const { loading, form, page, methods, res, pageState } = options
   const { onSearch, toAdd, toEdit, toInfo, exportAnnualVerification, expired, expireing, onShowSizeChange, onChange, handlerUpload } = methods
 
   /**
@@ -124,6 +124,7 @@ const List = options => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={tableColumns}
+            loading={loading}
             bordered
             pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量

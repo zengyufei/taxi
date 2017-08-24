@@ -1,7 +1,7 @@
 import { extend } from 'ModelUtils'
 
 const prefix = 'punishInfo'
-const urlPrefix = '/driver/punishInfo'
+const urlPrefix = '/punishInfo'
 
 export default extend({
 
@@ -89,13 +89,13 @@ export default extend({
     },
 
     // 分页 查询
-    * queryPage(playload, { call, put }) {
-      const response = yield call(`${urlPrefix}/queryPage`, playload)
+    * queryPage(playload, { get, put }) {
+      const response = yield get(`${urlPrefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
     // 新增违章代码
-    * insert(playload, { call, put }) {
-      const response = yield call(`${urlPrefix}/insert`, playload)
+    * insert(playload, { post, put }) {
+      const response = yield post(`${urlPrefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'insertSuccess' })
@@ -103,8 +103,8 @@ export default extend({
       } else { ZMsg.error(response.msg) }
     },
     // 修改 违章代码
-    * update(playload, { call, put, select }) {
-      const response = yield call(`${urlPrefix}/update`, playload)
+    * update(playload, { post, put, select }) {
+      const response = yield post(`${urlPrefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         const page = yield select(state => state.punishStore.page)

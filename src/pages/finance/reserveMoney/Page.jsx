@@ -1,17 +1,17 @@
-import { connect } from 'dva';
-import { Form, Input, Button, Icon, Popconfirm, Alert, Table, Upload, Modal } from 'antd';
-import styles from './Page.css';
-import Add from './Add.jsx';
-import Update from './Update.jsx';
-import Detail from './Detail.jsx';
-import qs from 'qs';
+import { connect } from 'dva'
+import { Form, Input, Button, Icon, Popconfirm, Alert, Table, Upload, Modal } from 'antd'
+import styles from './Page.css'
+import Add from './Add'
+import Update from './Update'
+import Detail from './Detail'
+import qs from 'qs'
 
-const FormItem = Form.Item;
-const { tokenSessionKey, resourceSessionKey } = constant;
+const FormItem = Form.Item
+const { tokenSessionKey, resourceSessionKey } = constant
 
-let Index = (option) => {
-  const { page, dispatch, form, res, register } = option;
-  const { getFieldDecorator } = form;
+let Index = option => {
+  const { loading, page, dispatch, form, res, register } = option
+  const { getFieldDecorator } = form
 
   /* 详情 */
   function toDetail(reserveMoney) {
@@ -19,14 +19,14 @@ let Index = (option) => {
       type: 'reserveMoneyStore/toEdit',
       res: 'detail',
       reserveMoney,
-    });
+    })
   }
   /* 添加 */
   function toAdd(e) {
     dispatch({
       type: 'reserveMoneyStore/toRegister',
       res: 'add',
-    });
+    })
   }
   /* 编辑 */
   function toEdit(reserveMoney) {
@@ -34,22 +34,22 @@ let Index = (option) => {
       type: 'reserveMoneyStore/toEdit',
       res: 'update',
       reserveMoney,
-    });
+    })
   }
 
-  const token = session.get(tokenSessionKey);
+  const token = session.get(tokenSessionKey)
   /* 导出 */
   function toExport(e) {
-    const carNo = form.getFieldValue('carNo');
-    const plateNumber = form.getFieldValue('plateNumber');
+    const carNo = form.getFieldValue('carNo')
+    const plateNumber = form.getFieldValue('plateNumber')
     const params = {
       carNo,
       plateNumber,
-    };
+    }
     // 删除空值、undefind
-    Object.keys(params).map(v => params[v] || delete params[v]);
-    const paramsForGet = (params && qs.stringify(params)) || '';
-    window.location.href = `/reserveMoney/export.htm?token=${token}&${paramsForGet}`;
+    Object.keys(params).map(v => params[v] || delete params[v])
+    const paramsForGet = (params && qs.stringify(params)) || ''
+    window.location.href = `/reserveMoney/export.htm?token=${token}&${paramsForGet}`
   }
   /**
    * 上传文件
@@ -63,7 +63,7 @@ let Index = (option) => {
     },
     onChange(info) {
       if (info.file.status !== 'uploading') {
-        console.log('uploading');
+        console.log('uploading')
       }
       if (info.file.status === 'done') {
         Modal.info({
@@ -74,35 +74,35 @@ let Index = (option) => {
           onOk() {
             dispatch({
               type: 'reserveMoneyStore/queryPage',
-            });
+            })
           },
-        });
+        })
       } else if (info.file.status === 'error') {
-        console.log('error');
+        console.log('error')
       }
     },
-  };
+  }
 
   /**
    * 条件查询
    */
-  const query = (e) => {
-    e.preventDefault();
+  const query = e => {
+    e.preventDefault()
     form.validateFields((err, values) => {
       dispatch({
         type: 'reserveMoneyStore/queryPage',
         ...values,
-      });
-    });
+      })
+    })
   };
 
-  let a;
+  let a
   if (res == 'add') {
-    a = <Add key="add" />;
+    a = <Add key="add" />
   } else if (res == 'update') {
-    a = <Update key="update" />;
+    a = <Update key="update" />
   } else if (res == 'detail') {
-    a = <Detail key="detail" />;
+    a = <Detail key="detail" />
   }
 
   const columns = [{
@@ -170,14 +170,12 @@ let Index = (option) => {
         </ZButton>
       </span>
     ),
-  }];
+  }]
 
   return (
     <div>
       {
-        register ? a
-          :
-        <div>
+        register ? a : <div>
           <div>
             <ZButton permission="finance:reserveMoney:insert">
               <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
@@ -212,50 +210,52 @@ let Index = (option) => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
-            pagination={{  // 分页
+            pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量
-              pageSize: (page && +page.pageSize) || 10,  // 显示几条一页
+              pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
-              showSizeChanger: true,  // 是否显示可以设置几条一页的选项
-              onShowSizeChange(current, pageSize) {  // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+              showSizeChanger: true, // 是否显示可以设置几条一页的选项
+              onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
                 form.validateFields((err, values) => {
-              　　dispatch({
+                  dispatch({
                     type: 'reserveMoneyStore/queryPage',
                     pageNo: current,
                     pageSize,
                     ...values,
-                  });
-                });
+                  })
+                })
               },
-              onChange(page, pageSize) {  // 点击改变页数的选项时调用函数，current:将要跳转的页数
+              onChange(page, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
                 form.validateFields((err, values) => {
                   dispatch({
                     type: 'reserveMoneyStore/queryPage',
                     pageNo: page,
                     pageSize,
                     ...values,
-                  });
-                });
+                  })
+                })
               },
-              showTotal() {  // 设置显示一共几条数据
-                return `共 ${(page && page.totalCount) || 0} 条数据`;
+              showTotal() { // 设置显示一共几条数据
+                return `共 ${(page && page.totalCount) || 0} 条数据`
               },
             }}
           />
         </div>
       }
     </div>
-  );
+  )
 };
 
-function mapStateToProps({ reserveMoneyStore }) {
+function mapStateToProps({ loading, reserveMoneyStore }) {
   return {
+    loading: loading.models.reserveMoneyStore,
     register: reserveMoneyStore.register,
     res: reserveMoneyStore.res,
     page: reserveMoneyStore.page,
-  };
+  }
 }
 
-Index = Form.create()(Index);
-export default connect(mapStateToProps)(Index);
+Index = Form.create()(Index)
+export default connect(mapStateToProps)(Index)

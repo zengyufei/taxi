@@ -78,9 +78,6 @@ let Car = options => {
   const tableColumns = getColumns(fields).enhance(operatorColumn).values()
 
 
-
-
-
   let pageSwitch
   if (res === 'carAdd') {
     pageSwitch = <CarAdd key="carAdd" />

@@ -126,13 +126,13 @@ const config = {
         {
           id: _.uniqueId(),
           name: '政府表扬',
-          url: '/govt',
+          url: '/govtPraise',
           permission: 'driver:govt:*',
         },
         {
           id: _.uniqueId(),
           name: '媒体报道',
-          url: '/media',
+          url: '/mediaPraise',
           permission: 'driver:media:*',
         },
         {
@@ -156,13 +156,13 @@ const config = {
         {
           id: _.uniqueId(),
           name: '交通违法',
-          url: '/violation',
+          url: '/trafficViolation',
           permission: 'driver:violation:*',
         },
         {
           id: _.uniqueId(),
           name: '交通事故',
-          url: '/accident',
+          url: '/trafficAccident',
           permission: 'driver:accident:*',
         },
         {

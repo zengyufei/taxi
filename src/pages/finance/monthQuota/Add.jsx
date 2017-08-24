@@ -68,21 +68,21 @@ let Add = (props) => {
   /** 模糊查询 车辆自编号 */
   const handleSearch = (value) => {
     dispatch({
-      type: 'commonStore/queryLikeCarNo',
+      type: 'driverCommonStore/queryLikeCarNo',
       str: value,
     });
   };
   /** 自编号查询车信息 */
   const queryByCarNo = () => {
     dispatch({
-      type: 'commonStore/queryDriverListByOption',
+      type: 'driverCommonStore/queryDriverListByOption',
       carNo: form.getFieldValue('carNo'),
     });
   };
   let carNo,rbs=[];
   const onCancel = () => {
     dispatch({
-      type: 'commonStore/onCancel',
+      type: 'driverCommonStore/onCancel',
       visible: false,
       drivers: [],
     });
@@ -90,7 +90,7 @@ let Add = (props) => {
 
   if(drivers.length == 1) {
     dispatch({
-      type: 'commonStore/queryDriver',
+      type: 'driverCommonStore/queryDriver',
       drivers: drivers,
       driver: driver,
       index: 0,
@@ -102,14 +102,14 @@ let Add = (props) => {
     })
     // 弹出选择框
     dispatch({
-      type: 'commonStore/onCancel',
+      type: 'driverCommonStore/onCancel',
       visible: true,
       drivers: drivers,
     });
   }
   const onOk = (e) => {
     dispatch({
-      type: 'commonStore/queryDriver',
+      type: 'driverCommonStore/queryDriver',
       drivers: drivers,
       driver: driver,
       index: e.target.value,
@@ -346,12 +346,12 @@ let Add = (props) => {
   );
 };
 
-function mapStateToProps({ commonStore }) {
+function mapStateToProps({ driverCommonStore }) {
   return {
-    carNos: commonStore.carNos,
-    driver: commonStore.driver,
-    drivers: commonStore.drivers,
-    visible: commonStore.visible,
+    carNos: driverCommonStore.carNos,
+    driver: driverCommonStore.driver,
+    drivers: driverCommonStore.drivers,
+    visible: driverCommonStore.visible,
   };
 }
 

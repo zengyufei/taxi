@@ -80,13 +80,13 @@ let Update = (props) => {
   };
   const onStartChange = (value) => {
     dispatch({
-      type: 'commonStore/onStartChange',
+      type: 'driverCommonStore/onStartChange',
       startValue: value,
     });
   };
   const onEndChange = (value) => {
     dispatch({
-      type: 'commonStore/onEndChange',
+      type: 'driverCommonStore/onEndChange',
       endValue: value,
     });
   };
@@ -236,11 +236,11 @@ let Update = (props) => {
   );
 };
 
-function mapStateToProps({ securityDepositStore, commonStore }) {
+function mapStateToProps({ securityDepositStore, driverCommonStore }) {
   return {
     securityDeposit: securityDepositStore.securityDeposit,
-    startValue: commonStore.startValue,
-    endValue: commonStore.endValue,
+    startValue: driverCommonStore.startValue,
+    endValue: driverCommonStore.endValue,
   };
 }
 

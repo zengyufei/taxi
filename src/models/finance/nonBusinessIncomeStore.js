@@ -1,7 +1,7 @@
 import { extend } from 'ModelUtils'
 
-const prefix = 'lostAndFound'
-const urlPrefix = '/driver/lostAndFound'
+const prefix = 'nonBusinessIncome'
+
 
 export default extend({
 
@@ -31,8 +31,8 @@ export default extend({
     carNo: [],
     plateNumber: [],
 
-    // 运载的失物认领信息
-    lostAndFound: {},
+    // 运载的营业外收入信息
+    nonBusinessIncome: {},
   },
 
   /**
@@ -62,7 +62,7 @@ export default extend({
     },
     // 修改页面
     toEdit(state, action) {
-      return { ...state, register: true, res: action.res, lostAndFound: action.lostAndFound }
+      return { ...state, register: true, res: action.res, nonBusinessIncome: action.nonBusinessIncome }
     },
 
   },
@@ -78,7 +78,7 @@ export default extend({
   effects: {
 
     * init({}, { update, tableBindType, formBindType, select }) {
-      const { init } = yield select(({ lostAndFoundStore }) => lostAndFoundStore)
+      const { init } = yield select(({ nonBusinessIncomeStore }) => nonBusinessIncomeStore)
       if (!init) {
         yield tableBindType({
         })
@@ -91,36 +91,36 @@ export default extend({
 
     // 分页 查询
     * queryPage(playload, { get, put }) {
-      const response = yield get(`${urlPrefix}/queryPage`, playload)
+      const response = yield get(`${prefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
-    // 新增失物认领
-    * insert(playload, { post, put }) {
-      const response = yield post(`${urlPrefix}/insert`, playload)
+    // 新增营业外收入
+    * insert(playload, { get, put, select }) {
+      const response = yield get(`${prefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage' })
       } else { ZMsg.error(response.msg) }
     },
-    // 修改 失物认领
-    * update(playload, { post, put, select }) {
-      const response = yield post(`${urlPrefix}/update`, playload)
-      if (+response.code === 200) {
-        ZMsg.success(response.msg)
-        const page = yield select(state => state.complainStore.page)
+    // 修改 营业外收入 页面
+    * update(playload, { get, put, select }) {
+      const response = yield get(`${prefix}/update`, playload)
+      if (+response.code === 200) { ZMsg.success(response.msg) } else { ZMsg.error(response.msg) }
+
+      if (response.code === 200) {
+        const page = yield select(state => state.nonBusinessIncomeStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
-    // 删除失物认领
+    // 删除营业外收入
     * deleteById({ id }, { get, put, select }) {
-      const response = yield get(`${urlPrefix}/deleteById`, id)
-      if (+response.code === 200) {
-        ZMsg.success(response.msg)
-        const page = yield select(state => state.complainStore.page)
-        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      const response = yield get(`${prefix}/deleteById`, id)
+      if (+response.code === 200) { ZMsg.success(response.msg) } else { ZMsg.error(response.msg) }
+
+      const page = yield select(state => state.nonBusinessIncomeStore.page)
+      yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
     },
 
   },

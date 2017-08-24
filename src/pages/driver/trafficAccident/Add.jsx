@@ -1,25 +1,40 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
- */
-import TweenOne from 'rc-tween-one';
-import { connect } from 'dva';
-import CreateFormAreasCascader from 'components/select/CreateFormAreasCascader';
-import { Form, Input, Icon, Row, Col, Button, Card, Upload, Modal,
-  DatePicker, Radio, InputNumber, Cascader, AutoComplete } from 'antd';
+import TweenOne from 'rc-tween-one'
+import { connect } from 'dva'
+import ZFormItem from 'ZFormItem'
+import { getFields } from 'FormUtils'
+import { Form, Input, Row, Col, Button, Card, Modal,
+  DatePicker, Radio, InputNumber, AutoComplete } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
 
-let Add = (props) => {
-  const { dispatch, form, driver,drivers,carNos,visible } = props;
-  const { getFieldDecorator } = form;
+const fields = [
+  {
+    key: 'areaCode',
+    name: '事发区域',
+    type: 'area',
+    rules: [
+      { required: true, message: '请选择事发区域!' },
+      {
+        validator(rule, value, callback) {
+          if (value === undefined) {
+            callback()
+          } else {
+            value.length === 0 ?
+              callback() :
+              value.length === 1 ? callback('请选择选择城市') :
+                value.length === 2 ? callback('请选择选择区县') : callback()
+          }
+        },
+      }],
+  },
+]
+
+let Add = options => {
+  const { dispatch, form, driver, drivers, carNos, visible } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -30,7 +45,7 @@ let Add = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -42,11 +57,18 @@ let Add = (props) => {
         offset: 6,
       },
     },
-  };
+  }
+
+  const itemProps = { form,
+    item: {
+    },
+    ...formItemLayout }
+  const fieldMap = getFields(fields).toMapValues()
+
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
@@ -55,71 +77,72 @@ let Add = (props) => {
           accidentTime: form.getFieldValue('accidentTime') != undefined ? form.getFieldValue('accidentTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
           closeDate: form.getFieldValue('closeDate') != undefined ? form.getFieldValue('closeDate').format('YYYY-MM-DD') : undefined,
           areaCode: form.getFieldValue('areaCode')[2],
-        });
+        })
       }
-    });
+    })
   };
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'trafficAccidentStore/toPage',
-    });
+    })
   };
 
   /** 模糊查询 车辆自编号 */
-  const handleSearch = (value) => {
+  const handleSearch = value => {
     dispatch({
       type: 'driverCommonStore/queryLikeCarNo',
       str: value,
-    });
+    })
   };
   /** 自编号查询车信息 */
   const queryByCarNo = () => {
     dispatch({
       type: 'driverCommonStore/queryDriverListByOption',
       carNo: form.getFieldValue('carNo'),
-    });
+    })
   };
-  let carNo,rbs=[];
+  let carNo, 
+rbs = []
   const onCancel = () => {
     dispatch({
       type: 'driverCommonStore/onCancel',
       visible: false,
       drivers: [],
-    });
+    })
   }
 
-  if(drivers.length == 1) {
+  if (drivers.length == 1) {
     dispatch({
       type: 'driverCommonStore/queryDriver',
-      drivers: drivers,
-      driver: driver,
+      drivers,
+      driver,
       index: 0,
-    });
-    onCancel();
+    })
+    onCancel()
   } else if (drivers.length > 1) {
     drivers.forEach((value, index) => {
-      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>);
+      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>)
     })
     // 弹出选择框
     dispatch({
       type: 'driverCommonStore/onCancel',
       visible: true,
-      drivers: drivers,
-    });
+      drivers,
+    })
   }
-  const onOk = (e) => {
+  const onOk = e => {
     dispatch({
       type: 'driverCommonStore/queryDriver',
-      drivers: drivers,
-      driver: driver,
+      drivers,
+      driver,
       index: e.target.value,
-    });
-    onCancel();
+    })
+    onCancel()
   }
-  if(driver.features != undefined || driver.features != null){
-    carNo = JSON.parse(driver.features).carNo;
+  if (driver.features != undefined || driver.features != null) {
+    carNo = JSON.parse(driver.features).carNo
   }
 
   return (
@@ -139,15 +162,15 @@ let Add = (props) => {
           <Col span={14}>
             <Form onSubmit={handleSubmit} style={{ maxWidth: '100%', marginTop: '10px' }}>
               <Card title="新增交通事故">
-                {getFieldDecorator('carId', { initialValue: driver != undefined ? driver.carId : '' })(<Input type="hidden"/>)}
-                {getFieldDecorator('driverId', { initialValue: driver != undefined ? driver.id : '' })(<Input type="hidden"/>)}
+                {getFieldDecorator('carId', { initialValue: driver != undefined ? driver.carId : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('driverId', { initialValue: driver != undefined ? driver.id : '' })(<Input type="hidden" />)}
                 <FormItem
                   {...formItemLayout}
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
@@ -162,7 +185,7 @@ let Add = (props) => {
                     )}
                   </Col>
                   <Col span={4}>
-                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                    <Button style={{ marginLeft: '30px' }} onClick={queryByCarNo}>查询</Button>
                   </Col>
                 </FormItem>
                 <FormItem
@@ -170,8 +193,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
@@ -185,8 +208,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
@@ -202,8 +225,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
@@ -217,8 +240,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         肇事时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentTime', {
@@ -232,8 +255,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         天气&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('weather', {
@@ -247,8 +270,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         接触对象&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('canDriverCar', {
@@ -260,8 +283,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         出事地点类型&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentPlace', {
@@ -270,42 +293,14 @@ let Add = (props) => {
                     <Input />
                   )}
                 </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span className="ant-form-item-required">事发区域&nbsp;</span>
-                    )}
-                  className={form.getFieldError('areaCode') ? 'has-error' : ''}
-                  hasFeedback
-                >
-                  <CreateFormAreasCascader
-                    getFieldDecorator={
-                        getFieldDecorator('areaCode', {
-                          rules: [{
-                            validator(rule, value, callback) {
-                              if (value === undefined) {
-                                callback('请选择选择省市区');
-                              } else {
-                                value.length == 0 ?
-                                  callback('请选择选择省份和城市') :
-                                    value.length == 1 ? callback('请选择选择城市') :
-                                      value.length == 2 ? callback('请选择选择区县') : callback();
-                              }
-                            },
-                          }],
-                        })
-                      }
-                    placeholder="事发区域"
-                  />
-                  {form.getFieldError('areaCode') && <div className="ant-form-explain">{form.getFieldError('areaCode')}</div>}
-                </FormItem>
+                <ZFormItem {...itemProps} field={fieldMap.areaCode} />
                 <FormItem
                   {...formItemLayout}
                   label={(
                     <span>
                         具体路段&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentAddress', {
@@ -319,8 +314,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         事故原因&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentCause', {
@@ -334,8 +329,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         事故形态&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentModel', {
@@ -360,8 +355,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         摘要伤亡情况&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentDesc', {
@@ -375,8 +370,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         受伤人数&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('injuredNumber', {
@@ -390,8 +385,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         死亡人数&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('deathNumber', {
@@ -405,8 +400,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         对方资料&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('otherInfoDesc', {
@@ -420,8 +415,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         事故性质&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('accidentNature', {
@@ -440,8 +435,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         责任&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('dutyType', {
@@ -461,8 +456,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         事故档案编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('documentNo', {})(<Input />)}
@@ -472,12 +467,12 @@ let Add = (props) => {
                   label={(
                     <span>
                         总经损&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
-                  {getFieldDecorator('totalLoss', {initialValue:0})(
-                    <InputNumber min={0} max={9999999999}/>
+                  {getFieldDecorator('totalLoss', { initialValue: 0 })(
+                    <InputNumber min={0} max={9999999999} />
                   )}
                 </FormItem>
                 <FormItem
@@ -485,8 +480,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         结案日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('closeDate', {})(
@@ -499,7 +494,10 @@ let Add = (props) => {
                     <Button key="registerButton" type="primary" htmlType="submit" size="large">保存</Button>
                   </ZButton>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+htmlType="button"
+size="large"
+style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -509,7 +507,7 @@ let Add = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
+  )
 };
 
 function mapStateToProps({ driverCommonStore }) {
@@ -518,8 +516,8 @@ function mapStateToProps({ driverCommonStore }) {
     driver: driverCommonStore.driver,
     drivers: driverCommonStore.drivers,
     visible: driverCommonStore.visible,
-  };
+  }
 }
 
-Add = Form.create()(Add);
-export default connect(mapStateToProps)(Add);
+Add = Form.create()(Add)
+export default connect(mapStateToProps)(Add)

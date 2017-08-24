@@ -90,21 +90,21 @@ export default extend({
     },
 
     // 分页 查询
-    * queryPage(playload, { call, put }) {
-      const response = yield call(`${urlPrefix}/queryPage`, playload)
+    * queryPage(playload, { get, put }) {
+      const response = yield get(`${urlPrefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
     // 新增驾驶员过户
-    * insert(playload, { call, put }) {
-      const response = yield call(`${urlPrefix}/insert`, playload)
+    * insert(playload, { post, put }) {
+      const response = yield post(`${urlPrefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'queryPage' })
       } else { ZMsg.error(response.msg) }
     },
     // 修改 驾驶员过户
-    * update(playload, { call, put }) {
-      const response = yield call(`${urlPrefix}/update`, playload)
+    * update(playload, { post, put }) {
+      const response = yield post(`${urlPrefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'queryPage' })
@@ -112,8 +112,8 @@ export default extend({
     },
 
     // 删除驾驶员过户
-    * deleteById({ id }, { call, put, select }) {
-      const response = yield call(`${urlPrefix}/deleteById`, id)
+    * deleteById({ id }, { get, put, select }) {
+      const response = yield get(`${urlPrefix}/deleteById`, id)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         const page = yield select(state => state.transferStore.page)

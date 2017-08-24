@@ -1,7 +1,6 @@
 import { extend } from 'ModelUtils'
 
-const prefix = 'lostAndFound'
-const urlPrefix = '/driver/lostAndFound'
+const prefix = 'monthQuota'
 
 export default extend({
 
@@ -31,8 +30,8 @@ export default extend({
     carNo: [],
     plateNumber: [],
 
-    // 运载的失物认领信息
-    lostAndFound: {},
+    // 运载的月缴定额信息
+    monthQuota: {},
   },
 
   /**
@@ -62,7 +61,7 @@ export default extend({
     },
     // 修改页面
     toEdit(state, action) {
-      return { ...state, register: true, res: action.res, lostAndFound: action.lostAndFound }
+      return { ...state, register: true, res: action.res, monthQuota: action.monthQuota }
     },
 
   },
@@ -78,7 +77,7 @@ export default extend({
   effects: {
 
     * init({}, { update, tableBindType, formBindType, select }) {
-      const { init } = yield select(({ lostAndFoundStore }) => lostAndFoundStore)
+      const { init } = yield select(({ monthQuotaStore }) => monthQuotaStore)
       if (!init) {
         yield tableBindType({
         })
@@ -91,34 +90,34 @@ export default extend({
 
     // 分页 查询
     * queryPage(playload, { get, put }) {
-      const response = yield get(`${urlPrefix}/queryPage`, playload)
+      const response = yield get(`${prefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
-    // 新增失物认领
+    // 新增月缴定额
     * insert(playload, { post, put }) {
-      const response = yield post(`${urlPrefix}/insert`, playload)
+      const response = yield post(`${prefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage' })
       } else { ZMsg.error(response.msg) }
     },
-    // 修改 失物认领
+    // 修改 月缴定额 页面
     * update(playload, { post, put, select }) {
-      const response = yield post(`${urlPrefix}/update`, playload)
+      const response = yield post(`${prefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
-        const page = yield select(state => state.complainStore.page)
+        const page = yield select(state => state.monthQuotaStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       } else { ZMsg.error(response.msg) }
     },
 
-    // 删除失物认领
+    // 删除月缴定额
     * deleteById({ id }, { get, put, select }) {
-      const response = yield get(`${urlPrefix}/deleteById`, id)
+      const response = yield get(`${prefix}/deleteById`, id)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
-        const page = yield select(state => state.complainStore.page)
+        const page = yield select(state => state.monthQuotaStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       } else { ZMsg.error(response.msg) }
     },

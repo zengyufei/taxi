@@ -6,19 +6,19 @@
  * 4. 从对象再获取对象点出来的在按需加载下面
  * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, Radio, InputNumber, DatePicker, AutoComplete, Modal } from 'antd';
+import { connect } from 'dva'
+import { Form, Input, Row, Col, Button, Card, Radio, InputNumber, DatePicker, AutoComplete, Modal } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
 
-let Add = (props) => {
-  const { dispatch, form, driver,drivers,carNos,visible } = props;
-  const { getFieldDecorator } = form;
+let Add = options => {
+  const { dispatch, form, driver, drivers, carNos, visible } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -29,7 +29,7 @@ let Add = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -41,82 +41,83 @@ let Add = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'nonBusinessIncomeStore/insert',
           ...values,
           payDate: form.getFieldValue('payDate') != undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'nonBusinessIncomeStore/toPage',
-    });
-  };
+    })
+  }
 
   /** 模糊查询 车辆自编号 */
-  const handleSearch = (value) => {
+  const handleSearch = value => {
     dispatch({
-      type: 'commonStore/queryLikeCarNo',
+      type: 'driverCommonStore/queryLikeCarNo',
       str: value,
-    });
-  };
+    })
+  }
   /** 自编号查询车信息 */
   const queryByCarNo = () => {
     dispatch({
-      type: 'commonStore/queryDriverListByOption',
+      type: 'driverCommonStore/queryDriverListByOption',
       carNo: form.getFieldValue('carNo'),
-    });
-  };
-  let carNo,rbs=[];
+    })
+  }
+  let carNo,
+    rbs = []
   const onCancel = () => {
     dispatch({
-      type: 'commonStore/onCancel',
+      type: 'driverCommonStore/onCancel',
       visible: false,
       drivers: [],
-    });
+    })
   }
 
-  if(drivers.length == 1) {
+  if (drivers.length == 1) {
     dispatch({
-      type: 'commonStore/queryDriver',
-      drivers: drivers,
-      driver: driver,
+      type: 'driverCommonStore/queryDriver',
+      drivers,
+      driver,
       index: 0,
-    });
-    onCancel();
+    })
+    onCancel()
   } else if (drivers.length > 1) {
     drivers.forEach((value, index) => {
-      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>);
+      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>)
     })
     // 弹出选择框
     dispatch({
-      type: 'commonStore/onCancel',
+      type: 'driverCommonStore/onCancel',
       visible: true,
-      drivers: drivers,
-    });
+      drivers,
+    })
   }
-  const onOk = (e) => {
+  const onOk = e => {
     dispatch({
-      type: 'commonStore/queryDriver',
-      drivers: drivers,
-      driver: driver,
+      type: 'driverCommonStore/queryDriver',
+      drivers,
+      driver,
       index: e.target.value,
-    });
-    onCancel();
+    })
+    onCancel()
   }
-  if(driver.features != undefined || driver.features != null){
-    carNo = JSON.parse(driver.features).carNo;
+  if (driver.features != undefined || driver.features != null) {
+    carNo = JSON.parse(driver.features).carNo
   }
 
   return (
@@ -143,8 +144,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
@@ -159,7 +160,7 @@ let Add = (props) => {
                     )}
                   </Col>
                   <Col span={4}>
-                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                    <Button style={{ marginLeft: '30px' }} onClick={queryByCarNo}>查询</Button>
                   </Col>
                 </FormItem>
                 <FormItem
@@ -167,8 +168,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
@@ -182,8 +183,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
@@ -199,8 +200,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
@@ -215,8 +216,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         类型&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('inComeType', {
                     rules: [{ required: true, whitespace: true, message: '请选择类型!' }],
@@ -236,8 +237,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         项目名称&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('itemName', {
                     rules: [{ required: true, whitespace: true, message: '请输入项目名称!' }],
@@ -250,8 +251,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('amount', {
                     rules: [{ required: true, message: '请输入金额!' }],
@@ -264,8 +265,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         缴款日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('payDate', {
                     rules: [{ required: true, message: '请选择缴款日期!' }],
@@ -283,17 +284,17 @@ let Add = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
-
-function mapStateToProps({ commonStore }) {
-  return {
-    carNos: commonStore.carNos,
-    driver: commonStore.driver,
-    drivers: commonStore.drivers,
-    visible: commonStore.visible,
-  };
+  )
 }
 
-Add = Form.create()(Add);
-export default connect(mapStateToProps)(Add);
+function mapStateToProps({ driverCommonStore }) {
+  return {
+    carNos: driverCommonStore.carNos,
+    driver: driverCommonStore.driver,
+    drivers: driverCommonStore.drivers,
+    visible: driverCommonStore.visible,
+  }
+}
+
+Add = Form.create()(Add)
+export default connect(mapStateToProps)(Add)

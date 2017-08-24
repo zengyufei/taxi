@@ -8,6 +8,7 @@ const CheckboxGroup = Checkbox.Group
 
 class PermissionComponet extends React.Component {
   static propTypes = {
+    loading: PropTypes.bool,
     resourceList: PropTypes.array,
     rbacStore: PropTypes.object.isRequired,
     updateState: PropTypes.func.isRequired,
@@ -50,7 +51,7 @@ class PermissionComponet extends React.Component {
 
   render() {
     let { resources, roleResIdList, resourceMapByParentResNo } = this.state
-    const { rbacStore, updateState } = this.props
+    const { loading, rbacStore, updateState } = this.props
     const { resourceSecondTree = [] } = rbacStore
 
     const operatorColumn = [{
@@ -146,6 +147,7 @@ class PermissionComponet extends React.Component {
       dataSource: resourceSecondTree,
       bordered: true,
       pagination: false,
+      loading,
       defaultExpandAllRows: false,
       rowSelection,
       expandedRowKeys: this.state.expandedRowKeys,

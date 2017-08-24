@@ -26,6 +26,7 @@ module.exports = (app, auth) => {
       getComponent(nextState, cb) {
         require.ensure([], require => {
           if (auth('car:annualVerification:*')) {
+            registerModel(app, require('models/car/carStore'))
             registerModel(app, require('models/car/annualVerificationStore'))
             cb(null, require('pages/car/annualVerification'))
           }

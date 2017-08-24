@@ -284,15 +284,24 @@ export default extend({
    */
   subscriptions: {
     setup({ dispatch, listen }) {
-      listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'init',
-        })
-        dispatch({
-          type: 'queryPage',
-          pageNo: 1,
-          pageSize: 10,
-        })
+      listen({
+        [`/${prefix}`]: () => {
+          dispatch({
+            type: 'init',
+          })
+          dispatch({
+            type: 'queryPage',
+            pageNo: 1,
+            pageSize: 10,
+          })
+        },
+        '/archives': () => {
+          dispatch({
+            type: 'queryPage',
+            pageNo: 1,
+            pageSize: 10,
+          })
+        },
       })
     },
   },

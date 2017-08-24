@@ -1,14 +1,14 @@
 import { connect } from 'dva';
 import { Form, Input, Button, Icon, Popconfirm, Alert, Table, Upload, Modal, Select } from 'antd';
 import styles from './Page.css';
-import Add from './Add.jsx';
-import Update from './Update.jsx';
+import Add from './Add';
+import Update from './Update';
 
 const FormItem = Form.Item;
 const { tokenSessionKey, resourceSessionKey } = constant;
 
 let Index = (option) => {
-  const { dispatch, form, res, register, page } = option;
+  const { loading, dispatch, form, res, register, page } = option;
   const { getFieldDecorator } = form;
 
   /* 添加 */
@@ -103,9 +103,7 @@ let Index = (option) => {
   return (
     <div>
       {
-        register ? a
-          :
-        <div>
+        register ? a          :        <div>
           <div>
             <ZButton permission="driver:punishInfo:insert">
               <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
@@ -130,6 +128,7 @@ let Index = (option) => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
             pagination={{  // 分页
               total: (page && +page.totalCount) || 0, // 总数量
@@ -167,8 +166,9 @@ let Index = (option) => {
   );
 };
 
-function mapStateToProps({ punishInfoStore }) {
+function mapStateToProps({ loading, punishInfoStore }) {
   return {
+    loading: loading.models.punishInfoStore,
     register: punishInfoStore.register,
     res: punishInfoStore.res,
     page: punishInfoStore.page,

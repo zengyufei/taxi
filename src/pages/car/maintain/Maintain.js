@@ -38,7 +38,7 @@ let Maintain = option => {
     ),
   }]
 
-  const { form, page, dispatch, res, pageState } = option
+  const { loading, form, page, dispatch, res, pageState } = option
   const { getFieldDecorator } = form
 
   function queryPage() {
@@ -167,6 +167,7 @@ let Maintain = option => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
             pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量
@@ -198,8 +199,9 @@ let Maintain = option => {
   )
 }
 
-function mapStateToProps({ maintainStore }) {
+function mapStateToProps({ loading, maintainStore }) {
   return {
+    loading: loading.models.maintainStore,
     page: maintainStore.page,
     pageState: maintainStore.pageState,
     res: maintainStore.res,

@@ -12,7 +12,7 @@ const FormItem = Form.Item
 const { TOKEN_KEY } = constant
 
 let Index = option => {
-  const { page, dispatch, form, res, register } = option
+  const { loading, page, dispatch, form, res, register } = option
   const { getFieldDecorator } = form
 
   /* 详情 */
@@ -340,6 +340,7 @@ let Index = option => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
             pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量
@@ -377,8 +378,9 @@ let Index = option => {
   )
 }
 
-function mapStateToProps({ driverStore, driverCommonStore }) {
+function mapStateToProps({ loading, driverStore, driverCommonStore }) {
   return {
+    loading: loading.models.driverStore,
     register: driverStore.register,
     res: driverStore.res,
     page: driverStore.page,

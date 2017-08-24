@@ -18,6 +18,7 @@ const Routers = function({ history, app }) {
         ...require('./rbac')(app, auth),
         ...require('./car')(app, auth),
         ...require('./driver')(app, auth),
+        ...require('./finance')(app, auth),
       ],
     },
     require('./login')(app),

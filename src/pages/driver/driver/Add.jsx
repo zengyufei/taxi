@@ -2,7 +2,7 @@ import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
 import ZFormItem from 'ZFormItem'
-import { validate, getFields } from 'FormUtils'
+import { getFields } from 'FormUtils'
 import { Form, Input, Row, Col,
   Button, Card, Radio, InputNumber, DatePicker, Switch, AutoComplete } from 'antd'
 

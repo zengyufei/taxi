@@ -70,7 +70,7 @@ let Insurance = option => {
     ),
   }]
 
-  const { form, page, dispatch, res, pageState, UPLOAD_URL } = option
+  const { loading, form, page, dispatch, res, pageState, UPLOAD_URL } = option
   const { getFieldDecorator } = form
 
   function queryPage(e) {
@@ -183,9 +183,7 @@ let Insurance = option => {
   return (
     <div>
       {
-        pageState ? pageSwitch
-          :
-        <div>
+        pageState ? pageSwitch          :        <div>
             <div>
               <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
               <Popconfirm title="是否确定要导出" onConfirm={exportInsurance} >
@@ -235,6 +233,7 @@ let Insurance = option => {
               rowKey="id"
               dataSource={(page && page.dataList) || []}
               columns={columns}
+              loading={loading}
               bordered
               pagination={{ // 分页
                 total: (page && +page.totalCount) || 0, // 总数量
@@ -266,8 +265,9 @@ let Insurance = option => {
   )
 }
 
-function mapStateToProps({ insuranceStore }) {
+function mapStateToProps({ loading, insuranceStore }) {
   return {
+    loading: loading.models.insuranceStore,
     UPLOAD_URL: insuranceStore.UPLOAD_URL,
     page: insuranceStore.page,
     pageState: insuranceStore.pageState,

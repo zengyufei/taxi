@@ -3,16 +3,16 @@ import { Form, Input, Button, Popconfirm, Table, Upload, Modal } from 'antd'
 
 import qs from 'qs'
 import styles from './Page.css'
-import Add from './Add.jsx'
-import Update from './Update.jsx'
-import Detail from './Detail.jsx'
+import Add from './Add'
+import Update from './Update'
+import Detail from './Detail'
 
 const FormItem = Form.Item
 const { TOKEN_KEY } = constant
 
 
 let Index = option => {
-  const { page, dispatch, form, res, register } = option
+  const { loading, page, dispatch, form, res, register } = option
   const { getFieldDecorator } = form
 
   /* 详情 */
@@ -202,6 +202,7 @@ let Index = option => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
             pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量
@@ -239,8 +240,9 @@ let Index = option => {
   )
 }
 
-function mapStateToProps({ commonPraiseStore }) {
+function mapStateToProps({ loading, commonPraiseStore }) {
   return {
+    loading: loading.models.commonPraiseStore,
     register: commonPraiseStore.register,
     res: commonPraiseStore.res,
     page: commonPraiseStore.page,

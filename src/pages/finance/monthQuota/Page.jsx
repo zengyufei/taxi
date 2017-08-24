@@ -1,16 +1,16 @@
 import { connect } from 'dva'
 import { Form, Input, Button, Icon, Popconfirm, Alert, Table, Upload, Modal } from 'antd'
 import styles from './Page.css'
-import Add from './Add.jsx'
-import Update from './Update.jsx'
-import Detail from './Detail.jsx'
+import Add from './Add'
+import Update from './Update'
+import Detail from './Detail'
 import qs from 'qs'
 
 const FormItem = Form.Item
 const { tokenSessionKey, resourceSessionKey } = constant
 
 let Index = option => {
-  const { page, dispatch, form, res, register } = option
+  const { loading, page, dispatch, form, res, register } = option
   const { getFieldDecorator } = form
 
   /* 详情 */
@@ -133,7 +133,7 @@ let Index = option => {
     title: '月末状态',
     dataIndex: 'endStatus',
     key: 'endStatus',
-    render: text => text == 'WORKING' ? '在职' : '离职',
+    render: text => (text == 'WORKING' ? '在职' : '离职'),
   }, {
     title: '应收月缴定额',
     dataIndex: 'standardAmount',
@@ -172,9 +172,7 @@ let Index = option => {
   return (
     <div>
       {
-        register ? a
-          :
-        <div>
+        register ? a : <div>
           <div>
             <ZButton permission="finance:monthQuota:insert">
               <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
@@ -209,23 +207,24 @@ let Index = option => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
-            pagination={{  // 分页
+            pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量
-              pageSize: (page && +page.pageSize) || 10,  // 显示几条一页
+              pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
-              showSizeChanger: true,  // 是否显示可以设置几条一页的选项
-              onShowSizeChange(current, pageSize) {  // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+              showSizeChanger: true, // 是否显示可以设置几条一页的选项
+              onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
                 form.validateFields((err, values) => {
-              　　dispatch({
+                  dispatch({
                     type: 'monthQuotaStore/queryPage',
                     pageNo: current,
                     pageSize,
                     ...values,
-                  });
-                });
+                  })
+                })
               },
-              onChange(page, pageSize) {  // 点击改变页数的选项时调用函数，current:将要跳转的页数
+              onChange(page, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
                 form.validateFields((err, values) => {
                   dispatch({
                     type: 'monthQuotaStore/queryPage',
@@ -235,7 +234,7 @@ let Index = option => {
                   })
                 })
               },
-              showTotal() {  // 设置显示一共几条数据
+              showTotal() { // 设置显示一共几条数据
                 return `共 ${(page && page.totalCount) || 0} 条数据`
               },
             }}
@@ -246,8 +245,9 @@ let Index = option => {
   )
 }
 
-function mapStateToProps({ monthQuotaStore }) {
+function mapStateToProps({ loading, monthQuotaStore }) {
   return {
+    loading: loading.models.monthQuotaStore,
     register: monthQuotaStore.register,
     res: monthQuotaStore.res,
     page: monthQuotaStore.page,

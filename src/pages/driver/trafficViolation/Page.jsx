@@ -1,9 +1,9 @@
 import { connect } from 'dva';
 import { Form, Input, Button, Icon, Popconfirm, Alert, Table, Upload, Modal, DatePicker } from 'antd';
 import styles from './Page.css';
-import Add from './Add.jsx';
-import Update from './Update.jsx';
-import Detail from './Detail.jsx';
+import Add from './Add';
+import Update from './Update';
+import Detail from './Detail';
 import qs from 'qs';
 
 const FormItem = Form.Item;
@@ -11,7 +11,7 @@ const { tokenSessionKey } = constant;
 const { RangePicker } = DatePicker;
 
 let Index = (option) => {
-  const { dispatch, form, res, register, page } = option;
+  const { loading, dispatch, form, res, register, page } = option;
   const { getFieldDecorator } = form;
 
   /* 详情 */
@@ -169,9 +169,7 @@ let Index = (option) => {
   return (
     <div>
       {
-        register ? a
-          :
-        <div>
+        register ? a          :        <div>
           <div>
             <ZButton permission="driver:violation:insert">
               <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
@@ -214,6 +212,7 @@ let Index = (option) => {
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={columns}
+            loading={loading}
             bordered
             pagination={{  // 分页
               total: (page && +page.totalCount) || 0, // 总数量
@@ -251,8 +250,9 @@ let Index = (option) => {
   );
 };
 
-function mapStateToProps({ trafficViolationStore }) {
+function mapStateToProps({ loading, trafficViolationStore }) {
   return {
+    loading: loading.models.trafficViolationStore,
     register: trafficViolationStore.register,
     res: trafficViolationStore.res,
     page: trafficViolationStore.page,
