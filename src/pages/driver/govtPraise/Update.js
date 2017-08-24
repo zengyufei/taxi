@@ -74,11 +74,11 @@ let Update = (props) => {
    * 上传文件
    * @type {{name: string, action: string, headers: {authorization: string}, onChange: ((info))}}
    */
-  const token = session.get(tokenSessionKey);
+  ;
   let fileURL;
   const importCar = {
     name: 'file',
-    action: `/fileupload/docs.htm?token=${token}`,
+    action: `${BASE_URL}/fileupload/docs.htm?token=${token}`,
     headers: {
       authorization: 'authorization-text',
     },

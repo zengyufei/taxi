@@ -77,16 +77,12 @@ export default extend({
    */
   effects: {
 
-    * init({}, { update, tableBindType, formBindType, select }) {
-      const { init } = yield select(({ nonBusinessIncomeStore }) => nonBusinessIncomeStore)
-      if (!init) {
-        yield tableBindType({
-        })
+    * init({}, { tableBindType, formBindType }) {
+      yield tableBindType({
+      })
 
-        yield formBindType({
-        })
-        yield update({ init: true })
-      }
+      yield formBindType({
+      })
     },
 
     // 分页 查询
@@ -95,7 +91,7 @@ export default extend({
       yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
     // 新增营业外收入
-    * insert(playload, { get, put, select }) {
+    * insert(playload, { get, put }) {
       const response = yield get(`${prefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
@@ -133,9 +129,6 @@ export default extend({
   subscriptions: {
     setup({ dispatch, listen }) {
       listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'init',
-        })
         dispatch({
           type: 'queryPage',
           pageNo: 1,

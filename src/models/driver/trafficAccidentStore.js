@@ -78,16 +78,12 @@ export default extend({
    */
   effects: {
 
-    * init({}, { update, tableBindType, formBindType, select }) {
-      const { init } = yield select(({ trafficAccidentStore }) => trafficAccidentStore)
-      if (!init) {
-        yield tableBindType({
-        })
+    * init({}, { tableBindType, formBindType }) {
+      yield tableBindType({
+      })
 
-        yield formBindType({
-        })
-        yield update({ init: true })
-      }
+      yield formBindType({
+      })
     },
 
     // 分页 查询
@@ -132,9 +128,6 @@ export default extend({
   subscriptions: {
     setup({ dispatch, listen }) {
       listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'init',
-        })
         dispatch({
           type: 'queryPage',
           pageNo: 1,

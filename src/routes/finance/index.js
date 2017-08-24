@@ -15,7 +15,7 @@ module.exports = (app, auth) => {
           if (auth('driver:driver:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/finance/monthQuotaStore'))
-            cb(null, require('pages/finance/monthQuota/Page'))
+            cb(null, require('pages/finance/monthQuota'))
           }
         }, 'monthQuota')
       },
@@ -28,7 +28,7 @@ module.exports = (app, auth) => {
           if (auth('driver:driver:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/finance/nonBusinessIncomeStore'))
-            cb(null, require('pages/finance/nonBusinessIncome/Page'))
+            cb(null, require('pages/finance/nonBusinessIncome'))
           }
         }, 'nonBusinessIncome')
       },
@@ -41,7 +41,7 @@ module.exports = (app, auth) => {
           if (auth('driver:driver:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/finance/reserveMoneyStore'))
-            cb(null, require('pages/finance/reserveMoney/Page'))
+            cb(null, require('pages/finance/reserveMoney'))
           }
         }, 'reserveMoney')
       },
@@ -54,7 +54,7 @@ module.exports = (app, auth) => {
           if (auth('driver:driver:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/finance/securityDepositStore'))
-            cb(null, require('pages/finance/securityDeposit/Page'))
+            cb(null, require('pages/finance/securityDeposit'))
           }
         }, 'securityDeposit')
       },
@@ -67,7 +67,7 @@ module.exports = (app, auth) => {
           if (auth('driver:driver:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/finance/subtractAmountStore'))
-            cb(null, require('pages/finance/subtractAmount/Page'))
+            cb(null, require('pages/finance/subtractAmount'))
           }
         }, 'subtractAmount')
       },

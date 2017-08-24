@@ -9,6 +9,7 @@
 import { connect } from 'dva'
 import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
 import qs from 'qs'
+import moment from 'moment'
 
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
@@ -22,7 +23,8 @@ const { tokenSessionKey } = constant
 
 let Car = options => {
   const { loading, form, methods, page, res, pageState } = options
-  const { toInfo, toEdit, exportCar, toAdd, onSearch, onShowSizeChange, onChange, upload } = methods
+  const { toInfo, toEdit, exportCar, toAdd, onSearch, onShowSizeChange, onChange, upload
+    , roadTransporting, roadTransport, ownershiping, ownership } = methods
 
   /**
    * 上传文件
@@ -38,6 +40,10 @@ let Car = options => {
   const btns = (
     <div>
       <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
+      <Button type="primary" icon="clock-circle-o" onClick={roadTransporting}>道路运输证即将过期</Button>&nbsp;
+      <Button type="primary" icon="close-circle-o" onClick={roadTransport}>道路运输证已过期</Button>&nbsp;
+      <Button type="primary" icon="clock-circle-o" onClick={ownershiping}>产权证即将过期</Button>&nbsp;
+      <Button type="primary" icon="close-circle-o" onClick={ownership}>产权证已过期</Button>&nbsp;
       <Popconfirm title="是否确定要导出" onConfirm={exportCar} >
         <Button type="primary" icon="export">导出</Button>&nbsp;
       </Popconfirm>
@@ -162,6 +168,37 @@ const mapDispatchToProps = (dispatch, { form }) => {
           ...values,
         })
       },
+      /** 即将到期和已到期 */
+      roadTransporting() {
+        dispatch({
+          type: 'carStore/warnList',
+          warningEnum: 'roadTransportEndDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+        })
+      },
+      roadTransport() {
+        dispatch({
+          type: 'carStore/warnList',
+          warningEnum: 'roadTransportEndDate',
+          endDate: moment().format('YYYY-MM-DD'),
+        })
+      },
+      ownershiping() {
+        dispatch({
+          type: 'carStore/warnList',
+          warningEnum: 'ownershipEndDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+        })
+      },
+      ownership() {
+        dispatch({
+          type: 'carStore/warnList',
+          warningEnum: 'ownershipEndDate',
+          endDate: moment().format('YYYY-MM-DD'),
+        })
+      },
 
       toAdd() {
         dispatch({
@@ -207,6 +244,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
           type: 'carStore/queryPage',
           pageNo: current,
           pageSize,
+          ...form.getFieldsValue(),
         })
       },
 
@@ -215,6 +253,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
           type: 'carStore/queryPage',
           pageNo: current,
           pageSize,
+          ...form.getFieldsValue(),
         })
       },
 
@@ -302,7 +341,11 @@ const searchFields = [
   }, {
     name: '车辆类型',
     key: 'carType',
-    type: 'carType',
+    enums: {
+      BYD_E6: '比亚迪E6',
+      BYD_E5: '比亚迪E5',
+      BM_EU220: '北汽EU220',
+    },
   }, {
     name: '车架号',
     key: 'carFrame',
@@ -327,11 +370,26 @@ const searchFields = [
   },  */{
     name: '车身颜色',
     key: 'carColor',
-    type: 'carColor',
+    enums: {
+      BLUE: '蓝色',
+      RED: '红色',
+      GREEN: '绿色',
+      YELLOW: '黄色',
+      BLUEWHITE: '蓝白色',
+      LAKEBLUE: '湖青色',
+    },
   }, {
     name: '车辆营运状态',
     key: 'carStatus',
-    type: 'carStatus',
+    enums: {
+      OPERATE_WAIT: '待营运',
+      OPERATE_USED: '营运中',
+      ACCIDENT_REPAIR: '事故维修',
+      ACCIDENT_SCRAP: '事故报废',
+      ROUTINE_SCRAP: '正常报废',
+      BUSINESS_CAR: '公务用车',
+      LONG_DISTANCE_LEASE: '长途租赁',
+    },
   }, {
     name: '机动车登记证号',
     key: 'certificateNo',

@@ -10,8 +10,23 @@ const fieldTypes = {
   datetime: value => {
     return value ? moment(new Date(parseInt(value, 10))).format('YYYY-MM-DD HH:mm:ss') : ''
   },
-  date: value => {
-    return value ? moment(new Date(value)).format('YYYY-MM-DD') : ''
+  yearMonth: (value, field) => {
+    if (value) {
+      if (field.parse) {
+        return moment(value, field.parse).format(field.format || 'YYYY-MM')
+      }
+      moment(new Date(value)).format(field.format || 'YYYY-MM')
+    }
+    return ''
+  },
+  date: (value, field) => {
+    if (value) {
+      if (field.parse) {
+        return moment(value, field.parse).format(field.format || 'YYYY-MM-DD')
+      }
+      moment(new Date(value)).format(field.format || 'YYYY-MM-DD')
+    }
+    return ''
   },
   enum: (value, field) => {
     return field.enums[value]

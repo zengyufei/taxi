@@ -16,7 +16,7 @@ module.exports = (app, auth) => {
             registerModel(app, require('models/car/carStore'))
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/driverStore'))
-            cb(null, require('pages/driver/driver/Page'))
+            cb(null, require('pages/driver/driver'))
           }
         }, 'driver')
       },
@@ -29,7 +29,7 @@ module.exports = (app, auth) => {
           if (auth('driver:archives:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/driverStore'))
-            cb(null, require('pages/driver/archives/Page'))
+            cb(null, require('pages/driver/archives'))
           }
         }, 'archives')
       },
@@ -42,20 +42,20 @@ module.exports = (app, auth) => {
           if (auth('driver:common:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/commonPraiseStore'))
-            cb(null, require('pages/driver/commonPraise/Page'))
+            cb(null, require('pages/driver/commonPraise'))
           }
         }, 'commonPraise')
       },
     },
 
-    {
+    /* {
       path: 'govtPraise',
       getComponent(nextState, cb) {
         require.ensure([], require => {
           if (auth('driver:govt:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/govtPraiseStore'))
-            cb(null, require('pages/driver/govtPraise/Page'))
+            cb(null, require('pages/driver/govtPraise'))
           }
         }, 'govtPraise')
       },
@@ -68,7 +68,7 @@ module.exports = (app, auth) => {
           if (auth('driver:media:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/mediaPraiseStore'))
-            cb(null, require('pages/driver/mediaPraise/Page'))
+            cb(null, require('pages/driver/mediaPraise'))
           }
         }, 'mediaPraise')
       },
@@ -81,7 +81,7 @@ module.exports = (app, auth) => {
           if (auth('driver:complain:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/complainStore'))
-            cb(null, require('pages/driver/complain/Page'))
+            cb(null, require('pages/driver/complain'))
           }
         }, 'complain')
       },
@@ -94,7 +94,7 @@ module.exports = (app, auth) => {
           if (auth('driver:punishInfo:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/punishInfoStore'))
-            cb(null, require('pages/driver/punishInfo/Page'))
+            cb(null, require('pages/driver/punishInfo'))
           }
         }, 'punishInfo')
       },
@@ -107,7 +107,7 @@ module.exports = (app, auth) => {
           if (auth('driver:punish:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/punishStore'))
-            cb(null, require('pages/driver/punish/Page'))
+            cb(null, require('pages/driver/punish'))
           }
         }, 'punish')
       },
@@ -120,7 +120,7 @@ module.exports = (app, auth) => {
           if (auth('driver:violation:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/trafficViolationStore'))
-            cb(null, require('pages/driver/trafficViolation/Page'))
+            cb(null, require('pages/driver/trafficViolation'))
           }
         }, 'trafficViolation')
       },
@@ -133,7 +133,7 @@ module.exports = (app, auth) => {
           if (auth('driver:accident:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/trafficAccidentStore'))
-            cb(null, require('pages/driver/trafficAccident/Page'))
+            cb(null, require('pages/driver/trafficAccident'))
           }
         }, 'trafficAccident')
       },
@@ -146,7 +146,7 @@ module.exports = (app, auth) => {
           if (auth('driver:lostAndFound:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/lostAndFoundStore'))
-            cb(null, require('pages/driver/lostAndFound/Page'))
+            cb(null, require('pages/driver/lostAndFound'))
           }
         }, 'lostAndFound')
       },
@@ -159,11 +159,11 @@ module.exports = (app, auth) => {
           if (auth('driver:transfer:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/transferStore'))
-            cb(null, require('pages/driver/transfer/Page'))
+            cb(null, require('pages/driver/transfer'))
           }
         }, 'transfer')
       },
-    },
+    }, */
 
 
   ]

@@ -150,57 +150,13 @@ export default extend({
 
   effects: {
 
-    * init({}, { update, tableBindType, formBindType, select }) {
-      const { init } = yield select(({ carStore }) => carStore)
-      if (!init) {
+    * init({}, { tableBindType, formBindType }) {
         yield tableBindType({
         })
 
         yield formBindType({
-          carStatus: ({ showPlaceholder }) => {
-            return {
-              input: (
-                <Select style={{ width: 120 }} allowClear placeholder={showPlaceholder || '请选择'} >
-                  <Option value="OPERATE_WAIT">待营运</Option>
-                  <Option value="OPERATE_USED">营运中</Option>
-                  <Option value="ACCIDENT_REPAIR">事故维修</Option>
-                  <Option value="ACCIDENT_SCRAP">事故报废</Option>
-                  <Option value="ROUTINE_SCRAP">正常报废</Option>
-                  <Option value="BUSINESS_CAR">公务用车</Option>
-                  <Option value="LONG_DISTANCE_LEASE">长途租赁</Option>
-                </Select>
-              ),
-            }
-          },
-          carColor: ({ showPlaceholder }) => {
-            return {
-              input: (
-                <Select style={{ width: 120 }} allowClear placeholder={showPlaceholder || '请选择'} >
-                  <Option value="BLUE">蓝色</Option>
-                  <Option value="RED">红色</Option>
-                  <Option value="GREEN">绿色</Option>
-                  <Option value="YELLOW">黄色</Option>
-                  <Option value="BLUEWHITE">蓝白色</Option>
-                  <Option value="LAKEBLUE">湖青色</Option>
-                </Select>
-              ),
-            }
-          },
-          carType: ({ showPlaceholder }) => {
-            return {
-              input: (
-                <Select style={{ width: 120 }} allowClear placeholder={showPlaceholder || '请选择'} >
-                  <Option value="BYD_E6">比亚迪E6</Option>
-                  <Option value="BYD_E5">比亚迪E5</Option>
-                  <Option value="BM_EU220">北汽EU220</Option>
-                </Select>
-              ),
-            }
-          },
 
         })
-        yield update({ init: true })
-      }
     },
 
     /**
@@ -210,6 +166,11 @@ export default extend({
     * queryPage(playload, { get, put }) {
       const response = yield get(`${prefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
+    },
+    // 提醒 查询
+    * warnList(playload, { get, put }) {
+      const response = yield get(`${prefix}/warnList`, playload)
+      yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
 
     * queryByCarNo({ carNo }, { get, put }) {
@@ -268,9 +229,6 @@ export default extend({
   subscriptions: {
     setup({ dispatch, listen }) {
       listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'init',
-        })
         dispatch({
           type: 'queryPage',
           pageNo: 1,

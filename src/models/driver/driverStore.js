@@ -203,21 +203,22 @@ export default extend({
    */
   effects: {
 
-    * init({}, { update, tableBindType, formBindType, select }) {
-      const { init } = yield select(({ driverStore }) => driverStore)
-      if (!init) {
-        yield tableBindType({
-        })
+    * init({}, { tableBindType, formBindType }) {
+      yield tableBindType({
+      })
 
-        yield formBindType({
-        })
-        yield update({ init: true })
-      }
+      yield formBindType({
+      })
     },
 
     // 分页 查询
     * queryPage(playload, { get, put }) {
       const response = yield get(`${urlPrefix}/queryPage`, playload)
+      yield put({ type: 'queryPageSuccess', page: response.result, register: false })
+    },
+    // 提醒 查询
+    * warnList(playload, { get, put }) {
+      const response = yield get(`${urlPrefix}/warnList`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
     // 资格证查询驾驶员信息
@@ -286,9 +287,6 @@ export default extend({
     setup({ dispatch, listen }) {
       listen({
         [`/${prefix}`]: () => {
-          dispatch({
-            type: 'init',
-          })
           dispatch({
             type: 'queryPage',
             pageNo: 1,

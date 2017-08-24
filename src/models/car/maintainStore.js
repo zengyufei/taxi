@@ -80,16 +80,12 @@ export default extend({
   effects: {
 
 
-    * init({}, { update, tableBindType, formBindType, select }) {
-      const { init } = yield select(({ maintainStore }) => maintainStore)
-      if (!init) {
-        yield tableBindType({
-        })
+    * init({}, { tableBindType, formBindType }) {
+      yield tableBindType({
+      })
 
-        yield formBindType({
-        })
-        yield update({ init: true })
-      }
+      yield formBindType({
+      })
     },
 
     /**
@@ -99,6 +95,11 @@ export default extend({
     *queryPage(playload, {get, put}) {  // eslint-disable-line
       const response = yield get(`${prefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
+    },
+    // 提醒 查询
+    * warnList(playload, { get, put }) {
+      const response = yield get(`${prefix}/warnList`, playload)
+      yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
 
     // 新增
@@ -148,9 +149,6 @@ export default extend({
   subscriptions: {
     setup({ dispatch, listen }) {
       listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'init',
-        })
         dispatch({
           type: 'queryPage',
           pageNo: 1,

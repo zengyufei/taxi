@@ -6,19 +6,19 @@
  * 4. 从对象再获取对象点出来的在按需加载下面
  * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd';
-import moment from 'moment';
+import { connect } from 'dva'
+import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioGroup = Radio.Group
 
-let Update = (props) => {
-  const { dispatch, form, securityDeposit, startValue, endValue } = props;
-  const { getFieldDecorator } = form;
+let Update = props => {
+  const { dispatch, form, securityDeposit, startValue, endValue } = props
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -29,7 +29,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -41,11 +41,11 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
@@ -53,43 +53,43 @@ let Update = (props) => {
           ...values,
           payDate: form.getFieldValue('payDate') != undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
           refundDate: form.getFieldValue('refundDate') != undefined ? form.getFieldValue('refundDate').format('YYYY-MM-DD') : undefined,
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'securityDepositStore/toPage',
-    });
-  };
+    })
+  }
 
   // 自定义日期范围
-  const disabledStartDate = (startValue) => {
+  const disabledStartDate = startValue => {
     if (!startValue || !endValue) {
-      return false;
+      return false
     }
-    return startValue.valueOf() > endValue.valueOf();
-  };
-  const disabledEndDate = (endValue) => {
+    return startValue.valueOf() > endValue.valueOf()
+  }
+  const disabledEndDate = endValue => {
     if (!endValue || !startValue) {
-      return false;
+      return false
     }
-    return endValue.valueOf() <= startValue.valueOf();
-  };
-  const onStartChange = (value) => {
+    return endValue.valueOf() <= startValue.valueOf()
+  }
+  const onStartChange = value => {
     dispatch({
       type: 'driverCommonStore/onStartChange',
       startValue: value,
-    });
-  };
-  const onEndChange = (value) => {
+    })
+  }
+  const onEndChange = value => {
     dispatch({
       type: 'driverCommonStore/onEndChange',
       endValue: value,
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -104,8 +104,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('qualificationNo', {
                     initialValue: securityDeposit.qualificationNo,
@@ -118,8 +118,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('userName', {
                     initialValue: securityDeposit.userName,
@@ -132,8 +132,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('carNo', {
                     initialValue: securityDeposit.carNo,
@@ -146,8 +146,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateNumber', {
                     initialValue: securityDeposit.plateNumber,
@@ -160,13 +160,13 @@ let Update = (props) => {
                   label={(
                     <span>
                         安全保证金金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('amount', {
                     rules: [{ required: true, message: '请输入安全保证金金额!' }],
                     initialValue: securityDeposit.amount })(
-                      <InputNumber min={0} max={9999999} />
+                    <InputNumber min={0} max={9999999} />
                   )}
                 </FormItem>
                 <FormItem
@@ -174,8 +174,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         安全保证金缴纳日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('payDate', { initialValue: moment(securityDeposit.payDate) })(
                     <DatePicker
@@ -191,8 +191,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         安全保证金退还日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('refundDate', { initialValue: moment(securityDeposit.refundDate) })(
                     <DatePicker
@@ -208,8 +208,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         状态&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('status', { initialValue: securityDeposit.status })(
                     <RadioGroup>
@@ -223,7 +223,10 @@ let Update = (props) => {
                     <Button key="registerButton" type="primary" htmlType="submit" size="large">保存</Button>
                   </ZButton>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+                    htmlType="button"
+                    size="large"
+                    style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -233,16 +236,16 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ securityDepositStore, driverCommonStore }) {
   return {
     securityDeposit: securityDepositStore.securityDeposit,
     startValue: driverCommonStore.startValue,
     endValue: driverCommonStore.endValue,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+Update = Form.create()(Update)
+export default connect(mapStateToProps)(Update)

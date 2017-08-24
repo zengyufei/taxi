@@ -22,17 +22,13 @@ export default extend({
   },
   effects: {
 
-    * init({}, { update, tableBindType, sessionCache, select }) {
-      const { init } = yield select(({ sysRoleStore }) => sysRoleStore)
-      if (!init) {
-        yield tableBindType({
-          sysMemberId: id => {
-            const cache = sessionCache.getIds('sysMemberIds', id)
-            return cache && cache.account
-          },
-        })
-        yield update({ init: true })
-      }
+    * init({}, { tableBindType, sessionCache }) {
+      yield tableBindType({
+        sysMemberId: id => {
+          const cache = sessionCache.getIds('sysMemberIds', id)
+          return cache && cache.account
+        },
+      })
     },
 
     * queryPage(payload, { get, getMessage, update, _, sessionCache }) {
@@ -100,16 +96,6 @@ export default extend({
     },
   },
   subscriptions: {
-    setup({ dispatch, listen }) {
-      listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'queryPage',
-        })
-        dispatch({
-          type: 'init',
-        })
-      })
-    },
   },
 })
 

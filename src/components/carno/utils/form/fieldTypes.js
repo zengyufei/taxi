@@ -4,11 +4,18 @@ import { DatePicker, Select, Input, Checkbox, InputNumber, Switch } from 'antd'
 
 const Option = Select.Option
 const RangePicker = DatePicker.RangePicker
+const MonthPicker = DatePicker.MonthPicker
 
 /*
  * 表单字段类型
  */
 const fieldTypes = {
+  yearMonth: ({ initialValue, inputProps }) => {
+    return {
+      input: <MonthPicker {...inputProps} />,
+      initialValue: initialValue ? moment(parseInt(initialValue, 10)) : null,
+    }
+  },
   date: ({ initialValue, inputProps }) => {
     return {
       input: <DatePicker {...inputProps} />,

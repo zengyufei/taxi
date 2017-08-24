@@ -21,32 +21,28 @@ export default extend({
   },
   effects: {
 
-    * init({}, { update, tableBindType, formBindType, select }) {
-      const { init } = yield select(({ sysOrgStore }) => sysOrgStore)
-      if (!init) {
-        yield tableBindType({
-          initPwd: text => {
-            return +text === 0 ? '正常' : '未初始化'
-          },
-        })
-        yield formBindType({
-          invalid: ({ showPlaceholder }) => {
-            return {
-              input: (
-                <Select key="invalid" allowClear placeholder={showPlaceholder || '请选择'}>
-                  <Option key="invalid0" value="true">有效</Option>
-                  <Option key="invalid1" value="false">无效</Option>
-                </Select>
-              ),
-            }
-          },
-        })
-        yield update({ init: true })
-      }
+    * init({}, { tableBindType, formBindType }) {
+      yield tableBindType({
+        initPwd: text => {
+          return +text === 0 ? '正常' : '未初始化'
+        },
+      })
+      yield formBindType({
+        invalid: ({ showPlaceholder }) => {
+          return {
+            input: (
+              <Select key="invalid" allowClear placeholder={showPlaceholder || '请选择'}>
+                <Option key="invalid0" value="true">有效</Option>
+                <Option key="invalid1" value="false">无效</Option>
+              </Select>
+            ),
+          }
+        },
+      })
     },
 
     * queryPage(payload, { getMessage, update }) {
-      const { result = {} } = yield getMessage(queryPageUrl, payload, `${moduleName}列表`)
+      const { result } = yield getMessage(queryPageUrl, payload, `${moduleName}列表`)
       yield update({ page: result })
     },
 
@@ -54,7 +50,7 @@ export default extend({
      * 不提示刷新分页，增删改操作使用
      */
     * reload(payload, { get, update }) {
-      const { result = {} } = yield get(queryPageUrl, payload)
+      const { result } = yield get(queryPageUrl, payload)
       yield update({ page: result })
     },
 
@@ -96,9 +92,6 @@ export default extend({
   subscriptions: {
     setup({ dispatch, listen }) {
       listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'init',
-        })
         dispatch({
           type: 'queryPage',
         })

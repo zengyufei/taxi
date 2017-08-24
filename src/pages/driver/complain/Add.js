@@ -14,7 +14,7 @@ const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
 const RadioButton = Radio.Button
-const { TOKEN_KEY } = constant
+const { tokenSessionKey } = constant
 
 let Add = props => {
   const { dispatch, form, driver, drivers, carNos, visible, startValue, endValue, imgURLList, imgURLImage, previewVisible, previewImage } = props
@@ -74,11 +74,11 @@ let Add = props => {
    * 上传文件
    * @type {{name: string, action: string, headers: {authorization: string}, onChange: ((info))}}
    */
-  const token = session.get(TOKEN_KEY)
+  
   let fileURL
   const importCar = {
     name: 'file',
-    action: `/fileupload/docs.htm?token=${token}`,
+    action: `${BASE_URL}/fileupload/docs.htm?token=${token}`,
     headers: {
       authorization: 'authorization-text',
     },

@@ -53,12 +53,20 @@ axios.interceptors.response.use(response => {
   }
 
   let resData = response.data
-  if (resData && resData.code) {
-    if (+resData.code !== 200) {
-      Modal.error({ title: '错误提示', content: resData.msg ? resData.msg : '出现异常，但系统没有对此异常的说明', okText: '确定', maskClosable: true })
-      // return Promise.reject(response)
-    } else if (+resData.code === 200) {
-      resData.code = +resData.code
+  if (resData) {
+    if (resData.code) {
+      if (+resData.code !== 200) {
+        Modal.error({ title: '错误提示', content: resData.msg ? resData.msg : '出现异常，但系统没有对此异常的说明', okText: '确定', maskClosable: true })
+        // return Promise.reject(response)
+      } else if (+resData.code === 200) {
+        resData.code = +resData.code
+      }
+    } else {
+      resData.code = 0
+    }
+
+    if (!resData.result) {
+      resData.result = {}
     }
   }
   /*
@@ -67,7 +75,7 @@ axios.interceptors.response.use(response => {
   }
   */
   // 关闭loading动画
-  return resData
+  return resData || { code: 0, result: {} }
 }, error => {
   if (error.response) {
     switch (error.response.status) {

@@ -180,8 +180,11 @@ const fields = [
     type: 'number',
   }, {
     key: 'available',
-    name: '是否无效',
-    type: 'invalid',
+    name: '有效性',
+    enums: {
+      true: '有效',
+      false: '无效',
+    },
     hasFeedback: false,
   }, {
     key: 'description',

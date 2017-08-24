@@ -12,7 +12,7 @@ import { Form, Input, Icon, Row, Col, Button, Card, message, Upload, Modal, Date
 
 const TweenOneGroup = TweenOne.TweenOneGroup;
 const FormItem = Form.Item;
-const { TOKEN_KEY } = constant;
+const { tokenSessionKey } = constant;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
@@ -74,11 +74,11 @@ let Add = (props) => {
    * 上传文件
    * @type {{name: string, action: string, headers: {authorization: string}, onChange: ((info))}}
    */
-  const token = session.get(TOKEN_KEY);
+  ;
   let fileURL;
   const importCar = {
     name: 'file',
-    action: `/fileupload/docs.htm?token=${token}`,
+    action: `${BASE_URL}/fileupload/docs.htm?token=${token}`,
     headers: {
       authorization: 'authorization-text',
     },

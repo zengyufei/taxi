@@ -2,7 +2,7 @@
  * @Author: zengyufei
  * @Date: 2017-08-04 14:20:07
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-11 11:03:10
+ * @Last Modified time: 2017-08-24 16:21:06
  */
 import dva from 'dva'
 import createLoading from 'dva-loading'
@@ -24,8 +24,30 @@ const app = dva({
   onError (error) {
     message.error(error.message)
   },
+  onEffect(effect, { put, select }, model) {
+    return function* (...args) {
+      const { init } = yield select(e => e[`${model.namespace}`])
+      if (init) {
+        yield effect(...args)
+      } else if (model.effects[`${model.namespace}/init`]) {
+        yield [
+          effect(...args),
+          put({ type: `${model.namespace}/init` }),
+          put({ type: `${model.namespace}/updateState`, init: true }),
+        ]
+      } else if (model.effects[`${model.namespace}/once`]) {
+        yield [
+          effect(...args),
+          put({ type: `${model.namespace}/once` }),
+          put({ type: `${model.namespace}/updateState`, init: true }),
+        ]
+      } else {
+        yield effect(...args)
+      }
+    }
+  },
 })
-app.use(createLoading(/* {effects: true,} */))
+app.use(createLoading({ effects: true }))
 
 // 2. Model
 app.model(require('./models/appStore'))

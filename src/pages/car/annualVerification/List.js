@@ -1,12 +1,13 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-22 17:50:34 
+ * @Author: zengyufei
+ * @Date: 2017-08-22 17:50:34
  * @Last Modified by: zengyufei
  * @Last Modified time: 2017-08-23 12:09:58
  */
 import { connect } from 'dva'
 import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
 import qs from 'qs'
+import moment from 'moment'
 
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
@@ -20,7 +21,8 @@ const { tokenSessionKey } = constant
 
 const List = options => {
   const { loading, form, page, methods, res, pageState } = options
-  const { onSearch, toAdd, toEdit, toInfo, exportAnnualVerification, expired, expireing, onShowSizeChange, onChange, handlerUpload } = methods
+  const { onSearch, toAdd, toEdit, toInfo, exportAnnualVerification, onShowSizeChange, onChange, handlerUpload
+    ,synthesizeing,synthesize,drivingLicenseing,drivingLicense,taximetering,taximeter } = methods
 
   /**
    * 导入文件
@@ -59,8 +61,12 @@ const List = options => {
   const btns = (
     <div>
       <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-      <Button type="primary" icon="clock-circle-o" onClick={expireing}>审核即将过期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={expired}>审核过期</Button>&nbsp;
+      <Button type="primary" icon="clock-circle-o" onClick={synthesizeing}>综合审即将过期</Button>&nbsp;
+      <Button type="primary" icon="close-circle-o" onClick={synthesize}>综合审已过期</Button>&nbsp;
+      <Button type="primary" icon="clock-circle-o" onClick={drivingLicenseing}>行驶证即将过期</Button>&nbsp;
+      <Button type="primary" icon="close-circle-o" onClick={drivingLicense}>行驶证已过期</Button>&nbsp;
+      <Button type="primary" icon="clock-circle-o" onClick={taximetering}>计价器即将过期</Button>&nbsp;
+      <Button type="primary" icon="close-circle-o" onClick={taximeter}>计价器已过期</Button>&nbsp;
       <Popconfirm title="是否确定要导出" onConfirm={exportAnnualVerification} >
         <Button type="primary" icon="export" >导出</Button>&nbsp;
       </Popconfirm>
@@ -174,6 +180,53 @@ const mapDispatchToProps = (dispatch, { form }) => {
         })
       },
 
+      /** 即将到期和已到期 */
+      synthesizeing() {
+        dispatch({
+          type: 'annualVerificationStore/warnList',
+          warningEnum: 'synthesizeDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+        })
+      },
+      synthesize() {
+        dispatch({
+          type: 'annualVerificationStore/warnList',
+          warningEnum: 'synthesizeDate',
+          endDate: moment().format('YYYY-MM-DD'),
+        })
+      },
+      drivingLicenseing() {
+        dispatch({
+          type: 'annualVerificationStore/warnList',
+          warningEnum: 'drivingLicenseDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+        })
+      },
+      drivingLicense() {
+        dispatch({
+          type: 'annualVerificationStore/warnList',
+          warningEnum: 'drivingLicenseDate',
+          endDate: moment().format('YYYY-MM-DD'),
+        })
+      },
+      taximetering() {
+        dispatch({
+          type: 'annualVerificationStore/warnList',
+          warningEnum: 'taximeterDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+        })
+      },
+      taximeter() {
+        dispatch({
+          type: 'annualVerificationStore/warnList',
+          warningEnum: 'taximeterDate',
+          endDate: moment().format('YYYY-MM-DD'),
+        })
+      },
+
       toAdd() {
         dispatch({
           type: 'carStore/setCarNull',
@@ -213,37 +266,23 @@ const mapDispatchToProps = (dispatch, { form }) => {
         window.location.href = `${BASE_URL}/annualVerification/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
       },
 
-      expired() {
-        dispatch({
-          type: 'annualVerificationStore/expired',
-          carNo: form.getFieldValue('carNo'),
-          plateNumber: form.getFieldValue('plateNumber'),
-        })
-      },
-
-      expireing() {
-        dispatch({
-          type: 'annualVerificationStore/expireing',
-          carNo: form.getFieldValue('carNo'),
-          plateNumber: form.getFieldValue('plateNumber'),
-        })
-      },
-
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
         dispatch({
           type: 'annualVerificationStore/queryPage',
           pageNo: current,
           pageSize,
+          ...form.getFieldsValue(),
         })
       },
+
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
         dispatch({
           type: 'annualVerificationStore/queryPage',
           pageNo: current,
           pageSize,
+          ...form.getFieldsValue(),
         })
       },
-
 
       handlerUpload() {
         dispatch({

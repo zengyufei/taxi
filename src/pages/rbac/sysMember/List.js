@@ -162,18 +162,27 @@ const fields = [
   {
     key: 'locked',
     name: '是否锁定',
-    type: 'locked',
+    enums: {
+      false: '正常',
+      true: '锁定',
+    },
   },
   {
     key: 'initPwd',
     name: '是否初始化',
-    type: 'initPwd',
+    enums: {
+      false: '正常',
+      true: '未初始化',
+    },
   },
 
   {
     key: 'available',
     name: '是否有效',
-    type: 'invalid',
+    enums: {
+      true: '有效',
+      false: '无效',
+    },
   },
   {
     key: 'realName',

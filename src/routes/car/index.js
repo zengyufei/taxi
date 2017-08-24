@@ -39,8 +39,9 @@ module.exports = (app, auth) => {
       getComponent(nextState, cb) {
         require.ensure([], require => {
           if (auth('car:maintain:*')) {
+            registerModel(app, require('models/car/carStore'))
             registerModel(app, require('models/car/maintainStore'))
-            cb(null, require('pages/car/maintain/Maintain'))
+            cb(null, require('pages/car/maintain'))
           }
         }, 'maintain')
       },
@@ -51,8 +52,9 @@ module.exports = (app, auth) => {
       getComponent(nextState, cb) {
         require.ensure([], require => {
           if (auth('car:insurance:*')) {
+            registerModel(app, require('models/car/carStore'))
             registerModel(app, require('models/car/insuranceStore'))
-            cb(null, require('pages/car/insurance/Insurance'))
+            cb(null, require('pages/car/insurance'))
           }
         }, 'insurance')
       },
@@ -64,7 +66,7 @@ module.exports = (app, auth) => {
         require.ensure([], require => {
           if (auth('car:carOperateLog:*')) {
             registerModel(app, require('models/car/carOperateLogStore'))
-            cb(null, require('pages/car/carOperateLog/CarOperateLog'))
+            cb(null, require('pages/car/carOperateLog'))
           }
         }, 'carOperateLog')
       },

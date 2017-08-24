@@ -1,18 +1,16 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-24 11:41:55 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-24 11:44:56
  */
 import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
 import ZFormItem from 'ZFormItem'
-import { validate, getFields } from 'FormUtils'
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox,
-  Button, Card, Radio, InputNumber, DatePicker, Alert, Switch } from 'antd'
+import { getFields } from 'FormUtils'
+import { Form, Input, Row, Col,
+  Button, Card, Radio, InputNumber, DatePicker, Switch } from 'antd'
 import moment from 'moment'
 
 
@@ -117,9 +115,12 @@ let Update = options => {
     },
   }
 
+  console.log(driver)
   const itemProps = { form,
     item: {
       ...driver,
+      censusAreaCode: [driver.censusProvinceCode, driver.censusCityCode, driver.censusAreaCode],
+      nativeAreaCode: [driver.nativeProvinceCode, driver.nativeCityCode, driver.nativeAreaCode],
     },
     ...formItemLayout }
   const fieldMap = getFields(fields).toMapValues()
