@@ -97,7 +97,7 @@ export default extend({
         ZMsg.success(response.msg)
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 失物认领
     * update(playload, { post, put, select }) {
@@ -106,7 +106,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.complainStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除失物认领
@@ -116,7 +116,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.complainStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

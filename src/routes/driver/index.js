@@ -159,6 +159,7 @@ module.exports = (app, auth) => {
           if (auth('driver:transfer:*')) {
             registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/driver/transferStore'))
+            registerModel(app, require('models/driver/driverStore'))
             cb(null, require('pages/driver/transfer'))
           }
         }, 'transfer')

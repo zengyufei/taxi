@@ -2,10 +2,10 @@
  * @Author: zengyufei 
  * @Date: 2017-08-23 15:40:50 
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-25 11:42:20
+ * @Last Modified time: 2017-08-25 14:02:23
  */
 import { connect } from 'dva'
-import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
+import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
 import qs from 'qs'
 
 import ZSearch from 'ZSearch'
@@ -19,7 +19,7 @@ import Info from './Info.js'
 
 const { tokenSessionKey } = constant
 
-let CarOperateLog = option => {
+let List = option => {
   const { loading, form, page, methods, res, pageState } = option
   const { toAdd, toEdit, toInfo, exportCarOperateLog, onShowSizeChange, onChange, handlerUpload, onSearch } = methods
 
@@ -267,4 +267,4 @@ const fields = [{
   key: 'powerConsume',
 }]
 
-export default connect(mapStateToProps, mapDispatchToProps)(CarOperateLog)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))

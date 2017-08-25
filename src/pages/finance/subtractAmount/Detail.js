@@ -1,32 +1,30 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:44:28 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 14:45:52
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Checkbox, Button, Card } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Button, Card } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, subtractAmount } = props;
-  let subtractTypeDesc;
+let Detail = options => {
+  const { dispatch, subtractAmount } = options
+  let subtractTypeDesc
   switch (subtractAmount.subtractType) {
     case 'SERVICE_SUB':
-      subtractTypeDesc = '营运核减';
-      break;
+      subtractTypeDesc = '营运核减'
+      break
     case 'REPAIR_SUB':
-      subtractTypeDesc = '维修核减';
-      break;
+      subtractTypeDesc = '维修核减'
+      break
     case 'ACCIDENT_SUB':
-      subtractTypeDesc = '维修核减';
-      break;
+      subtractTypeDesc = '维修核减'
+      break
   }
 
   const formItemLayout = {
@@ -38,7 +36,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -50,14 +48,14 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'subtractAmountStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -92,7 +90,10 @@ let Detail = (props) => {
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+                    htmlType="button"
+                    size="large"
+                    style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -102,14 +103,13 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ subtractAmountStore }) {
   return {
     subtractAmount: subtractAmountStore.subtractAmount,
-  };
+  }
 }
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

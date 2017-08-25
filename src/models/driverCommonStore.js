@@ -20,7 +20,7 @@ export default extend({
   effects: {
     // 模糊查询 从业资格证编号
     * queryLikeQualificationNo({ str }, { post, put }) {
-      const response = yield post('/common/queryLikeQualificationNo', str)
+      const response = yield post('/common/queryLikeQualificationNo', {str: str})
       yield put({ type: 'queryLikeQualificationNoSuccess', qualificationNos: response })
     },
     // 模糊查询 车辆自编号

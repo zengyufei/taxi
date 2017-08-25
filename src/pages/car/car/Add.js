@@ -16,7 +16,7 @@ const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 const Option = Select.Option
 
-let CarAdd = options => {
+const Add = options => {
   const { dispatch, form } = options
   const { getFieldDecorator } = form
   const { previewVisible, previewImage, plateList, ownershipList, roadTransportList, certificateList, plateImage, ownershipImage, roadTransportImage, certificateImage } = options
@@ -216,7 +216,7 @@ let CarAdd = options => {
                   {getFieldDecorator('plateImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={plateList}
                         onPreview={handlePreview}
@@ -256,7 +256,7 @@ let CarAdd = options => {
                   {getFieldDecorator('ownershipImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={ownershipList}
                         onPreview={handlePreview}
@@ -366,7 +366,7 @@ let CarAdd = options => {
                   {getFieldDecorator('roadTransportImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={roadTransportList}
                         onPreview={handlePreview}
@@ -434,7 +434,7 @@ let CarAdd = options => {
                   {getFieldDecorator('certificateImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={certificateList}
                         onPreview={handlePreview}
@@ -512,5 +512,4 @@ function mapStateToProps({ carStore }) {
 }
 
 
-CarAdd = Form.create()(CarAdd)
-export default connect(mapStateToProps)(CarAdd)
+export default Form.create()(connect(mapStateToProps)(Add))

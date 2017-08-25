@@ -6,23 +6,20 @@
  * 4. 从对象再获取对象点出来的在按需加载下面
  * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox,
-  Button, Card, Radio, InputNumber, DatePicker, Alert, message, Upload, Modal } from 'antd';
-import moment from 'moment';
+import { connect } from 'dva'
+import { Form, Input, Icon, Row, Col,
+  Button, Card, DatePicker, Upload, Modal } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
-const { RangePicker } = DatePicker;
-const Option = Select.Option;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let MaintainUpdate = (props) => {
-  const { dispatch, form, maintain } = props;
-  const { getFieldDecorator } = form;
-  const { plateList, plateImage, previewVisible, previewImage, maintainList, maintainImage } = props;
+let Update = options => {
+  const { dispatch, form, maintain } = options
+  const { getFieldDecorator } = form
+  const { plateList, previewVisible, previewImage, maintainList, maintainImage } = options
 
   const formItemLayout = {
     labelCol: {
@@ -33,7 +30,7 @@ let MaintainUpdate = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -45,64 +42,64 @@ let MaintainUpdate = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const updateMaintain = (e) => {
-    e.preventDefault();
+  const updateMaintain = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const planFinishDate = form.getFieldValue('planFinishDate') ? form.getFieldValue('planFinishDate').format('YYYY-MM-DD') : null;
-        const planRealityDate = form.getFieldValue('planRealityDate') ? form.getFieldValue('planRealityDate').format('YYYY-MM-DD') : null;
+        const planFinishDate = form.getFieldValue('planFinishDate') ? form.getFieldValue('planFinishDate').format('YYYY-MM-DD') : null
+        const planRealityDate = form.getFieldValue('planRealityDate') ? form.getFieldValue('planRealityDate').format('YYYY-MM-DD') : null
         dispatch({
           type: 'maintainStore/updateNotNull',
           ...values,
           planFinishDate,
           planRealityDate,
           maintainImage,
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = () => {
     dispatch({
       type: 'maintainStore/queryPage',
-    });
-  };
+    })
+  }
 
   // 上传图片
   const maintainChange = ({ fileList }) => {
     dispatch({
       type: 'maintainStore/maintainChange',
       maintainList: fileList,
-    });
-  };
+    })
+  }
   // 预览图片
-  const handlePreview = (file) => {
-    console.log('handlePreview');
-    console.log(file);
+  const handlePreview = file => {
+    console.log('handlePreview')
+    console.log(file)
     dispatch({
       type: 'maintainStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 删除图片
-  const handleCancel = (e) => {
-    console.log('handleCancel');
+  const handleCancel = () => {
+    console.log('handleCancel')
     dispatch({
       type: 'maintainStore/unlookPreview',
-    });
-  };
+    })
+  }
   // 添加图片样式
   const uploadButton = (
     <div>
       <Icon type="plus" />
       <div className="ant-upload-text">点击上传文件</div>
     </div>
-  );
+  )
 
   return (
     <div>
@@ -128,8 +125,8 @@ let MaintainUpdate = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('carNo', {
@@ -143,8 +140,8 @@ let MaintainUpdate = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
@@ -158,8 +155,8 @@ let MaintainUpdate = (props) => {
                   label={(
                     <span>
                         车辆照片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateImage')(
                     <div >
@@ -180,11 +177,11 @@ let MaintainUpdate = (props) => {
                   label={(
                     <span>
                         二级维护计划完成日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('planFinishDate', {
-                    rules: [{ required: true, message: '请选择二级维护计划完成日期!' }],initialValue: moment(maintain.planFinishDate),
+                    rules: [{ required: true, message: '请选择二级维护计划完成日期!' }], initialValue: moment(maintain.planFinishDate),
                   })(<DatePicker />)}
                 </FormItem>
                 <FormItem
@@ -192,11 +189,11 @@ let MaintainUpdate = (props) => {
                   label={(
                     <span>
                         二级维护实际完成日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('planRealityDate', {
-                     initialValue: moment(maintain.planRealityDate),
+                    initialValue: moment(maintain.planRealityDate),
                   })(<DatePicker />)}
                 </FormItem>
                 <FormItem
@@ -204,13 +201,13 @@ let MaintainUpdate = (props) => {
                   label={(
                     <span>
                         二级维护单据的扫描件&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('maintainImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={maintainList}
                         onPreview={handlePreview}
@@ -236,8 +233,8 @@ let MaintainUpdate = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ maintainStore }) {
   return {
@@ -247,7 +244,6 @@ function mapStateToProps({ maintainStore }) {
     previewImage: maintainStore.previewImage,
     maintainList: maintainStore.maintainList,
     maintainImage: maintainStore.maintainImage,
-  };
+  }
 }
-MaintainUpdate = Form.create()(MaintainUpdate);
-export default connect(mapStateToProps)(MaintainUpdate);
+export default Form.create()(connect(mapStateToProps)(Update))

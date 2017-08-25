@@ -1,22 +1,20 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:54:56 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:54:56 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Row, Col, Checkbox, Button, Card, Upload, Modal } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Button, Card, Upload, Modal } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, driver, previewImage, previewVisible } = props;
-  const { registerFileList, checkFileList, noCriminalFileList, serviceFileList, insuranceFileList, IDCardImgFileList, safetyResponsibilityFileList } = props;
+let Detail = options => {
+  const { dispatch, driver, previewImage, previewVisible } = options
+  const { registerFileList, checkFileList, noCriminalFileList, serviceFileList, insuranceFileList, IDCardImgFileList, safetyResponsibilityFileList } = options
 
   const formItemLayout = {
     labelCol: {
@@ -27,7 +25,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -39,28 +37,28 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'driverStore/toPage',
-    });
+    })
   };
 
   // 预览图片
-  const lookPreview = (file) => {
+  const lookPreview = file => {
     dispatch({
       type: 'driverStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
+    })
   };
   // 关闭预览图片
-  const unlookPreview = (e) => {
+  const unlookPreview = e => {
     dispatch({
       type: 'driverStore/unlookPreview',
-    });
+    })
   };
 
   return (
@@ -87,8 +85,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         入职登记表&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -106,8 +104,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         体检报告&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -125,8 +123,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                    无犯罪记录证明&nbsp;
-                   </span>
-                   )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -144,8 +142,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                    优质服务承诺书&nbsp;
-                   </span>
-                   )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -163,8 +161,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                    意外险自愿购买承诺书&nbsp;
-                   </span>
-                   )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -182,8 +180,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                    身份证复印件&nbsp;
-                   </span>
-                   )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -201,8 +199,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                    安全责任书&nbsp;
-                   </span>
-                   )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -224,7 +222,7 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
+  )
 };
 
 function mapStateToProps({ driverStore }) {
@@ -239,8 +237,7 @@ function mapStateToProps({ driverStore }) {
     insuranceFileList: driverStore.insuranceFileList,
     IDCardImgFileList: driverStore.IDCardImgFileList,
     safetyResponsibilityFileList: driverStore.safetyResponsibilityFileList,
-  };
+  }
 }
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

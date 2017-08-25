@@ -1,10 +1,8 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:05:50 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:05:50 
  */
 import TweenOne from 'rc-tween-one'
 
@@ -17,7 +15,7 @@ const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 const Option = Select.Option
 
-let InsuranceUpdate = options => {
+let Update = options => {
   const { dispatch, form, insurance } = options
   const { getFieldDecorator } = form
   const { plateList, previewVisible, previewImage, insuranceFile, insuranceList } = options
@@ -378,7 +376,7 @@ let InsuranceUpdate = options => {
                   {getFieldDecorator('insuranceFile')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={insuranceList}
                         onPreview={handlePreview}
@@ -448,5 +446,4 @@ function mapStateToProps({ insuranceStore }) {
     fiveInsurance: insuranceStore.fiveInsurance,
   }
 }
-InsuranceUpdate = Form.create()(InsuranceUpdate)
-export default connect(mapStateToProps)(InsuranceUpdate)
+export default Form.create()(connect(mapStateToProps)(Update))

@@ -116,4 +116,4 @@ const fields = [
 
 ]
 
-export default connect(mapStateToProps)(Form.create()(UpdatePage))
+export default Form.create()(connect(mapStateToProps)(UpdatePage))

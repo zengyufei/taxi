@@ -1,5 +1,11 @@
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:12:28 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 15:29:35
+ */
 import { connect } from 'dva'
-import { Button, Table, Upload, Modal } from 'antd'
+import { Form, Button, Table, Upload, Modal } from 'antd'
 
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
@@ -196,4 +202,4 @@ const fields = [{
 }]
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(index)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(index))

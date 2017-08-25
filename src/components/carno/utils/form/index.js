@@ -71,7 +71,7 @@ const getSearchFields = (originFields, fieldKeys, extraFields) => {
       if (typeof key === 'string') {
         for (let i in fields) {
           const item = fields[i]
-          if (item.key == key) {
+          if (item.key === key) {
             field = item
             continue
           }
@@ -163,7 +163,7 @@ const getFields = (originFields, fieldKeys, extraFields) => {
 
       for (let i in fields) {
         const item = fields[i]
-        if (item.key == extraField.key) {
+        if (item.key === extraField.key) {
           field = key
         }
       }
@@ -195,7 +195,7 @@ const getFields = (originFields, fieldKeys, extraFields) => {
       if (typeof key === 'string') {
         for (let i in fields) {
           const item = fields[i]
-          if (item.key == key) {
+          if (item.key === key) {
             field = item
             continue
           }
@@ -281,7 +281,7 @@ const validate = form => {
       const isDateTimeType = value && value instanceof moment
       const newValue = isDateTimeType ? getDateValue(values[key]) : values[key]
       // 如果value为undefined,则不赋值到values对象上
-      if (newValue != undefined) {
+      if (newValue !== undefined) {
         newValues[key] = newValue
       }
     })

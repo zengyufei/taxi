@@ -61,11 +61,11 @@ export default extend({
     },
     toEdit(state, action) {
       let insuranceList = []
-      if (action.insurance.insuranceFile != null) {
+      if (action.insurance.insuranceFile !== null) {
         insuranceList = [{ uid: 0, url: UPLOAD_URL + action.insurance.insuranceFile, status: 'done' }]
       }
       let plateList = []
-      if (action.insurance.plateImage != null) {
+      if (action.insurance.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.insurance.plateImage, status: 'done' }]
       }
       let oneInsurance=false, twoInsurance=false, threeInsurance=false, fourInsurance=false, fiveInsurance=false;
@@ -104,11 +104,11 @@ export default extend({
     },
     toInfo(state, action) {
       let insuranceList = []
-      if (action.insurance.insuranceFile != null) {
+      if (action.insurance.insuranceFile !== null) {
         insuranceList = [{ uid: 0, url: UPLOAD_URL + action.insurance.insuranceFile, status: 'done' }]
       }
       let plateList = []
-      if (action.insurance.plateImage != null) {
+      if (action.insurance.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.insurance.plateImage, status: 'done' }]
       }
       return { ...state,

@@ -1,21 +1,19 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:01:52 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 15:01:52 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Button, Card } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, lostAndFound } = props;
+let Detail = options => {
+  const { dispatch, lostAndFound } = options
 
   const formItemLayout = {
     labelCol: {
@@ -26,7 +24,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -38,13 +36,13 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'lostAndFoundStore/toPage',
-    });
+    })
   };
 
   return (
@@ -59,8 +57,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.qualificationNo}
                 </FormItem>
@@ -69,8 +67,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.userName}
                 </FormItem>
@@ -79,8 +77,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.carNo}
                 </FormItem>
@@ -89,8 +87,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.plateNumber}
                 </FormItem>
@@ -99,8 +97,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         物品名称&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.articleName}
                 </FormItem>
@@ -109,8 +107,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         物品数量&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.articleCount}
                 </FormItem>
@@ -119,8 +117,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         物品金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.articleAmount}
                 </FormItem>
@@ -129,8 +127,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         上交时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.handTime}
                 </FormItem>
@@ -139,8 +137,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         归还时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.returnTime}
                 </FormItem>
@@ -149,8 +147,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         失主姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.lostUserName}
                 </FormItem>
@@ -159,8 +157,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         失主电话&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.lostMobile}
                 </FormItem>
@@ -169,8 +167,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         归还经办人&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.returnOprator}
                 </FormItem>
@@ -179,8 +177,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         备注&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {lostAndFound.remark}
                 </FormItem>
@@ -194,14 +192,13 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
+  )
 };
 
 function mapStateToProps({ lostAndFoundStore }) {
   return {
     lostAndFound: lostAndFoundStore.lostAndFound,
-  };
+  }
 }
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

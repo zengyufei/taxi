@@ -40,7 +40,7 @@ export default extend({
     },
     queryByCarNoSuccess(state, { car }) {
       let plateList = []
-      if (car != null) {
+      if (car !== null) {
         plateList = [{ uid: 0, url: UPLOAD_URL + car.plateImage, status: 'done' }]
       }
       return { ...state, car, plateList }
@@ -64,19 +64,19 @@ export default extend({
     },
     toInfo(state, action) {
       let plateList = []
-      if (action.car.plateImage != null) {
+      if (action.car.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.car.plateImage, status: 'done' }]
       }
       let ownershipList = []
-      if (action.car.ownershipImage != null) {
+      if (action.car.ownershipImage !== null) {
         ownershipList = [{ uid: 0, url: UPLOAD_URL + action.car.ownershipImage, status: 'done' }]
       }
       let roadTransportList = []
-      if (action.car.roadTransportImage != null) {
+      if (action.car.roadTransportImage !== null) {
         roadTransportList = [{ uid: 0, url: UPLOAD_URL + action.car.roadTransportImage, status: 'done' }]
       }
       let certificateList = []
-      if (action.car.certificateImage != null) {
+      if (action.car.certificateImage !== null) {
         certificateList = [{ uid: 0, url: UPLOAD_URL + action.car.certificateImage, status: 'done' }]
       }
 
@@ -95,19 +95,19 @@ export default extend({
     },
     toEdit(state, action) {
       let plateList = []
-      if (action.car.plateImage != null) {
+      if (action.car.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.car.plateImage, status: 'done' }]
       }
       let ownershipList = []
-      if (action.car.ownershipImage != null) {
+      if (action.car.ownershipImage !== null) {
         ownershipList = [{ uid: 0, url: UPLOAD_URL + action.car.ownershipImage, status: 'done' }]
       }
       let roadTransportList = []
-      if (action.car.roadTransportImage != null) {
+      if (action.car.roadTransportImage !== null) {
         roadTransportList = [{ uid: 0, url: UPLOAD_URL + action.car.roadTransportImage, status: 'done' }]
       }
       let certificateList = []
-      if (action.car.certificateImage != null) {
+      if (action.car.certificateImage !== null) {
         certificateList = [{ uid: 0, url: UPLOAD_URL + action.car.certificateImage, status: 'done' }]
       }
       return { ...state,
@@ -151,12 +151,12 @@ export default extend({
   effects: {
 
     * init({}, { tableBindType, formBindType }) {
-        yield tableBindType({
-        })
+      yield tableBindType({
+      })
 
-        yield formBindType({
+      yield formBindType({
 
-        })
+      })
     },
 
     /**
@@ -174,7 +174,7 @@ export default extend({
     },
 
     * queryByCarNo({ carNo }, { get, put }) {
-      const response = yield get(`${prefix}/queryByCarNo`, { carNo: carNo })
+      const response = yield get(`${prefix}/queryByCarNo`, { carNo })
       if (+response.code === 200) {
         yield put({ type: 'queryByCarNoSuccess', car: response.result })
       } else {

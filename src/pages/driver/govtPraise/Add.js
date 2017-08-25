@@ -1,24 +1,23 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:00:12 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 15:47:38
  */
-import TweenOne from 'rc-tween-one';
-import { connect } from 'dva';
-import { Form, Input, Icon, Row, Col, Button, Card, message, Upload, Modal, DatePicker, Radio, AutoComplete } from 'antd';
+import TweenOne from 'rc-tween-one'
+import { connect } from 'dva'
+import { Form, Input, Icon, Row, Col, Button, Card, Upload, Modal, DatePicker, Radio, AutoComplete } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const { tokenSessionKey } = constant;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
 
-let Add = (props) => {
-  const { dispatch, form, driver,drivers,carNos,visible, imgURLList,imgURLImage,previewVisible,previewImage } = props;
-  const { getFieldDecorator } = form;
+const { tokenSessionKey } = constant
+
+let Add = options => {
+  const { dispatch, form, driver, drivers, carNos, visible, imgURLList, imgURLImage, previewVisible, previewImage } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -29,7 +28,7 @@ let Add = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -41,135 +40,131 @@ let Add = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   const uploadButton = (
     <div>
       <Icon type="plus" />
       <div className="ant-upload-text">添加</div>
     </div>
-  );
-  /* 上传图片*/
+  )
+  /* 上传图片 */
   const imgChange = ({ fileList }) => {
     dispatch({
       type: 'govtPraiseStore/imgChange',
       imgURLList: fileList,
-    });
-  };
+    })
+  }
   // 预览图片
-  const lookPreview = (file) => {
+  const lookPreview = file => {
     dispatch({
       type: 'govtPraiseStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 关闭预览图片
-  const unlookPreview = (e) => {
+  const unlookPreview = () => {
     dispatch({
       type: 'govtPraiseStore/unlookPreview',
-    });
-  };
+    })
+  }
   /**
    * 上传文件
-   * @type {{name: string, action: string, headers: {authorization: string}, onChange: ((info))}}
    */
-  ;
-  let fileURL;
+  let fileURL
   const importCar = {
     name: 'file',
-    action: `${BASE_URL}/fileupload/docs.htm?token=${token}`,
-    headers: {
-      authorization: 'authorization-text',
-    },
+    action: `${BASE_URL}/fileupload/docs.htm?token=${session.get(tokenSessionKey)}`,
     onChange(info) {
       if (info.file.status !== 'uploading') {
-        console.log('uploading');
+        console.log('uploading')
       }
       if (info.file.status === 'done') {
-        fileURL = info.file.response;
+        fileURL = info.file.response
       } else if (info.file.status === 'error') {
-        console.log('error');
+        console.log('error')
       }
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'govtPraiseStore/insert',
           ...values,
-          creditDate: form.getFieldValue('creditDate') != undefined ? form.getFieldValue('creditDate').format('YYYY-MM-DD') : undefined,
+          creditDate: form.getFieldValue('creditDate') !== undefined ? form.getFieldValue('creditDate').format('YYYY-MM-DD') : undefined,
           imgURL: imgURLImage,
-          fileURL: fileURL,
-        });
+          fileURL,
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = () => {
     dispatch({
       type: 'govtPraiseStore/toPage',
-    });
-  };
+    })
+  }
 
   /** 模糊查询 车辆自编号 */
-  const handleSearch = (value) => {
+  const handleSearch = value => {
     dispatch({
       type: 'driverCommonStore/queryLikeCarNo',
       str: value,
-    });
-  };
+    })
+  }
   /** 自编号查询车信息 */
   const queryByCarNo = () => {
     dispatch({
       type: 'driverCommonStore/queryDriverListByOption',
       carNo: form.getFieldValue('carNo'),
-    });
-  };
-  let carNo,rbs=[];
+    })
+  }
+  let carNo
+  let rbs = []
   const onCancel = () => {
     dispatch({
       type: 'driverCommonStore/onCancel',
       visible: false,
       drivers: [],
-    });
+    })
   }
 
-  if(drivers.length == 1) {
+  if (drivers.length === 1) {
     dispatch({
       type: 'driverCommonStore/queryDriver',
-      drivers: drivers,
-      driver: driver,
+      drivers,
+      driver,
       index: 0,
-    });
-    onCancel();
+    })
+    onCancel()
   } else if (drivers.length > 1) {
     drivers.forEach((value, index) => {
-      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>);
+      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>)
     })
     // 弹出选择框
     dispatch({
       type: 'driverCommonStore/onCancel',
       visible: true,
-      drivers: drivers,
-    });
+      drivers,
+    })
   }
-  const onOk = (e) => {
+  const onOk = e => {
     dispatch({
       type: 'driverCommonStore/queryDriver',
-      drivers: drivers,
-      driver: driver,
+      drivers,
+      driver,
       index: e.target.value,
-    });
-    onCancel();
+    })
+    onCancel()
   }
-  if(driver.features != undefined || driver.features != null){
-    carNo = JSON.parse(driver.features).carNo;
+  if (driver.features) {
+    carNo = JSON.parse(driver.features).carNo
   }
 
   return (
@@ -189,16 +184,16 @@ let Add = (props) => {
           <Col span={16}>
             <Form onSubmit={handleSubmit} style={{ maxWidth: '100%', marginTop: '10px' }}>
               <Card title="新增政府表扬">
-                {getFieldDecorator('carId', {initialValue:driver ? driver.carId : ''})(<Input type="hidden" />)}
-                {getFieldDecorator('driverId', {initialValue:driver ? driver.id : ''})(<Input type="hidden" />)}
+                {getFieldDecorator('carId', { initialValue: driver ? driver.carId : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('driverId', { initialValue: driver ? driver.id : '' })(<Input type="hidden" />)}
                 {getFieldDecorator('creditType', { initialValue: 'GOVT_PRAISE' })(<Input type="hidden" />)}
                 <FormItem
                   {...formItemLayout}
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
@@ -213,7 +208,7 @@ let Add = (props) => {
                     )}
                   </Col>
                   <Col span={4}>
-                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                    <Button style={{ marginLeft: '30px' }} onClick={queryByCarNo}>查询</Button>
                   </Col>
                 </FormItem>
                 <FormItem
@@ -221,12 +216,12 @@ let Add = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver.features != undefined ? JSON.parse(driver.features).plateNumber : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver.features !== undefined ? JSON.parse(driver.features).plateNumber : '',
                   })(
                     <Input disabled />
                   )}
@@ -236,13 +231,13 @@ let Add = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
                     {getFieldDecorator('qualificationNo', {
-                      initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.qualificationNo : '',
+                      initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.qualificationNo : '',
                     })(
                       <Input disabled />
                     )}
@@ -253,12 +248,12 @@ let Add = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.userName : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.userName : '',
                   })(
                     <Input disabled />
                   )}
@@ -269,8 +264,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         表彰的文件名称&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('praiseFileName', {
@@ -284,8 +279,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         政府部门&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('govtOrg', {
@@ -299,8 +294,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         表彰时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('creditDate', {
@@ -314,8 +309,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         等级&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('praiseGrade', {
@@ -335,8 +330,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         网址链接&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('newsUrl')(
@@ -348,13 +343,13 @@ let Add = (props) => {
                   label={(
                     <span>
                         图片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('imgURL', {})(
                     <div>
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={imgURLList}
                         onPreview={lookPreview}
@@ -373,8 +368,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         文件上传&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('fileURL', {})(
                     <div>
@@ -399,8 +394,8 @@ let Add = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ driverCommonStore, govtPraiseStore }) {
   return {
@@ -413,8 +408,7 @@ function mapStateToProps({ driverCommonStore, govtPraiseStore }) {
     imgURLList: govtPraiseStore.imgURLList,
     previewImage: govtPraiseStore.previewImage,
     imgURLImage: govtPraiseStore.imgURLImage,
-  };
+  }
 }
 
-Add = Form.create()(Add);
-export default connect(mapStateToProps)(Add);
+export default Form.create()(connect(mapStateToProps)(Add))

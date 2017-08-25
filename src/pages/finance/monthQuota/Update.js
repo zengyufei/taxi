@@ -1,15 +1,7 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
- */
 import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd'
+import { Form, Input, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd'
 import moment from 'moment'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
@@ -52,18 +44,18 @@ let Update = options => {
         dispatch({
           type: 'monthQuotaStore/update',
           ...values,
-          yearMonth: form.getFieldValue('yearMonth') != undefined ? form.getFieldValue('yearMonth').format('YYYYMM') : undefined,
+          yearMonth: form.getFieldValue('yearMonth') !== undefined ? form.getFieldValue('yearMonth').format('YYYYMM') : undefined,
         })
       }
     })
-  };
+  }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
       type: 'monthQuotaStore/toPage',
     })
-  };
+  }
 
   const ym = monthQuota.yearMonth.toString()
 
@@ -261,9 +253,9 @@ let Update = options => {
                   </ZButton>
                   <Button
                     key="returnLoginButton"
-htmlType="button"
-size="large"
-style={{ marginLeft: '30px' }}
+                                        htmlType="button"
+                                        size="large"
+                                        style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -274,7 +266,7 @@ style={{ marginLeft: '30px' }}
       </TweenOneGroup>
     </div>
   )
-};
+}
 
 function mapStateToProps({ monthQuotaStore }) {
   return {
@@ -282,5 +274,4 @@ function mapStateToProps({ monthQuotaStore }) {
   }
 }
 
-Update = Form.create()(Update)
-export default connect(mapStateToProps)(Update)
+export default Form.create()(connect(mapStateToProps)(Update))

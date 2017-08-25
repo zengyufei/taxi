@@ -1,25 +1,23 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:46:44 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:46:44 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd';
-import moment from 'moment';
+import { connect } from 'dva'
+import { Form, Input, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
-const { MonthPicker } = DatePicker;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioGroup = Radio.Group
+const { MonthPicker } = DatePicker
 
-let Update = (props) => {
-  const { dispatch, form, subtractAmount } = props;
-  const { getFieldDecorator } = form;
+let Update = options => {
+  const { dispatch, form, subtractAmount } = options
+  const { getFieldDecorator } = form
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -29,7 +27,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -41,44 +39,44 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
-  let subtractTypeDesc;
+  let subtractTypeDesc
   switch (subtractAmount.subtractType) {
     case 'SERVICE_SUB':
-      subtractTypeDesc = '营运核减';
-      break;
+      subtractTypeDesc = '营运核减'
+      break
     case 'REPAIR_SUB':
-      subtractTypeDesc = '维修核减';
-      break;
+      subtractTypeDesc = '维修核减'
+      break
     case 'ACCIDENT_SUB':
-      subtractTypeDesc = '维修核减';
-      break;
+      subtractTypeDesc = '维修核减'
+      break
   }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'subtractAmountStore/update',
           ...values,
-          subDate: form.getFieldValue('subDate') != undefined ? form.getFieldValue('subDate').format('YYYY-MM-DD') : undefined,
-          yearMonth: form.getFieldValue('yearMonth') != undefined ? form.getFieldValue('yearMonth').format('YYYYMM') : undefined,
-        });
+          subDate: form.getFieldValue('subDate') !== undefined ? form.getFieldValue('subDate').format('YYYY-MM-DD') : undefined,
+          yearMonth: form.getFieldValue('yearMonth') !== undefined ? form.getFieldValue('yearMonth').format('YYYYMM') : undefined,
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'subtractAmountStore/toPage',
-    });
-  };
+    })
+  }
 
-  const ym = subtractAmount.yearMonth.toString();
+  const ym = subtractAmount.yearMonth.toString()
 
   return (
     <div>
@@ -96,8 +94,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('qualificationNo', {
                     initialValue: subtractAmount.qualificationNo,
@@ -110,8 +108,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('userName', {
                     initialValue: subtractAmount.userName,
@@ -124,8 +122,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('carNo', {
                     initialValue: subtractAmount.carNo,
@@ -138,8 +136,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateNumber', {
                     initialValue: subtractAmount.plateNumber,
@@ -152,8 +150,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         年月&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('yearMonth', {
                     rules: [{ required: true, message: '请选择年月!' }],
@@ -165,8 +163,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         核减类型&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('subtractType', {
                     rules: [{ required: true, message: '请选择核减类型!' }],
@@ -184,8 +182,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         核减金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('subAmount', {
                     rules: [{ required: true, message: '请输入核减金额!' }],
@@ -199,8 +197,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         核减日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('subDate', {
                     rules: [{ required: true, message: '请选择核减日期!' }],
@@ -212,7 +210,10 @@ let Update = (props) => {
                     <Button key="registerButton" type="primary" htmlType="submit" size="large">保存</Button>
                   </ZButton>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+                    htmlType="button"
+                    size="large"
+                    style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -222,14 +223,13 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ subtractAmountStore }) {
   return {
     subtractAmount: subtractAmountStore.subtractAmount,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+export default Form.create()(connect(mapStateToProps)(Update))

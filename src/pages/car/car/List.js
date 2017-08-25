@@ -7,7 +7,7 @@
  * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
  */
 import { connect } from 'dva'
-import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
+import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
 import qs from 'qs'
 import moment from 'moment'
 
@@ -21,7 +21,7 @@ import CarInfo from './Info.js'
 
 const { tokenSessionKey } = constant
 
-let Car = options => {
+const List = options => {
   const { loading, form, methods, page, res, pageState } = options
   const { toInfo, toEdit, exportCar, toAdd, onSearch, onShowSizeChange, onChange, upload
     , roadTransporting, roadTransport, ownershiping, ownership } = methods
@@ -394,4 +394,4 @@ const searchFields = [
     key: 'certificateNo',
   }]
 
-export default connect(mapStateToProps, mapDispatchToProps)(Car)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))

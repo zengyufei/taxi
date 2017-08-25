@@ -1,5 +1,5 @@
 import { connect } from 'dva'
-import { Button, Popconfirm, Table } from 'antd'
+import { Button, Popconfirm, Table, Form } from 'antd'
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
 import { getFields, getSearchFields } from 'FormUtils'
@@ -119,9 +119,13 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
 
       onSearch(values) {
-        if (values && values.provinceAndCity && values.provinceAndCity.length) {
-          values.province = values.provinceAndCity[0]
-          values.city = values.provinceAndCity[1]
+        console.log(values)
+        if (values) {
+          if (values.provinceAndCity && values.provinceAndCity.length) {
+            values.province = values.provinceAndCity[0]
+            values.city = values.provinceAndCity[1]
+            delete values.provinceAndCity
+          }
         }
         dispatch({
           type: 'sysOrgStore/queryPage',
@@ -204,4 +208,4 @@ const fields = [
   },
 ]
 
-export default connect(mapStateToProps, mapDispatchToProps)(List)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))

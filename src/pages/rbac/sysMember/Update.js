@@ -1,8 +1,8 @@
 /*
  * @Author: zengyufei 
- * @Date: 2017-08-17 09:52:50 
- * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-22 10:34:10
+ * @Date: 2017-08-25 14:34:52 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:34:52 
  */
 import { connect } from 'dva'
 import { Form } from 'antd'
@@ -143,4 +143,4 @@ const fields = [
   },
 ]
 
-export default connect(mapStateToProps)(Form.create()(UpdatePage))
+export default Form.create()(connect(mapStateToProps)(UpdatePage))

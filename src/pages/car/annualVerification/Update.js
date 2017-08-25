@@ -16,7 +16,7 @@ import moment from 'moment'
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 
-let AnnualVerificationUpdate = options => {
+const Update = options => {
   const { dispatch, form, annualVerification } = options
   const { getFieldDecorator } = form
   const { previewVisible, previewImage, plateList, synthesizeFileList, synthesizeFile, taximeterFileList, taximeterFile, drivingLicenseFileList, drivingLicenseFile } = options
@@ -67,7 +67,7 @@ let AnnualVerificationUpdate = options => {
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
       type: 'annualVerificationStore/queryPage',
     })
@@ -210,7 +210,7 @@ let AnnualVerificationUpdate = options => {
                   {getFieldDecorator('synthesizeFile')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={synthesizeFileList}
                         onPreview={handlePreview}
@@ -247,7 +247,7 @@ let AnnualVerificationUpdate = options => {
                   {getFieldDecorator('drivingLicenseFile')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={drivingLicenseFileList}
                         onPreview={handlePreview}
@@ -284,7 +284,7 @@ let AnnualVerificationUpdate = options => {
                   {getFieldDecorator('taximeterFile')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={taximeterFileList}
                         onPreview={handlePreview}
@@ -312,7 +312,7 @@ let AnnualVerificationUpdate = options => {
   )
 }
 
-function mapStateToProps({ annualVerificationStore, carStore }) {
+function mapStateToProps({ annualVerificationStore }) {
   return {
     annualVerification: annualVerificationStore.annualVerification,
 
@@ -328,5 +328,4 @@ function mapStateToProps({ annualVerificationStore, carStore }) {
   }
 }
 
-AnnualVerificationUpdate = Form.create()(AnnualVerificationUpdate)
-export default connect(mapStateToProps)(AnnualVerificationUpdate)
+export default Form.create()(connect(mapStateToProps)(Update))

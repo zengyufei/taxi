@@ -26,6 +26,7 @@ module.exports = (app, auth) => {
       getComponent(nextState, cb) {
         require.ensure([], require => {
           if (auth('car:annualVerification:*')) {
+            registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/car/carStore'))
             registerModel(app, require('models/car/annualVerificationStore'))
             cb(null, require('pages/car/annualVerification'))
@@ -39,6 +40,7 @@ module.exports = (app, auth) => {
       getComponent(nextState, cb) {
         require.ensure([], require => {
           if (auth('car:maintain:*')) {
+            registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/car/carStore'))
             registerModel(app, require('models/car/maintainStore'))
             cb(null, require('pages/car/maintain'))
@@ -52,6 +54,7 @@ module.exports = (app, auth) => {
       getComponent(nextState, cb) {
         require.ensure([], require => {
           if (auth('car:insurance:*')) {
+            registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/car/carStore'))
             registerModel(app, require('models/car/insuranceStore'))
             cb(null, require('pages/car/insurance'))
@@ -65,6 +68,8 @@ module.exports = (app, auth) => {
       getComponent(nextState, cb) {
         require.ensure([], require => {
           if (auth('car:carOperateLog:*')) {
+            registerModel(app, require('models/car/carStore'))
+            registerModel(app, require('models/driverCommonStore'))
             registerModel(app, require('models/car/carOperateLogStore'))
             cb(null, require('pages/car/carOperateLog'))
           }

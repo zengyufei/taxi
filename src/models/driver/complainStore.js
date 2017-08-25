@@ -66,7 +66,7 @@ export default extend({
     // 修改页面
     toEdit(state, action) {
       let imgURLList = []
-      if (action.complain.imgURL != null) {
+      if (action.complain.imgURL) {
         imgURLList = [{ uid: 0, url: UPLOAD_URL + action.complain.imgURL, status: 'done' }]
       }
       return { ...state, register: true, res: action.res, complain: action.complain, imgURLList }
@@ -121,7 +121,7 @@ export default extend({
         yield put({ type: 'cleanImage' })
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 服务投诉
     * update(playload, { post, put, select }) {
@@ -142,7 +142,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.complainStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

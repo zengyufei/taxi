@@ -38,14 +38,14 @@ export default extend({
     },
     toEdit(state, action) {
       let plateList = []
-      if (action.carOperateLog.plateImage != null) {
+      if (action.carOperateLog.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.carOperateLog.plateImage, status: 'done' }]
       }
       return { ...state, pageState: true, res: action.res, carOperateLog: action.carOperateLog, plateList }
     },
     toInfo(state, action) {
       let plateList = []
-      if (action.carOperateLog.plateImage != null) {
+      if (action.carOperateLog.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.carOperateLog.plateImage, status: 'done' }]
       }
       return { ...state, pageState: true, res: action.res, carOperateLog: action.carOperateLog, plateList }

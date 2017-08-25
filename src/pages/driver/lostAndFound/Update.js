@@ -1,22 +1,20 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:02:31 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 15:03:01
  */
-import TweenOne from 'rc-tween-one';
-import { connect } from 'dva';
-import { Form, Input, Icon, Row, Col, Button, Card, message, Upload, Modal, DatePicker, InputNumber } from 'antd';
-import moment from 'moment';
+import TweenOne from 'rc-tween-one'
+import { connect } from 'dva'
+import { Form, Input, Row, Col, Button, Card, DatePicker, InputNumber } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Update = (props) => {
-  const { dispatch, form, lostAndFound } = props;
-  const { getFieldDecorator } = form;
+let Update = options => {
+  const { dispatch, form, lostAndFound } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -27,7 +25,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -39,29 +37,29 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'lostAndFoundStore/update',
           ...values,
-          handTime: form.getFieldValue('handTime') != undefined ? form.getFieldValue('handTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-          returnTime: form.getFieldValue('returnTime') != undefined ? form.getFieldValue('returnTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-        });
+          handTime: form.getFieldValue('handTime') !== undefined ? form.getFieldValue('handTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          returnTime: form.getFieldValue('returnTime') !== undefined ? form.getFieldValue('returnTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = () => {
     dispatch({
       type: 'lostAndFoundStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -76,8 +74,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('qualificationNo', {
@@ -91,8 +89,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
@@ -106,8 +104,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('carNo', {
@@ -121,8 +119,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
@@ -136,8 +134,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         物品名称&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('articleName', {
@@ -152,8 +150,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         物品数量&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('articleCount', {
@@ -166,8 +164,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         物品金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('articleAmount', { initialValue: lostAndFound.articleAmount })(<InputNumber max={9999999} />)}
@@ -177,8 +175,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         上交时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('handTime', {
@@ -193,8 +191,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         归还时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('returnTime', {
@@ -208,8 +206,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         失主姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('lostUserName', {
@@ -221,8 +219,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         失主电话&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('lostMobile', {
@@ -234,8 +232,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         归还经办人&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('returnOprator', { initialValue: lostAndFound.returnOprator })(<Input />)}
@@ -245,11 +243,11 @@ let Update = (props) => {
                   label={(
                     <span>
                         备注&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
-                  {getFieldDecorator('remark',{ initialValue: lostAndFound.remark })(<Input type="textarea" rows={4}/>)}
+                  {getFieldDecorator('remark', { initialValue: lostAndFound.remark })(<Input type="textarea" rows={4} />)}
                 </FormItem>
 
                 <FormItem {...tailFormItemLayout}>
@@ -264,14 +262,13 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ lostAndFoundStore }) {
   return {
     lostAndFound: lostAndFoundStore.lostAndFound,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+export default Form.create()(connect(mapStateToProps)(Update))

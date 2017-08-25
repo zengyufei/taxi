@@ -1,27 +1,22 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:07:02 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:07:02 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox,
-  Button, Card, Radio, InputNumber, DatePicker, Alert, message, Upload, Modal, AutoComplete } from 'antd';
+import { connect } from 'dva'
+import { Form, Input, Icon, Row, Col,
+  Button, Card, DatePicker, Upload, Modal, AutoComplete } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
-const { RangePicker } = DatePicker;
-const Option = Select.Option;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let MaintainAdd = (props) => {
-  const { dispatch, form, car, carNos } = props;
-  const { plateList, previewVisible, previewImage, maintainList, maintainImage } = props;
-  const { getFieldDecorator } = form;
+let Add = options => {
+  const { dispatch, form, car, carNos } = options
+  const { plateList, previewVisible, previewImage, maintainList, maintainImage } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -32,7 +27,7 @@ let MaintainAdd = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -44,25 +39,25 @@ let MaintainAdd = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const addMaintain = (e) => {
-    e.preventDefault();
+  const addMaintain = e => {
+    e.preventDefault()
 
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        if (form.getFieldValue('plateNumber') == '') {
+        if (form.getFieldValue('plateNumber') === '') {
           Modal.info({
             title: '温馨提示',
             content: (
               '自编号不存在'
             ),
-          });
-          return;
+          })
+          return
         }
         /*
-        if(maintainImage == ''){
+        if(maintainImage === ''){
           Modal.info({
             title: '温馨提示',
             content: (
@@ -70,9 +65,9 @@ let MaintainAdd = (props) => {
             )
           })
           return ;
-        }*/
-        const planFinishDate = form.getFieldValue('planFinishDate') ? form.getFieldValue('planFinishDate').format('YYYY-MM-DD') : null;
-        const planRealityDate = form.getFieldValue('planRealityDate') ? form.getFieldValue('planRealityDate').format('YYYY-MM-DD') : null;
+        } */
+        const planFinishDate = form.getFieldValue('planFinishDate') ? form.getFieldValue('planFinishDate').format('YYYY-MM-DD') : null
+        const planRealityDate = form.getFieldValue('planRealityDate') ? form.getFieldValue('planRealityDate').format('YYYY-MM-DD') : null
         dispatch({
           type: 'maintainStore/insert',
           ...values,
@@ -80,62 +75,62 @@ let MaintainAdd = (props) => {
           planRealityDate,
           maintainImage,
 
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   /** 模糊查询 车辆自编号 */
-  const handleSearch = (value) => {
+  const handleSearch = value => {
     dispatch({
-      type: 'commonStore/queryLikeCarNo',
+      type: 'driverCommonStore/queryLikeCarNo',
       str: value,
-    });
-  };
-  function queryByCarNo(value) {
+    })
+  }
+  const queryByCarNo = () => {
     dispatch({
       type: 'carStore/queryByCarNo',
-      carNo: value,
-    });
+      carNo: form.getFieldValue('carNo'),
+    })
   }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'maintainStore/queryPage',
-    });
-  };
+    })
+  }
 
   // 上传图片
   const maintainChange = ({ fileList }) => {
     dispatch({
       type: 'maintainStore/maintainChange',
       maintainList: fileList,
-    });
-  };
+    })
+  }
   // 预览图片
-  const handlePreview = (file) => {
-    console.log('handlePreview');
+  const handlePreview = file => {
+    console.log('handlePreview')
     dispatch({
       type: 'maintainStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 删除图片
-  const handleCancel = (e) => {
-    console.log('handleCancel');
+  const handleCancel = e => {
+    console.log('handleCancel')
     dispatch({
       type: 'maintainStore/unlookPreview',
-    });
-  };
+    })
+  }
   // 添加图片样式
   const uploadButton = (
     <div>
       <Icon type="plus" />
       <div className="ant-upload-text">点击上传文件</div>
     </div>
-  );
+  )
 
   return (
     <div>
@@ -155,8 +150,8 @@ let MaintainAdd = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
@@ -166,21 +161,21 @@ let MaintainAdd = (props) => {
                       <AutoComplete
                         dataSource={carNos}
                         onSearch={handleSearch}
-                        onSelect={queryByCarNo}
-                        onChange={queryByCarNo}
                         placeholder="车辆自编号"
                       />
                     )}
                   </Col>
-
+                  <Col span={4}>
+                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                  </Col>
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateNumber', { initialValue: car ? car.plateNumber : '',
                   })(
@@ -192,8 +187,8 @@ let MaintainAdd = (props) => {
                   label={(
                     <span>
                         车辆照片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateImage')(
                     <div >
@@ -214,8 +209,8 @@ let MaintainAdd = (props) => {
                   label={(
                     <span>
                         二级维护计划完成日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('planFinishDate', {
                     rules: [{ required: true, message: '请选择二级维护计划完成日期!' }],
@@ -226,8 +221,8 @@ let MaintainAdd = (props) => {
                   label={(
                     <span>
                         二级维护实际完成日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('planRealityDate')(<DatePicker />)}
                 </FormItem>
@@ -236,13 +231,13 @@ let MaintainAdd = (props) => {
                   label={(
                     <span>
                         二级维护单据的扫描件&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('maintainImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={maintainList}
                         onPreview={handlePreview}
@@ -268,20 +263,19 @@ let MaintainAdd = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
-function mapStateToProps({ carStore, maintainStore, commonStore }) {
+function mapStateToProps({ carStore, maintainStore, driverCommonStore }) {
   return {
     car: carStore.car,
     plateList: carStore.plateList,
-    carNos: commonStore.carNos,
+    carNos: driverCommonStore.carNos,
     previewVisible: maintainStore.previewVisible,
     previewImage: maintainStore.previewImage,
     maintainList: maintainStore.maintainList,
     maintainImage: maintainStore.maintainImage,
 
-  };
+  }
 }
-MaintainAdd = Form.create()(MaintainAdd);
-export default connect(mapStateToProps)(MaintainAdd);
+export default Form.create()(connect(mapStateToProps)(Add))

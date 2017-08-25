@@ -1,5 +1,5 @@
 import { connect } from 'dva'
-import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
+import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
 import qs from 'qs'
 import moment from 'moment'
 
@@ -14,8 +14,8 @@ import Info from './Info.js'
 
 const { tokenSessionKey } = constant
 
-let Maintain = option => {
-  const { loading, form, page, res, pageState, methods } = option
+let List = options => {
+  const { loading, form, page, res, pageState, methods } = options
   const { onSearch, toAdd, toEdit, toInfo, exportMaintain, onShowSizeChange, onChange, handlerUpload, planFinish, planFinishing } = methods
 
   /**
@@ -257,4 +257,4 @@ const mapDispatchToProps = (dispatch, { form }) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Maintain)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))

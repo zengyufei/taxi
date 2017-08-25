@@ -4,10 +4,10 @@ const domains = require('./src/configs/domains')
 
 module.exports = (webpackConfig, env) => {
   // 环境判断
-  // process.env.NODE_ENV == 'development'
-  // process.env.NODE_ENV == 'dev'
-  // process.env.NODE_ENV == 'local'
-  // process.env.NODE_ENV == 'remote'
+  // process.env.NODE_ENV === 'development'
+  // process.env.NODE_ENV === 'dev'
+  // process.env.NODE_ENV === 'local'
+  // process.env.NODE_ENV === 'remote'
   // webpackConfig配置
   const path = require('path')
   const _ = require('lodash')

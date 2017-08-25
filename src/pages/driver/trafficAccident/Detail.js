@@ -1,22 +1,19 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:13:33 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 15:13:33 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox,
-  Button, Card, Radio, InputNumber, Alert } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Button, Card } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, trafficAccident } = props;
+let Detail = options => {
+  const { dispatch, trafficAccident } = options
 
   const formItemLayout = {
     labelCol: {
@@ -27,7 +24,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -39,71 +36,73 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'trafficAccidentStore/toPage',
-    });
-  };
-  let dutyTypeDesc,accidentModelDesc,accidentNatureDesc;
+    })
+  }
+  let dutyTypeDesc,
+    accidentModelDesc,
+    accidentNatureDesc
   switch (trafficAccident.dutyType) {
     case 'FULL_DUTY':
-      dutyTypeDesc = '全责';
-      break;
+      dutyTypeDesc = '全责'
+      break
     case 'MAIN_DUTY':
-      dutyTypeDesc = '主责';
-      break;
+      dutyTypeDesc = '主责'
+      break
     case 'SAME_DUTY':
-      dutyTypeDesc = '同责';
-      break;
+      dutyTypeDesc = '同责'
+      break
     case 'LESS_DUTY':
-      dutyTypeDesc = '次责';
-      break;
+      dutyTypeDesc = '次责'
+      break
     case 'NO_DUTY':
-      dutyTypeDesc = '无责';
-      break;
+      dutyTypeDesc = '无责'
+      break
   }
   switch (trafficAccident.accidentModel) {
     case 'model_one':
-      accidentModelDesc = '同向侧面碰刮';
-      break;
+      accidentModelDesc = '同向侧面碰刮'
+      break
     case 'model_two':
-      accidentModelDesc = '追尾相撞';
-      break;
+      accidentModelDesc = '追尾相撞'
+      break
     case 'model_three':
-      accidentModelDesc = '倒车相撞';
-      break;
+      accidentModelDesc = '倒车相撞'
+      break
     case 'model_four':
-      accidentModelDesc = '左转弯相撞';
-      break;
+      accidentModelDesc = '左转弯相撞'
+      break
     case 'model_five':
-      accidentModelDesc = '右转弯相撞';
-      break;
+      accidentModelDesc = '右转弯相撞'
+      break
     case 'model_six':
-      accidentModelDesc = '正面相撞';
-      break;
+      accidentModelDesc = '正面相撞'
+      break
     case 'model_seven':
-      accidentModelDesc = '运行伤害人体';
-      break;
+      accidentModelDesc = '运行伤害人体'
+      break
     case 'model_eight':
-      accidentModelDesc = '与其他物体相撞';
-      break;
+      accidentModelDesc = '与其他物体相撞'
+      break
     case 'model_nine':
-      accidentModelDesc = '其他';
-      break;
+      accidentModelDesc = '其他'
+      break
   }
   switch (trafficAccident.accidentNature) {
     case 'PROPERTY_LOSS':
-      accidentNatureDesc = '财产损失事故';
-      break;
+      accidentNatureDesc = '财产损失事故'
+      break
     case 'INJURED':
-      accidentNatureDesc = '伤人事故';
-      break;
+      accidentNatureDesc = '伤人事故'
+      break
     case 'DEATH':
-      accidentNatureDesc = '死亡事故';
-      break;
+      accidentNatureDesc = '死亡事故'
+      break
   }
 
   return (
@@ -118,8 +117,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.qualificationNo}
                 </FormItem>
@@ -128,8 +127,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.userName}
                 </FormItem>
@@ -138,8 +137,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.carNo}
                 </FormItem>
@@ -148,8 +147,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.plateNumber}
                 </FormItem>
@@ -158,8 +157,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         肇事时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.accidentTime}
                 </FormItem>
@@ -168,8 +167,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         天气&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.weather}
                 </FormItem>
@@ -178,8 +177,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         初次领证日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.licenseDate}
                 </FormItem>
@@ -188,8 +187,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         入职日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.entryDate}
                 </FormItem>
@@ -198,8 +197,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         入职年限&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.entryYear}
                 </FormItem>
@@ -208,8 +207,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         接触对象&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.canDriverCar}
                 </FormItem>
@@ -218,8 +217,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         出事地点类型&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.accidentPlace}
                 </FormItem>
@@ -228,8 +227,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         事发区域&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.areaDesc}
                 </FormItem>
@@ -238,8 +237,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         具体路段&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.accidentAddress}
                 </FormItem>
@@ -248,8 +247,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         事故原因&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.accidentCause}
                 </FormItem>
@@ -258,8 +257,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         事故形态&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {accidentModelDesc}
                 </FormItem>
@@ -268,8 +267,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         摘要伤亡情况&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.accidentDesc}
                 </FormItem>
@@ -278,8 +277,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         受伤人数&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.injuredNumber}
                 </FormItem>
@@ -288,8 +287,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         死亡人数&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.deathNumber}
                 </FormItem>
@@ -298,8 +297,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         对方资料&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.otherInfoDesc}
                 </FormItem>
@@ -308,8 +307,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         事故性质&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {accidentNatureDesc}
                 </FormItem>
@@ -318,8 +317,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         责任&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {dutyTypeDesc}
                 </FormItem>
@@ -328,8 +327,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         总经损&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.totalLoss}
                 </FormItem>
@@ -338,8 +337,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         结案日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {trafficAccident.closeDate}
                 </FormItem>
@@ -353,14 +352,13 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ trafficAccidentStore }) {
   return {
     trafficAccident: trafficAccidentStore.trafficAccident,
-  };
+  }
 }
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

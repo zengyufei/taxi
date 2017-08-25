@@ -1,3 +1,9 @@
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:59:12 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:59:12 
+ */
 import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
@@ -157,10 +163,10 @@ let Add = options => {
     })
   }
   /** 自编号查询车信息 */
-  const queryByCarNo = value => {
+  const queryByCarNo = () => {
     dispatch({
       type: 'carStore/queryByCarNo',
-      carNo: value,
+      carNo: form.getFieldValue('carNo'),
     })
   }
   /** 模糊查询 车辆自编号 */
@@ -202,13 +208,13 @@ let Add = options => {
                       <AutoComplete
                         dataSource={carNos}
                         onSearch={handleSearch}
-                        onSelect={queryByCarNo}
-                        onChange={queryByCarNo}
                         placeholder="车辆自编号"
                       />
                     )}
                   </Col>
-                  <Col span={-1} offset={19} />
+                  <Col span={4}>
+                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                  </Col>
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
@@ -220,7 +226,7 @@ let Add = options => {
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
-                    initialValue: car != undefined ? car.plateNumber : '',
+                    initialValue: car !== undefined ? car.plateNumber : '',
                   })(
                     <Input disabled />
                   )}
@@ -651,5 +657,4 @@ function mapStateToProps({ carStore, driverStore, driverCommonStore }) {
   }
 }
 
-Add = Form.create()(Add)
-export default connect(mapStateToProps)(Add)
+export default Form.create()(connect(mapStateToProps)(Add))

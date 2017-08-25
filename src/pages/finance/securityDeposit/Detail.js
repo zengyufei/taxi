@@ -1,21 +1,13 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
- */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Checkbox, Button, Card } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Button, Card } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, securityDeposit } = props;
+let Detail = options => {
+  const { dispatch, securityDeposit } = options
 
   const formItemLayout = {
     labelCol: {
@@ -26,7 +18,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -38,14 +30,14 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = () => {
     dispatch({
       type: 'securityDepositStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -79,11 +71,14 @@ let Detail = (props) => {
                   {securityDeposit.entryDate}
                 </FormItem>
                 <FormItem {...formItemLayout} label={(<span>状态&nbsp;</span>)}>
-                  {securityDeposit.status == true ? '正常' : '退还'}
+                  {securityDeposit.status === true ? '正常' : '退还'}
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+                    htmlType="button"
+                    size="large"
+                    style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -93,14 +88,13 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ securityDepositStore }) {
   return {
     securityDeposit: securityDepositStore.securityDeposit,
-  };
+  }
 }
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

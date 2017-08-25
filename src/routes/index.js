@@ -4,6 +4,12 @@ import { Router } from 'dva/router'
 import App from 'pages/app'
 import { auth } from 'utils'
 
+/* const registerModel = (app, model) => {
+  if (!(app._models.filter(m => m.namespace === model.namespace).length === 1)) {
+    app.model(model)
+  }
+} */
+
 const Routers = function({ history, app }) {
   const routes = [
     {
@@ -14,6 +20,11 @@ const Routers = function({ history, app }) {
           cb(null, { component: require('pages/home') })
         }, 'home')
       },
+      /* onEnter() {
+        require.ensure([], require => {
+          registerModel(app, require('models/commonStore'))
+        }, 'root')
+      }, */
       childRoutes: [
         ...require('./rbac')(app, auth),
         ...require('./car')(app, auth),

@@ -104,5 +104,5 @@ const fields = [
   },
 ]
 
-export default connect(mapStateToProps)(Form.create()(Add))
+export default Form.create()(connect(mapStateToProps)(Add))
 

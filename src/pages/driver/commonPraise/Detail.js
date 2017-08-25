@@ -1,22 +1,19 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:56:10 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:56:10 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Upload, Modal,
-  Button, Card, Radio, InputNumber, Alert, message } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Upload, Modal, Button, Card } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, commonPraise, imgURLList,previewVisible,previewImage } = props;
+let Detail = options => {
+  const { dispatch, commonPraise, imgURLList, previewVisible, previewImage } = options
 
   const formItemLayout = {
     labelCol: {
@@ -27,7 +24,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -39,35 +36,35 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'commonPraiseStore/toPage',
-    });
-  };
+    })
+  }
 
   // 预览图片
-  const lookPreview = (file) => {
+  const lookPreview = file => {
     dispatch({
       type: 'commonPraiseStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 关闭预览图片
-  const unlookPreview = (e) => {
+  const unlookPreview = e => {
     dispatch({
       type: 'commonPraiseStore/unlookPreview',
-    });
-  };
-  //下载文件
+    })
+  }
+  // 下载文件
   const download = () => {
     dispatch({
       type: 'driverCommonStore/download',
       URL: commonPraise.fileURL,
-    });
+    })
   }
 
   return (
@@ -82,8 +79,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.carNo}
                 </FormItem>
@@ -92,8 +89,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.plateNumber}
                 </FormItem>
@@ -102,8 +99,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.userName}
                 </FormItem>
@@ -112,8 +109,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.qualificationNo}
                 </FormItem>
@@ -122,8 +119,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         来电者姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.callName}
                 </FormItem>
@@ -132,8 +129,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         来电者联系方式&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.callMobile}
                 </FormItem>
@@ -142,8 +139,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         来电时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.callTime}
                 </FormItem>
@@ -152,8 +149,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         事情发生时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.creditTime}
                 </FormItem>
@@ -162,8 +159,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         事情发生经过&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.creditDesc}
                 </FormItem>
@@ -172,8 +169,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         图片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -191,8 +188,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         上传文件&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {commonPraise.fileURL ? <Button type="danger" icon="download" onClick={download} >下载</Button> : '未上传'}
                 </FormItem>
@@ -206,8 +203,8 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ commonPraiseStore }) {
   return {
@@ -215,9 +212,8 @@ function mapStateToProps({ commonPraiseStore }) {
     previewVisible: commonPraiseStore.previewVisible,
     imgURLList: commonPraiseStore.imgURLList,
     previewImage: commonPraiseStore.previewImage,
-  };
+  }
 }
 
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

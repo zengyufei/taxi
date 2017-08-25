@@ -1,5 +1,5 @@
 import { connect } from 'dva'
-import { Button, Popconfirm, Table } from 'antd'
+import { Form, Button, Popconfirm, Table } from 'antd'
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
 import { getFields, getSearchFields } from 'FormUtils'
@@ -180,4 +180,4 @@ const fields = [
   },
 ]
 
-export default connect(mapStateToProps, mapDispatchToProps)(List)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))

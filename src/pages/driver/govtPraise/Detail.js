@@ -1,22 +1,19 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:00:30 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 15:00:30 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Upload, Modal,
-  Button, Card, Radio, InputNumber, Alert, message } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Upload, Modal, Button, Card } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, govtPraise, imgURLList,previewVisible,previewImage } = props;
+let Detail = options => {
+  const { dispatch, govtPraise, imgURLList, previewVisible, previewImage } = options
 
   const formItemLayout = {
     labelCol: {
@@ -27,7 +24,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -39,50 +36,50 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
   // 预览图片
-  const lookPreview = (file) => {
+  const lookPreview = file => {
     dispatch({
       type: 'govtPraiseStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 关闭预览图片
-  const unlookPreview = (e) => {
+  const unlookPreview = e => {
     dispatch({
       type: 'govtPraiseStore/unlookPreview',
-    });
-  };
-  //下载文件
+    })
+  }
+  // 下载文件
   const download = () => {
     dispatch({
       type: 'driverCommonStore/download',
       URL: govtPraise.fileURL,
-    });
+    })
   }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'govtPraiseStore/toPage',
-    });
-  };
+    })
+  }
 
-  let praiseGradeDesc;
+  let praiseGradeDesc
   switch (govtPraise.praiseGrade) {
     case 'COUNTRY':
-      praiseGradeDesc = '国家级';
-      break;
+      praiseGradeDesc = '国家级'
+      break
     case 'PROVINCE':
-      praiseGradeDesc = '省级';
-      break;
+      praiseGradeDesc = '省级'
+      break
     case 'CITY':
-      praiseGradeDesc = '市级';
-      break;
+      praiseGradeDesc = '市级'
+      break
     case 'DISTRICT':
-      praiseGradeDesc = '区级';
-      break;
+      praiseGradeDesc = '区级'
+      break
   }
 
   return (
@@ -97,8 +94,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.carNo}
                 </FormItem>
@@ -107,8 +104,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.plateNumber}
                 </FormItem>
@@ -117,8 +114,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.userName}
                 </FormItem>
@@ -127,8 +124,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.qualificationNo}
                 </FormItem>
@@ -137,8 +134,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         表彰的文件名称&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.praiseFileName}
                 </FormItem>
@@ -147,8 +144,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         政府部门&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.govtOrg}
                 </FormItem>
@@ -157,8 +154,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         表彰时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.creditDate}
                 </FormItem>
@@ -167,8 +164,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         等级&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {praiseGradeDesc}
                 </FormItem>
@@ -177,8 +174,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         网址链接&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.newsUrl}
                 </FormItem>
@@ -187,8 +184,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         图片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -206,8 +203,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         上传文件&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {govtPraise.fileURL ? <Button type="danger" icon="download" onClick={download} >下载</Button> : '未上传'}
                 </FormItem>
@@ -221,8 +218,8 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ govtPraiseStore }) {
   return {
@@ -230,8 +227,7 @@ function mapStateToProps({ govtPraiseStore }) {
     previewVisible: govtPraiseStore.previewVisible,
     imgURLList: govtPraiseStore.imgURLList,
     previewImage: govtPraiseStore.previewImage,
-  };
+  }
 }
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

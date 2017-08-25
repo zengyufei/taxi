@@ -66,7 +66,7 @@ export default extend({
     // 修改页面
     toEdit(state, action) {
       let imgURLList = []
-      if (action.govtPraise.imgURL != null) {
+      if (action.govtPraise.imgURL) {
         imgURLList = [{ uid: 0, url: UPLOAD_URL + action.govtPraise.imgURL, status: 'done' }]
       }
       return { ...state, register: true, res: action.res, govtPraise: action.govtPraise, imgURLList }
@@ -121,7 +121,7 @@ export default extend({
         yield put({ type: 'cleanImage' })
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 政府表扬 页面
     * update(playload, { post, put, select }) {
@@ -132,7 +132,7 @@ export default extend({
         yield put({ type: 'cleanImage' })
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除政府表扬
@@ -142,7 +142,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.govtPraiseStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

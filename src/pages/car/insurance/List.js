@@ -2,10 +2,10 @@
  * @Author: zengyufei
  * @Date: 2017-08-23 15:40:58
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-24 14:07:51
+ * @Last Modified time: 2017-08-25 14:05:38
  */
 import { connect } from 'dva'
-import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
+import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
 import qs from 'qs'
 import moment from 'moment'
 
@@ -20,10 +20,10 @@ import Info from './Info.js'
 
 const { tokenSessionKey } = constant
 
-let Insurance = option => {
+let List = option => {
   const { loading, form, page, methods, res, pageState } = option
   const { toAdd, toEdit, toInfo, exportInsurance, onShowSizeChange, onChange, handlerUpload, onSearch
-    ,insuranceBusinessing,insuranceBusiness,insuranceForceing,insuranceForce} = methods
+    , insuranceBusinessing, insuranceBusiness, insuranceForceing, insuranceForce } = methods
 
   /**
    * 导入文件
@@ -307,4 +307,4 @@ const fields = [{
 }]
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Insurance)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))

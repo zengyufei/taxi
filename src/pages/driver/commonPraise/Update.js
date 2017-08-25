@@ -1,23 +1,22 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:57:03 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 15:44:15
  */
-import TweenOne from 'rc-tween-one';
-import { connect } from 'dva';
-import { Form, Input, Icon, Row, Col, Button, Card, message, Upload, Modal, DatePicker } from 'antd';
-import moment from 'moment';
+import TweenOne from 'rc-tween-one'
+import { connect } from 'dva'
+import { Form, Input, Icon, Row, Col, Button, Card, Upload, Modal, DatePicker } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const { tokenSessionKey } = constant;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Update = (props) => {
-  const { dispatch, form, commonPraise, imgURLList,imgURLImage,previewVisible,previewImage } = props;
-  const { getFieldDecorator } = form;
+const { tokenSessionKey } = constant
+
+let Update = options => {
+  const { dispatch, form, commonPraise, imgURLList, imgURLImage, previewVisible, previewImage } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -28,7 +27,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -40,83 +39,81 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   const uploadButton = (
     <div>
       <Icon type="plus" />
       <div className="ant-upload-text">添加</div>
     </div>
-  );
-  /* 上传图片*/
+  )
+  /* 上传图片 */
   const imgChange = ({ fileList }) => {
     dispatch({
       type: 'commonPraiseStore/imgChange',
       imgURLList: fileList,
-    });
-  };
+    })
+  }
   // 预览图片
-  const lookPreview = (file) => {
+  const lookPreview = file => {
     dispatch({
       type: 'commonPraiseStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 关闭预览图片
-  const unlookPreview = (e) => {
+  const unlookPreview = () => {
     dispatch({
       type: 'commonPraiseStore/unlookPreview',
-    });
-  };
+    })
+  }
 
   /**
    * 上传文件
-   * @type {{name: string, action: string, headers: {authorization: string}, onChange: ((info))}}
    */
-  ;
-  let fileURL;
+  let fileURL
   const importCar = {
     name: 'file',
-    action: `${BASE_URL}/fileupload/docs.htm?token=${token}`,
+    action: `${BASE_URL}/fileupload/docs.htm?token=${session.get(tokenSessionKey)}`,
     headers: {
       authorization: 'authorization-text',
     },
     onChange(info) {
       if (info.file.status !== 'uploading') {
-        console.log('uploading');
+        console.log('uploading')
       }
       if (info.file.status === 'done') {
-        fileURL = info.file.response;
+        fileURL = info.file.response
       } else if (info.file.status === 'error') {
-        console.log('error');
+        console.log('error')
       }
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'commonPraiseStore/update',
           ...values,
-          callTime: form.getFieldValue('callTime') != undefined ? form.getFieldValue('callTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-          creditTime: form.getFieldValue('creditTime') != undefined ? form.getFieldValue('creditTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          callTime: form.getFieldValue('callTime') !== undefined ? form.getFieldValue('callTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          creditTime: form.getFieldValue('creditTime') !== undefined ? form.getFieldValue('creditTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
           imgURL: imgURLImage,
-          fileURL : fileURL,
-        });
+          fileURL,
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = () => {
     dispatch({
       type: 'commonPraiseStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -132,8 +129,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('qualificationNo', {
@@ -147,8 +144,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
@@ -162,8 +159,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('carNo', {
@@ -177,8 +174,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
@@ -192,8 +189,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         来电者姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('callName', {
@@ -208,8 +205,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         来电者联系方式&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('callMobile', {
@@ -224,8 +221,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         来电时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('callTime', {
@@ -240,8 +237,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         事情发生时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('creditTime', {
@@ -256,8 +253,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         事情发生经过&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('creditDesc', {
@@ -272,13 +269,13 @@ let Update = (props) => {
                   label={(
                     <span>
                         图片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('imgURL', {})(
                     <div>
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={imgURLList}
                         onPreview={lookPreview}
@@ -297,8 +294,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         文件上传&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('fileURL', {})(
                     <div>
@@ -324,8 +321,8 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ commonPraiseStore }) {
   return {
@@ -334,8 +331,7 @@ function mapStateToProps({ commonPraiseStore }) {
     imgURLList: commonPraiseStore.imgURLList,
     previewImage: commonPraiseStore.previewImage,
     imgURLImage: commonPraiseStore.imgURLImage,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+export default Form.create()(connect(mapStateToProps)(Update))

@@ -1,19 +1,15 @@
-import { Form } from 'antd'
-
 import List from './List'
 import Add from './Add'
 import Update from './Update'
 
-const SysRole = option => {
-  const { form } = option
-
+const index = () => {
   return (
     <div>
       <Add />
       <Update />
-      <List form={form} />
+      <List />
     </div>
   )
 }
 
-export default Form.create()(SysRole)
+export default index

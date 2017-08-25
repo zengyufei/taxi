@@ -1,23 +1,21 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:51:06 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:51:06 
  */
 import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd'
+import { Form, Input, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd'
 import moment from 'moment'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 const RadioGroup = Radio.Group
 
-let Update = props => {
-  const { dispatch, form, securityDeposit, startValue, endValue } = props
+let Update = options => {
+  const { dispatch, form, securityDeposit, startValue, endValue } = options
   const { getFieldDecorator } = form
 
   const formItemLayout = {
@@ -51,15 +49,15 @@ let Update = props => {
         dispatch({
           type: 'securityDepositStore/update',
           ...values,
-          payDate: form.getFieldValue('payDate') != undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
-          refundDate: form.getFieldValue('refundDate') != undefined ? form.getFieldValue('refundDate').format('YYYY-MM-DD') : undefined,
+          payDate: form.getFieldValue('payDate') !== undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
+          refundDate: form.getFieldValue('refundDate') !== undefined ? form.getFieldValue('refundDate').format('YYYY-MM-DD') : undefined,
         })
       }
     })
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
       type: 'securityDepositStore/toPage',
     })
@@ -247,5 +245,4 @@ function mapStateToProps({ securityDepositStore, driverCommonStore }) {
   }
 }
 
-Update = Form.create()(Update)
-export default connect(mapStateToProps)(Update)
+export default Form.create()(connect(mapStateToProps)(Update))

@@ -46,26 +46,20 @@ function getColumns(fields, fieldKeys, extraFields) {
   const pick = _fieldKeys => {
     _fieldKeys = [].concat(_fieldKeys)
     columns = _fieldKeys.map(fieldKey => {
-      let title
+      let column
       for (let i in columns) {
         const item = fields[i]
-        if (fieldKey == (item.key || item.dataIndex)) {
-          title = item.name
+        if (fieldKey === (item.key || item.dataIndex)) {
+          // 如果fieldKey不存在，则创建text类型的column
+          column = {
+            dataIndex: fieldKey,
+            title: item.name || fieldKey,
+            render: value => {
+              return getFieldValue(value, item)
+            },
+          }
         }
       }
-
-      if (!title) {
-        title = fieldKey
-      }
-      // 如果fieldKey不存在，则创建text类型的column
-      const column = {
-        dataIndex: fieldKey,
-        title,
-        render: value => {
-          return getFieldValue(value)
-        },
-      }
-
       return column
     })
     return chain
@@ -104,7 +98,7 @@ function getColumns(fields, fieldKeys, extraFields) {
       let column
       for (let i in columns) {
         const item = columns[i]
-        if (item.dataIndex == extraColumn.dataIndex) {
+        if (item.dataIndex === extraColumn.dataIndex) {
           column = item.dataIndex
         }
       }

@@ -1,5 +1,11 @@
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:56:45 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:56:45 
+ */
 import { connect } from 'dva'
-import { Button, Popconfirm, Table, Upload, Modal } from 'antd'
+import { Form, Button, Popconfirm, Table, Upload, Modal } from 'antd'
 
 import qs from 'qs'
 
@@ -258,4 +264,4 @@ const fields = [{
 }]
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(index)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(index))

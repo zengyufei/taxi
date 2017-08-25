@@ -2,12 +2,11 @@
  * @Author: zengyufei
  * @Date: 2017-08-22 17:50:34
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-23 12:09:58
+ * @Last Modified time: 2017-08-25 13:46:48
  */
 import { connect } from 'dva'
-import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
+import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
 import qs from 'qs'
-import moment from 'moment'
 
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
@@ -22,7 +21,7 @@ const { tokenSessionKey } = constant
 const List = options => {
   const { loading, form, page, methods, res, pageState } = options
   const { onSearch, toAdd, toEdit, toInfo, exportAnnualVerification, onShowSizeChange, onChange, handlerUpload
-    ,synthesizeing,synthesize,drivingLicenseing,drivingLicense,taximetering,taximeter } = methods
+    , synthesizeing, synthesize, drivingLicenseing, drivingLicense, taximetering, taximeter } = methods
 
   /**
    * 导入文件
@@ -320,4 +319,4 @@ const searchFields = [{
   key: 'plateNumber',
 }]
 
-export default connect(mapStateToProps, mapDispatchToProps)(List)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))

@@ -2,8 +2,8 @@ import TweenOne from 'rc-tween-one'
 import { connect } from 'dva'
 import ZFormItem from 'ZFormItem'
 import { getFields } from 'FormUtils'
-import { Form, Input, Icon, Row, Col, Button, Card, Upload, Modal,
-  DatePicker, Radio, InputNumber, Cascader } from 'antd'
+import { Form, Input, Row, Col, Button, Card,
+  DatePicker, Radio, InputNumber } from 'antd'
 import moment from 'moment'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
@@ -74,8 +74,8 @@ let Update = options => {
         dispatch({
           type: 'trafficAccidentStore/update',
           ...values,
-          accidentTime: form.getFieldValue('accidentTime') != undefined ? form.getFieldValue('accidentTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-          closeDate: form.getFieldValue('closeDate') != undefined ? form.getFieldValue('closeDate').format('YYYY-MM-DD') : undefined,
+          accidentTime: form.getFieldValue('accidentTime') !== undefined ? form.getFieldValue('accidentTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          closeDate: form.getFieldValue('closeDate') !== undefined ? form.getFieldValue('closeDate').format('YYYY-MM-DD') : undefined,
           areaCode: form.getFieldValue('areaCode')[2],
         })
       }
@@ -449,5 +449,4 @@ function mapStateToProps({ trafficAccidentStore }) {
   }
 }
 
-Update = Form.create()(Update)
-export default connect(mapStateToProps)(Update)
+export default Form.create()(connect(mapStateToProps)(Update))

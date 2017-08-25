@@ -6,19 +6,19 @@
  * 4. 从对象再获取对象点出来的在按需加载下面
  * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd';
-import moment from 'moment';
+import { connect } from 'dva'
+import { Form, Input, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioGroup = Radio.Group
 
-let Update = (props) => {
-  const { dispatch, form, nonBusinessIncome } = props;
-  const { getFieldDecorator } = form;
+let Update = options => {
+  const { dispatch, form, nonBusinessIncome } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -29,7 +29,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -41,28 +41,28 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'nonBusinessIncomeStore/update',
           ...values,
-          payDate: form.getFieldValue('payDate') != undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
-        });
+          payDate: form.getFieldValue('payDate') !== undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'nonBusinessIncomeStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -77,8 +77,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('qualificationNo', {
                     rules: [{ required: true, whitespace: true, message: '请输入从业资格证号!' }],
@@ -92,8 +92,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('userName', {
                     initialValue: nonBusinessIncome.userName,
@@ -106,8 +106,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('carNo', {
                     initialValue: nonBusinessIncome.carNo,
@@ -120,8 +120,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateNumber', {
                     initialValue: nonBusinessIncome.plateNumber,
@@ -134,8 +134,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         类型&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('inComeType', {
                     rules: [{ required: true, message: '请选择类型!' }],
@@ -155,8 +155,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         项目名称&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('itemName', {
                     rules: [{ required: true, whitespace: true, message: '请输入项目名称!' }],
@@ -170,8 +170,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('amount', {
                     rules: [{ required: true, message: '请输入金额!' }],
@@ -185,8 +185,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         缴款日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('payDate', {
                     rules: [{ required: true, message: '请选择缴款日期!' }],
@@ -198,7 +198,10 @@ let Update = (props) => {
                     <Button key="registerButton" type="primary" htmlType="submit" size="large">保存</Button>
                   </ZButton>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+                                        htmlType="button"
+                                        size="large"
+                                        style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -208,14 +211,13 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ nonBusinessIncomeStore }) {
   return {
     nonBusinessIncome: nonBusinessIncomeStore.nonBusinessIncome,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+export default Form.create()(connect(mapStateToProps)(Update))

@@ -1,23 +1,21 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:01:27 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 15:01:27 
  */
-import TweenOne from 'rc-tween-one';
-import { connect } from 'dva';
-import { Form, Input, Icon, Row, Col, Button, Card, message, Upload, Modal, DatePicker, InputNumber, AutoComplete, Radio } from 'antd';
+import TweenOne from 'rc-tween-one'
+import { connect } from 'dva'
+import { Form, Input, Row, Col, Button, Card, Modal, DatePicker, InputNumber, AutoComplete, Radio } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioButton = Radio.Button
+const RadioGroup = Radio.Group
 
-let Add = (props) => {
-  const { dispatch, form, driver,drivers,carNos,visible, } = props;
-  const { getFieldDecorator } = form;
+let Add = options => {
+  const { dispatch, form, driver, drivers, carNos, visible } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -28,7 +26,7 @@ let Add = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -40,83 +38,84 @@ let Add = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'lostAndFoundStore/insert',
           ...values,
-          handTime: form.getFieldValue('handTime') != undefined ? form.getFieldValue('handTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-          returnTime: form.getFieldValue('returnTime') != undefined ? form.getFieldValue('returnTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-        });
+          handTime: form.getFieldValue('handTime') !== undefined ? form.getFieldValue('handTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          returnTime: form.getFieldValue('returnTime') !== undefined ? form.getFieldValue('returnTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+        })
       }
-    });
+    })
   };
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'lostAndFoundStore/toPage',
-    });
+    })
   };
 
   /** 模糊查询 车辆自编号 */
-  const handleSearch = (value) => {
+  const handleSearch = value => {
     dispatch({
       type: 'driverCommonStore/queryLikeCarNo',
       str: value,
-    });
+    })
   };
   /** 自编号查询车信息 */
   const queryByCarNo = () => {
     dispatch({
       type: 'driverCommonStore/queryDriverListByOption',
       carNo: form.getFieldValue('carNo'),
-    });
+    })
   };
-  let carNo,rbs=[];
+  let carNo, 
+rbs = []
   const onCancel = () => {
     dispatch({
       type: 'driverCommonStore/onCancel',
       visible: false,
       drivers: [],
-    });
+    })
   }
 
-  if(drivers.length == 1) {
+  if (drivers.length === 1) {
     dispatch({
       type: 'driverCommonStore/queryDriver',
-      drivers: drivers,
-      driver: driver,
+      drivers,
+      driver,
       index: 0,
-    });
-    onCancel();
+    })
+    onCancel()
   } else if (drivers.length > 1) {
     drivers.forEach((value, index) => {
-      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>);
+      rbs.push(<RadioButton key={index} value={index}>{value.userName} {value.qualificationNo}</RadioButton>)
     })
     // 弹出选择框
     dispatch({
       type: 'driverCommonStore/onCancel',
       visible: true,
-      drivers: drivers,
-    });
+      drivers,
+    })
   }
-  const onOk = (e) => {
+  const onOk = e => {
     dispatch({
       type: 'driverCommonStore/queryDriver',
-      drivers: drivers,
-      driver: driver,
+      drivers,
+      driver,
       index: e.target.value,
-    });
-    onCancel();
+    })
+    onCancel()
   }
-  if(driver.features != undefined || driver.features != null){
-    carNo = JSON.parse(driver.features).carNo;
+  if (driver.features) {
+    carNo = JSON.parse(driver.features).carNo
   }
 
   return (
@@ -136,16 +135,16 @@ let Add = (props) => {
           <Col span={14}>
             <Form onSubmit={handleSubmit} style={{ maxWidth: '100%', marginTop: '10px' }}>
               <Card title="新增失物认领">
-                {getFieldDecorator('carId', { initialValue: driver != undefined ? driver.carId : '' })(<Input type="hidden" />)}
-                {getFieldDecorator('driverId', { initialValue: driver != undefined ? driver.id : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('carId', { initialValue: driver !== undefined ? driver.carId : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('driverId', { initialValue: driver !== undefined ? driver.id : '' })(<Input type="hidden" />)}
                 {getFieldDecorator('creditType', { initialValue: 'LOST_AND_FOUND' })(<Input type="hidden" />)}
                 <FormItem
                   {...formItemLayout}
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
@@ -160,7 +159,7 @@ let Add = (props) => {
                     )}
                   </Col>
                   <Col span={4}>
-                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                    <Button style={{ marginLeft: '30px' }} onClick={queryByCarNo}>查询</Button>
                   </Col>
                 </FormItem>
                 <FormItem
@@ -168,12 +167,12 @@ let Add = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver.features != undefined ? JSON.parse(driver.features).plateNumber : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver.features !== undefined ? JSON.parse(driver.features).plateNumber : '',
                   })(
                     <Input disabled />
                   )}
@@ -183,13 +182,13 @@ let Add = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
                     {getFieldDecorator('qualificationNo', {
-                      initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.qualificationNo : '',
+                      initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.qualificationNo : '',
                     })(
                       <Input disabled />
                     )}
@@ -200,12 +199,12 @@ let Add = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.userName : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.userName : '',
                   })(
                     <Input disabled />
                   )}
@@ -216,8 +215,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         物品名称&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('articleName', {
@@ -231,8 +230,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         物品数量&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('articleCount', {
@@ -244,8 +243,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         物品金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('articleAmount')(<InputNumber max={9999999} />)}
@@ -255,8 +254,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         上交时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('handTime', {
@@ -270,8 +269,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         归还时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('returnTime')(
@@ -283,8 +282,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         失主姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('lostUserName', {
@@ -295,8 +294,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         失主电话&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('lostMobile', {
@@ -307,8 +306,8 @@ let Add = (props) => {
                   label={(
                     <span>
                         归还经办人&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('returnOprator')(<Input />)}
@@ -318,11 +317,11 @@ let Add = (props) => {
                   label={(
                     <span>
                         备注&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
-                  {getFieldDecorator('remark')(<Input type="textarea" rows={4}/>)}
+                  {getFieldDecorator('remark')(<Input type="textarea" rows={4} />)}
                 </FormItem>
 
                 <FormItem {...tailFormItemLayout}>
@@ -337,7 +336,7 @@ let Add = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
+  )
 };
 
 function mapStateToProps({ driverCommonStore }) {
@@ -346,8 +345,7 @@ function mapStateToProps({ driverCommonStore }) {
     driver: driverCommonStore.driver,
     drivers: driverCommonStore.drivers,
     visible: driverCommonStore.visible,
-  };
+  }
 }
 
-Add = Form.create()(Add);
-export default connect(mapStateToProps)(Add);
+export default Form.create()(connect(mapStateToProps)(Add))

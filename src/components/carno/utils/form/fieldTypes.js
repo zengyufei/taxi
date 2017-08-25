@@ -42,7 +42,7 @@ const fieldTypes = {
       })
       return occ
     }, [])
-    placeholder = placeholder == false ? '' : (placeholder || `请选择${field.name}`)
+    placeholder = placeholder === false ? '' : (placeholder || `请选择${field.name}`)
     return (
       <Select placeholder={placeholder} {...inputProps} >
         {enumsArray.map(item =>
@@ -63,21 +63,21 @@ const fieldTypes = {
     return <InputNumber min={meta.min || -Infinity} max={meta.max || Infinity} step={meta.step || 1} {...inputProps} />
   },
   textarea: ({ meta = {}, field, placeholder, inputProps }) => {
-    placeholder = placeholder == false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
+    placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
     return <Input type="textarea" rows={meta.rows || 3} placeholder={placeholder} autosize={meta.autosize} {...inputProps} />
   },
   text: ({ meta = {}, field, placeholder, inputProps }) => {
-    placeholder = placeholder == false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
+    placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
     const disabled = inputProps.disabled || meta.disabled || false
     return <Input type="text" placeholder={placeholder} {...inputProps} disabled={disabled} />
   },
   password: ({ meta = {}, field, placeholder, inputProps }) => {
-    placeholder = placeholder == false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
+    placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
     const disabled = inputProps.disabled || meta.disabled || false
     return <Input type="password" placeholder={placeholder} {...inputProps} disabled={disabled} />
   },
   textNumber: ({ meta = {}, field, placeholder, inputProps }) => {
-    placeholder = placeholder == false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
+    placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
     return <Input type="text" placeholder={placeholder} {...inputProps} />
   },
 }

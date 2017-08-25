@@ -1,5 +1,5 @@
 import { connect } from 'dva'
-import { Button, Table } from 'antd'
+import { Form, Button, Table } from 'antd'
 
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
@@ -67,7 +67,6 @@ let index = option => {
   } else if (res === 'detail') {
     a = <Detail key="detail" />
   }
-
 
   return (
     <div>
@@ -282,4 +281,4 @@ const fields = [{
   },
 }]
 
-export default connect(mapStateToProps, mapDispatchToProps)(index)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(index))

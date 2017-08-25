@@ -1,8 +1,8 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-24 11:41:55 
+ * @Author: zengyufei
+ * @Date: 2017-08-24 11:41:55
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-24 11:44:56
+ * @Last Modified time: 2017-08-25 15:00:00
  */
 import TweenOne from 'rc-tween-one'
 
@@ -115,7 +115,6 @@ let Update = options => {
     },
   }
 
-  console.log(driver)
   const itemProps = { form,
     item: {
       ...driver,
@@ -133,17 +132,17 @@ let Update = options => {
         dispatch({
           type: 'driverStore/update',
           ...values,
-          accidentInsuranceBeginDate: form.getFieldValue('insuranceRange') != undefined ? form.getFieldValue('insuranceRange')[0].format('YYYY-MM-DD') : undefined,
-          accidentInsuranceEndDate: form.getFieldValue('insuranceRange') != undefined ? form.getFieldValue('insuranceRange')[1].format('YYYY-MM-DD') : undefined,
-          licenseDate: form.getFieldValue('licenseDate') != undefined ? form.getFieldValue('licenseDate').format('YYYY-MM-DD') : undefined,
-          licenseStartDate: form.getFieldValue('licenseRange') != undefined ? form.getFieldValue('licenseRange')[0].format('YYYY-MM-DD') : undefined,
-          licenseEndDate: form.getFieldValue('licenseRange') != undefined ? form.getFieldValue('licenseRange')[1].format('YYYY-MM-DD') : undefined,
-          entryDate: form.getFieldValue('entryDate') != undefined ? form.getFieldValue('entryDate').format('YYYY-MM-DD') : undefined,
-          leaveDate: form.getFieldValue('leaveDate') != undefined ? form.getFieldValue('leaveDate').format('YYYY-MM-DD') : undefined,
-          labourContractBeginDate: form.getFieldValue('labourRange') != undefined ? form.getFieldValue('labourRange')[0].format('YYYY-MM-DD') : undefined,
-          labourContractEndDate: form.getFieldValue('labourRange') != undefined ? form.getFieldValue('labourRange')[1].format('YYYY-MM-DD') : undefined,
-          manageContractBeginDate: form.getFieldValue('manageRange') != undefined ? form.getFieldValue('manageRange')[0].format('YYYY-MM-DD') : undefined,
-          manageContractEndDate: form.getFieldValue('manageRange') != undefined ? form.getFieldValue('manageRange')[1].format('YYYY-MM-DD') : undefined,
+          accidentInsuranceBeginDate: form.getFieldValue('insuranceRange') !== undefined ? form.getFieldValue('insuranceRange')[0].format('YYYY-MM-DD') : undefined,
+          accidentInsuranceEndDate: form.getFieldValue('insuranceRange') !== undefined ? form.getFieldValue('insuranceRange')[1].format('YYYY-MM-DD') : undefined,
+          licenseDate: form.getFieldValue('licenseDate') !== undefined ? form.getFieldValue('licenseDate').format('YYYY-MM-DD') : undefined,
+          licenseStartDate: form.getFieldValue('licenseRange') !== undefined ? form.getFieldValue('licenseRange')[0].format('YYYY-MM-DD') : undefined,
+          licenseEndDate: form.getFieldValue('licenseRange') !== undefined ? form.getFieldValue('licenseRange')[1].format('YYYY-MM-DD') : undefined,
+          entryDate: form.getFieldValue('entryDate') !== undefined ? form.getFieldValue('entryDate').format('YYYY-MM-DD') : undefined,
+          leaveDate: form.getFieldValue('leaveDate') !== undefined ? form.getFieldValue('leaveDate').format('YYYY-MM-DD') : undefined,
+          labourContractBeginDate: form.getFieldValue('labourRange') !== undefined ? form.getFieldValue('labourRange')[0].format('YYYY-MM-DD') : undefined,
+          labourContractEndDate: form.getFieldValue('labourRange') !== undefined ? form.getFieldValue('labourRange')[1].format('YYYY-MM-DD') : undefined,
+          manageContractBeginDate: form.getFieldValue('manageRange') !== undefined ? form.getFieldValue('manageRange')[0].format('YYYY-MM-DD') : undefined,
+          manageContractEndDate: form.getFieldValue('manageRange') !== undefined ? form.getFieldValue('manageRange')[1].format('YYYY-MM-DD') : undefined,
           censusAreaCode: form.getFieldValue('censusAreaCode')[2],
           nativeAreaCode: form.getFieldValue('nativeAreaCode')[2],
           insuranceRange: '',
@@ -153,7 +152,7 @@ let Update = options => {
           identity: form.getFieldValue('qualificationNo'),
           maxBloodPressure: form.getFieldValue('pressure').split('/')[0],
           minBloodPressure: form.getFieldValue('pressure').split('/')[1],
-          mobile: (form.getFieldValue('mobile2') != undefined && form.getFieldValue('mobile2') != '') ? `${form.getFieldValue('mobile')},${form.getFieldValue('mobile2')}` : form.getFieldValue('mobile'),
+          mobile: (form.getFieldValue('mobile2') !== undefined && form.getFieldValue('mobile2') !== '') ? `${form.getFieldValue('mobile')},${form.getFieldValue('mobile2')}` : form.getFieldValue('mobile'),
         })
       }
     })
@@ -478,13 +477,13 @@ let Update = options => {
                       {
                         getFieldDecorator('policyNo', {
                           rules: [{ required: true, message: '请输入意外险单号!' }],
-                          initialValue: driver.insuranceCompany,
+                          initialValue: driver.policyNo,
                         })(<Input />)
                       }
                     </div> : <div>
                       {
                         getFieldDecorator('policyNo', {
-                          initialValue: driver.insuranceCompany,
+                          initialValue: driver.policyNo,
                         })(<Input disabled />)
                       }
                     </div>
@@ -628,7 +627,10 @@ let Update = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('emergencyContact', { initialValue: driver.emergencyContact })(<Input />)}
+                  {getFieldDecorator('emergencyContact', {
+                    rules: [{ required: true, message: '请输入紧急联系人姓名!' }],
+                    initialValue: driver.emergencyContact,
+                  })(<Input />)}
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
@@ -639,7 +641,7 @@ let Update = options => {
                   )}
                 >
                   {getFieldDecorator('emergencyMobile', {
-                    rules: [{ pattern: /^1[34578]\d{9}$/, message: '手机格式错误!' }],
+                    rules: [{ required: true, message: '请输入紧急联系人手机号!' }, { pattern: /^1[34578]\d{9}$/, message: '手机格式错误!' }],
                     initialValue: driver.emergencyMobile,
                   })(<Input />)}
                 </FormItem>
@@ -671,6 +673,5 @@ function mapStateToProps({ driverStore }) {
   }
 }
 
-Update = Form.create()(Update)
-export default connect(mapStateToProps)(Update)
+export default Form.create()(connect(mapStateToProps)(Update))
 

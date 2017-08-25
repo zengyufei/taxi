@@ -18,7 +18,7 @@ const FormItem = Form.Item
 const Option = Select.Option
 
 
-let CarUpdate = options => {
+const Update = options => {
   const { dispatch, form, car } = options
   const { getFieldDecorator } = form
   const { previewVisible, previewImage, plateList, ownershipList, roadTransportList, certificateList, plateImage, ownershipImage, roadTransportImage, certificateImage } = options
@@ -187,7 +187,7 @@ let CarUpdate = options => {
                   {getFieldDecorator('plateImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={plateList}
                         onPreview={handlePreview}
@@ -227,7 +227,7 @@ let CarUpdate = options => {
                   {getFieldDecorator('ownershipImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={ownershipList}
                         onPreview={handlePreview}
@@ -337,7 +337,7 @@ let CarUpdate = options => {
                   {getFieldDecorator('roadTransportImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={roadTransportList}
                         onPreview={handlePreview}
@@ -405,7 +405,7 @@ let CarUpdate = options => {
                   {getFieldDecorator('certificateImage')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={certificateList}
                         onPreview={handlePreview}
@@ -483,5 +483,4 @@ function mapStateToProps({ carStore }) {
   }
 }
 
-CarUpdate = Form.create()(CarUpdate)
-export default connect(mapStateToProps)(CarUpdate)
+export default Form.create()(connect(mapStateToProps)(Update))

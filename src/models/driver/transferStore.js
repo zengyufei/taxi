@@ -92,11 +92,12 @@ export default extend({
     },
     // 新增驾驶员过户
     * insert(playload, { post, put }) {
+      console.log(playload);return;
       const response = yield post(`${urlPrefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 驾驶员过户
     * update(playload, { post, put }) {
@@ -104,7 +105,7 @@ export default extend({
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除驾驶员过户
@@ -114,7 +115,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.transferStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

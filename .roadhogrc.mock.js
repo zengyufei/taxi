@@ -53,7 +53,7 @@ function readSyncDirToRequire(dirPath, isAbsolute = true) {
 }
 
 let mock = {};
-if (process.env.NODE_ENV == 'development' || process.env.NODE_ENV == 'dev') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev') {
   mock = readSyncDirToRequire(perfix);
 }
 

@@ -48,19 +48,19 @@ export default extend({
     },
     toEdit(state, action) {
       let plateList = []
-      if (action.annualVerification.plateImage != null) {
+      if (action.annualVerification.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.plateImage, status: 'done' }]
       }
       let synthesizeList = []
-      if (action.annualVerification.synthesizeFile != null) {
+      if (action.annualVerification.synthesizeFile !== null) {
         synthesizeList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.synthesizeFile, status: 'done' }]
       }
       let drivingLicenseList = []
-      if (action.annualVerification.drivingLicenseFile != null) {
+      if (action.annualVerification.drivingLicenseFile !== null) {
         drivingLicenseList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.drivingLicenseFile, status: 'done' }]
       }
       let taximeterList = []
-      if (action.annualVerification.taximeterFile != null) {
+      if (action.annualVerification.taximeterFile !== null) {
         taximeterList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.taximeterFile, status: 'done' }]
       }
 
@@ -78,19 +78,19 @@ export default extend({
     },
     toInfo(state, action) {
       let plateList = []
-      if (action.annualVerification.plateImage != null) {
+      if (action.annualVerification.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.plateImage, status: 'done' }]
       }
       let synthesizeList = []
-      if (action.annualVerification.synthesizeFile != null) {
+      if (action.annualVerification.synthesizeFile !== null) {
         synthesizeList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.synthesizeFile, status: 'done' }]
       }
       let drivingLicenseList = []
-      if (action.annualVerification.drivingLicenseFile != null) {
+      if (action.annualVerification.drivingLicenseFile !== null) {
         drivingLicenseList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.drivingLicenseFile, status: 'done' }]
       }
       let taximeterList = []
-      if (action.annualVerification.taximeterFile != null) {
+      if (action.annualVerification.taximeterFile !== null) {
         taximeterList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.taximeterFile, status: 'done' }]
       }
       return { ...state,

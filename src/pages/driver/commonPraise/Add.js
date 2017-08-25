@@ -1,10 +1,8 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:55:49 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 15:44:52
  */
 import TweenOne from 'rc-tween-one'
 import { connect } from 'dva'
@@ -12,9 +10,10 @@ import { Form, Input, Icon, Row, Col, Button, Card, Upload, Modal, DatePicker, A
 
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
-const { tokenSessionKey } = constant
 const RadioButton = Radio.Button
 const RadioGroup = Radio.Group
+
+const { tokenSessionKey } = constant
 
 let Add = options => {
   const { dispatch, form, driver, drivers, carNos, visible, imgURLList, imgURLImage, previewVisible, previewImage } = options
@@ -74,11 +73,11 @@ let Add = options => {
    * 上传文件
    * @type {{name: string, action: string, headers: {authorization: string}, onChange: ((info))}}
    */
-  
+
   let fileURL
   const importCar = {
     name: 'file',
-    action: `${BASE_URL}/fileupload/docs.htm?token=${token}`,
+    action: `${BASE_URL}/fileupload/docs.htm?token=${session.get(tokenSessionKey)}`,
     headers: {
       authorization: 'authorization-text',
     },
@@ -102,8 +101,8 @@ let Add = options => {
         dispatch({
           type: 'commonPraiseStore/insert',
           ...values,
-          callTime: form.getFieldValue('callTime') != undefined ? form.getFieldValue('callTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-          creditTime: form.getFieldValue('creditTime') != undefined ? form.getFieldValue('creditTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          callTime: form.getFieldValue('callTime') !== undefined ? form.getFieldValue('callTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          creditTime: form.getFieldValue('creditTime') !== undefined ? form.getFieldValue('creditTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
           imgURL: imgURLImage,
           fileURL,
         })
@@ -112,7 +111,7 @@ let Add = options => {
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
       type: 'commonPraiseStore/toPage',
     })
@@ -132,8 +131,8 @@ let Add = options => {
       carNo: form.getFieldValue('carNo'),
     })
   }
-  let carNo,
-    rbs = []
+  let carNo
+  let rbs = []
   const onCancel = () => {
     dispatch({
       type: 'driverCommonStore/onCancel',
@@ -142,7 +141,7 @@ let Add = options => {
     })
   }
 
-  if (drivers.length == 1) {
+  if (drivers.length === 1) {
     dispatch({
       type: 'driverCommonStore/queryDriver',
       drivers,
@@ -170,7 +169,7 @@ let Add = options => {
     })
     onCancel()
   }
-  if (driver.features != undefined || driver.features != null) {
+  if (driver.features) {
     carNo = JSON.parse(driver.features).carNo
   }
 
@@ -228,7 +227,7 @@ let Add = options => {
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver.features != undefined ? JSON.parse(driver.features).plateNumber : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver.features !== undefined ? JSON.parse(driver.features).plateNumber : '',
                   })(
                     <Input disabled />
                   )}
@@ -244,7 +243,7 @@ let Add = options => {
                 >
                   <Col span={18}>
                     {getFieldDecorator('qualificationNo', {
-                      initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.qualificationNo : '',
+                      initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.qualificationNo : '',
                     })(
                       <Input disabled />
                     )}
@@ -260,7 +259,7 @@ let Add = options => {
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.userName : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.userName : '',
                   })(
                     <Input disabled />
                   )}
@@ -352,7 +351,7 @@ let Add = options => {
                   {getFieldDecorator('imgURL', {})(
                     <div>
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={imgURLList}
                         onPreview={lookPreview}
@@ -413,5 +412,4 @@ function mapStateToProps({ driverCommonStore, commonPraiseStore }) {
   }
 }
 
-Add = Form.create()(Add)
-export default connect(mapStateToProps)(Add)
+export default Form.create()(connect(mapStateToProps)(Add))

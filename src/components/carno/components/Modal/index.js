@@ -34,7 +34,7 @@ export default class HModal extends React.Component {
     }
 
     // 如果confirmLoading 从true转变为flase,则隐藏modal
-    /* if (confirmLoading == false && this.props.confirmLoading) {
+    /* if (confirmLoading === false && this.props.confirmLoading) {
       this.setState({
         visible: false,
       });
@@ -55,7 +55,7 @@ export default class HModal extends React.Component {
     const { confirmLoading, form, onOk } = this.props
     const hideModal = () => {
       // 如果没有传递confirmLoading,则直接关闭窗口
-      if (confirmLoading == undefined) {
+      if (confirmLoading === undefined) {
         this.handleCancel()
       }
     }

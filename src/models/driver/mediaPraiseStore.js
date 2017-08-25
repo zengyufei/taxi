@@ -66,7 +66,7 @@ export default extend({
     // 修改页面
     toEdit(state, action) {
       let imgURLList = []
-      if (action.mediaPraise.imgURL != null) {
+      if (action.mediaPraise.imgURL) {
         imgURLList = [{ uid: 0, url: UPLOAD_URL + action.mediaPraise.imgURL, status: 'done' }]
       }
       return { ...state, register: true, res: action.res, mediaPraise: action.mediaPraise, imgURLList }
@@ -121,7 +121,7 @@ export default extend({
         yield put({ type: 'cleanImage' })
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 媒体报道
     * update(playload, { post, put, select }) {
@@ -132,7 +132,7 @@ export default extend({
         yield put({ type: 'cleanImage' })
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除媒体报道
@@ -142,7 +142,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.mediaPraiseStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

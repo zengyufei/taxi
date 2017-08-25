@@ -1,28 +1,22 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:04:21 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 14:05:11
  */
-import TweenOne from 'rc-tween-one';
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Switch,
-  Button, Card, Radio, InputNumber, DatePicker, Alert, message, Upload, Modal } from 'antd';
-import moment from 'moment';
+import TweenOne from 'rc-tween-one'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
-const { RangePicker } = DatePicker;
-const Option = Select.Option;
+import { connect } from 'dva'
+import { Form, Row, Col,
+  Button, Card, Upload, Modal } from 'antd'
 
-let InsuranceInfo = (props) => {
-  const { dispatch, form, insurance } = props;
-  const { getFieldDecorator } = form;
-  const { plateList, previewVisible, previewImage, insuranceList } = props;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+
+const Info = options => {
+  const { dispatch, insurance } = options
+  const { plateList, previewVisible, previewImage, insuranceList } = options
 
   const formItemLayout = {
     labelCol: {
@@ -33,7 +27,7 @@ let InsuranceInfo = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -45,29 +39,29 @@ let InsuranceInfo = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'insuranceStore/queryPage',
-    });
-  };
+    })
+  }
 
   // 预览图片
-  const handlePreview = (file) => {
+  const handlePreview = file => {
     dispatch({
       type: 'insuranceStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 删除图片
-  const handleCancel = (e) => {
+  const handleCancel = e => {
     dispatch({
       type: 'insuranceStore/unlookPreview',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -81,8 +75,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {insurance.carNo}
@@ -92,8 +86,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {insurance.plateNumber}
@@ -103,8 +97,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         车辆照片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   <div >
                     <Upload
@@ -123,8 +117,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         保险类型 &nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {insurance.insuranceTypeName}
@@ -134,8 +128,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         保险公司 &nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {insurance.insuranceCompany}
@@ -145,19 +139,19 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         保险种类 &nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
-                  {insurance.bizInsuranceStr.replace(/_/g,'=')}
+                  {insurance.bizInsuranceStr.replace(/_/g, '=')}
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
                   label={(
                     <span>
                         保险金额 &nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {insurance.insuranceMoney}(元)
@@ -167,8 +161,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         保险单号 &nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {insurance.policyNo}
@@ -178,8 +172,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         保险有效扫描件&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   <div >
                     <Upload
@@ -198,8 +192,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                         保险生效时间 &nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   { insurance.insuranceBuyDate}
                 </FormItem>
@@ -208,8 +202,8 @@ let InsuranceInfo = (props) => {
                   label={(
                     <span>
                          保险到期时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   { insurance.insuranceExpireDate}
                 </FormItem>
@@ -224,8 +218,8 @@ let InsuranceInfo = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ insuranceStore }) {
   return {
@@ -234,7 +228,6 @@ function mapStateToProps({ insuranceStore }) {
     previewVisible: insuranceStore.previewVisible,
     previewImage: insuranceStore.previewImage,
     insuranceList: insuranceStore.insuranceList,
-  };
+  }
 }
-InsuranceInfo = Form.create()(InsuranceInfo);
-export default connect(mapStateToProps)(InsuranceInfo);
+export default Form.create()(connect(mapStateToProps)(Info))

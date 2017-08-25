@@ -140,4 +140,4 @@ const fields = [
   },
 ]
 
-export default connect(mapStateToProps)(Form.create()(Header))
+export default Form.create()(connect(mapStateToProps)(Header))

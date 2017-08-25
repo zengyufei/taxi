@@ -6,23 +6,17 @@
  * 4. 从对象再获取对象点出来的在按需加载下面
  * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox,
-  Button, Card, Radio, InputNumber, DatePicker, Alert, message, Upload, Modal } from 'antd';
-import moment from 'moment';
+import { connect } from 'dva'
+import { Form, Row, Col, Button, Card, Upload, Modal } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
-const { RangePicker, MonthPicker } = DatePicker;
-const Option = Select.Option;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let CarOperateLogInfo = (props) => {
-  const { dispatch, form, carOperateLog } = props;
-  const { getFieldDecorator } = form;
-  const { plateList, previewVisible, previewImage } = props;
+let Info = options => {
+  const { dispatch, form, carOperateLog } = options
+  const { plateList, previewVisible, previewImage } = options
 
   const formItemLayout = {
     labelCol: {
@@ -33,7 +27,7 @@ let CarOperateLogInfo = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -45,31 +39,31 @@ let CarOperateLogInfo = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'carOperateLogStore/queryPage',
-    });
-  };
+    })
+  }
 
   // 预览图片
-  const handlePreview = (file) => {
-    console.log('handlePreview');
+  const handlePreview = file => {
+    console.log('handlePreview')
     dispatch({
       type: 'carOperateLogStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 删除图片
-  const handleCancel = (e) => {
-    console.log('handleCancel');
+  const handleCancel = e => {
+    console.log('handleCancel')
     dispatch({
       type: 'carOperateLogStore/unlookPreview',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -83,8 +77,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {carOperateLog.carNo}
                 </FormItem>
@@ -93,8 +87,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {carOperateLog.plateNumber}
@@ -104,8 +98,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         车辆照片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   <div >
                     <Upload
@@ -124,8 +118,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         选择年月份&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {carOperateLog.yearMonth}
                 </FormItem>
@@ -134,8 +128,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                        车辆月度行驶里程&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {carOperateLog.travelMileage}(公里)
                 </FormItem>
@@ -144,8 +138,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         车辆月度营运里程&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {carOperateLog.operateMileage}(公里)
                 </FormItem>
@@ -154,8 +148,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         车辆月度营业收入&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {carOperateLog.incomeAmount}(元)
                 </FormItem>
@@ -164,8 +158,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         车辆月度载客次数&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {carOperateLog.passengerTimes}(人次)
                 </FormItem>
@@ -174,8 +168,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         车辆月度客运量&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {carOperateLog.passengerCapacity}(人次)
@@ -185,8 +179,8 @@ let CarOperateLogInfo = (props) => {
                   label={(
                     <span>
                         车辆月度耗电量&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {carOperateLog.powerConsume}(度)
                 </FormItem>
@@ -201,16 +195,16 @@ let CarOperateLogInfo = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ carOperateLogStore }) {
   return {
-    carOperateLog:　carOperateLogStore.carOperateLog,
+    carOperateLog: carOperateLogStore.carOperateLog,
     plateList: carOperateLogStore.plateList,
     previewVisible: carOperateLogStore.previewVisible,
     previewImage: carOperateLogStore.previewImage,
-  };
+  }
 }
-CarOperateLogInfo = Form.create()(CarOperateLogInfo);
-export default connect(mapStateToProps)(CarOperateLogInfo);
+
+export default Form.create()(connect(mapStateToProps)(Info))

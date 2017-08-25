@@ -1,5 +1,11 @@
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:02:18 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 15:02:18 
+ */
 import { connect } from 'dva'
-import { Button, Popconfirm, Table, Upload, Modal } from 'antd'
+import { Form, Button, Popconfirm, Table, Upload, Modal } from 'antd'
 import qs from 'qs'
 
 import ZSearch from 'ZSearch'
@@ -276,4 +282,4 @@ const fields = [{
   key: 'returnOprator',
 }]
 
-export default connect(mapStateToProps, mapDispatchToProps)(index)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(index))

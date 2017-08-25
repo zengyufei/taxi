@@ -1,5 +1,5 @@
 import { connect } from 'dva'
-import { Button, Popconfirm, Table, Upload, Modal } from 'antd'
+import { Form, Button, Popconfirm, Table, Upload, Modal } from 'antd'
 import qs from 'qs'
 
 import ZSearch from 'ZSearch'
@@ -12,9 +12,8 @@ import Detail from './Detail'
 
 const { tokenSessionKey } = constant
 
-
-let index = option => {
-  const { loading, methods, form, res, register, page } = option
+let index = options => {
+  const { loading, methods, form, res, register, page } = options
   const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload } = methods
 
   /**
@@ -287,4 +286,4 @@ const fields = [{
   key: 'punishResult',
 }]
 
-export default connect(mapStateToProps, mapDispatchToProps)(index)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(index))

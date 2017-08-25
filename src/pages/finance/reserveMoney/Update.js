@@ -1,24 +1,21 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:52:52 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:52:52 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd';
-import moment from 'moment';
+import { connect } from 'dva'
+import { Form, Input, Row, Col, Button, Card, Radio, InputNumber, DatePicker } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Update = (props) => {
-  const { dispatch, form, reserveMoney } = props;
-  const { getFieldDecorator } = form;
+let Update = options => {
+  const { dispatch, form, reserveMoney } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -29,7 +26,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -41,28 +38,28 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'reserveMoneyStore/update',
           ...values,
-          payDate: form.getFieldValue('payDate') != undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
-        });
+          payDate: form.getFieldValue('payDate') !== undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'reserveMoneyStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -77,8 +74,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('qualificationNo', {
                     initialValue: reserveMoney.qualificationNo,
@@ -91,8 +88,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('userName', {
                     initialValue: reserveMoney.userName,
@@ -105,8 +102,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('carNo', {
                     initialValue: reserveMoney.carNo,
@@ -119,8 +116,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateNumber', {
                     initialValue: reserveMoney.plateNumber,
@@ -133,8 +130,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         预留金金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('totalAmount', {
                     rules: [{ required: true, message: '请输入预留金金额!' }],
@@ -148,8 +145,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         交通事故扣减金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('accidentSubAmount', { initialValue: reserveMoney.accidentSubAmount })(
                     <InputNumber min={0} max={9999999} />
@@ -160,8 +157,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         交通违法扣减金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('violationSubAmount', { initialValue: reserveMoney.violationSubAmount })(
                     <InputNumber min={0} max={9999999} />
@@ -172,8 +169,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         充电费用扣减金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('chargingSubAmount', { initialValue: reserveMoney.chargingSubAmount })(
                     <InputNumber min={0} max={9999999} />
@@ -184,8 +181,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         其它项扣减金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('otherSubAmount', { initialValue: reserveMoney.otherSubAmount })(
                     <InputNumber min={0} max={9999999} />
@@ -196,8 +193,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         退款金额&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('refundAmount', { initialValue: reserveMoney.refundAmount })(
                     <InputNumber min={0} max={9999999} />
@@ -208,8 +205,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         退款日期&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('payDate', { initialValue: moment(reserveMoney.payDate) })(<DatePicker />)}
                 </FormItem>
@@ -218,7 +215,10 @@ let Update = (props) => {
                     <Button key="registerButton" type="primary" htmlType="submit" size="large">保存</Button>
                   </ZButton>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+                    htmlType="button"
+                    size="large"
+                    style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -228,14 +228,13 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ reserveMoneyStore }) {
   return {
     reserveMoney: reserveMoneyStore.reserveMoney,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+export default Form.create()(connect(mapStateToProps)(Update))

@@ -41,22 +41,22 @@ export default extend({
     },
     toInfo(state, action) {
       let maintainList = []
-      if (action.maintain.maintainImage != null) {
+      if (action.maintain.maintainImage !== null) {
         maintainList = [{ uid: 0, url: UPLOAD_URL + action.maintain.maintainImage, status: 'done' }]
       }
       let plateList = []
-      if (action.maintain.plateImage != null) {
+      if (action.maintain.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.maintain.plateImage, status: 'done' }]
       }
       return { ...state, pageState: true, res: action.res, maintain: action.maintain, maintainList, plateList }
     },
     toUpdate(state, action) {
       let maintainList = []
-      if (action.maintain.maintainImage != null) {
+      if (action.maintain.maintainImage !== null) {
         maintainList = [{ uid: 0, url: UPLOAD_URL + action.maintain.maintainImage, status: 'done' }]
       }
       let plateList = []
-      if (action.maintain.plateImage != null) {
+      if (action.maintain.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.maintain.plateImage, status: 'done' }]
       }
       return { ...state, pageState: true, res: action.res, maintain: action.maintain, maintainList, maintainImage: '', plateList }

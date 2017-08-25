@@ -97,31 +97,31 @@ export default extend({
     // 修改页面
     toEdit(state, action) {
       let registerFileList = []
-      if (action.driver.registerRecord != null) {
+      if (action.driver.registerRecord !== null) {
         registerFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.registerRecord, status: 'done' }]
       }
       let checkFileList = []
-      if (action.driver.checkReport != null) {
+      if (action.driver.checkReport !== null) {
         checkFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.checkReport, status: 'done' }]
       }
       let noCriminalFileList = []
-      if (action.driver.noCriminalRecord != null) {
+      if (action.driver.noCriminalRecord !== null) {
         noCriminalFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.noCriminalRecord, status: 'done' }]
       }
       let serviceFileList = []
-      if (action.driver.serviceCommitment != null) {
+      if (action.driver.serviceCommitment !== null) {
         serviceFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.serviceCommitment, status: 'done' }]
       }
       let insuranceFileList = []
-      if (action.driver.insuranceCommitment != null) {
+      if (action.driver.insuranceCommitment !== null) {
         insuranceFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.insuranceCommitment, status: 'done' }]
       }
       let IDCardImgFileList = []
-      if (action.driver.iDCardImg != null) {
+      if (action.driver.iDCardImg !== null) {
         IDCardImgFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.iDCardImg, status: 'done' }]
       }
       let safetyResponsibilityFileList = []
-      if (action.driver.safetyResponsibility != null) {
+      if (action.driver.safetyResponsibility !== null) {
         safetyResponsibilityFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.safetyResponsibility, status: 'done' }]
       }
 
@@ -156,31 +156,31 @@ export default extend({
     },
     /* 入职登记表 上传图片 */
     registerChange(state, { registerFileList }) {
-      return { ...state, registerFileList, registerPreviewImage: registerFileList.length >= 1 ? registerFileList[0].response : '' }
+      return { ...state, registerFileList, registerPreviewImage: registerFileList.length ? registerFileList[0].response : '' }
     },
     /* 体检报告 上传图片 */
     checkChange(state, { checkFileList }) {
-      return { ...state, checkFileList, checkPreviewImage: checkFileList.length >= 1 ? checkFileList[0].response : '' }
+      return { ...state, checkFileList, checkPreviewImage: checkFileList.length ? checkFileList[0].response : '' }
     },
     /* 无犯罪记录证明 上传图片 */
     noCriminalChange(state, { noCriminalFileList }) {
-      return { ...state, noCriminalFileList, noCriminalPreviewImage: noCriminalFileList.length >= 1 ? noCriminalFileList[0].response : '' }
+      return { ...state, noCriminalFileList, noCriminalPreviewImage: noCriminalFileList.length ? noCriminalFileList[0].response : '' }
     },
     /* 优质服务承诺书 上传图片 */
     serviceChange(state, { serviceFileList }) {
-      return { ...state, serviceFileList, servicePreviewImage: serviceFileList.length >= 1 ? serviceFileList[0].response : '' }
+      return { ...state, serviceFileList, servicePreviewImage: serviceFileList.length ? serviceFileList[0].response : '' }
     },
     /* 意外险自愿购买承诺书 上传图片 */
     insuranceChange(state, { insuranceFileList }) {
-      return { ...state, insuranceFileList, insurancePreviewImage: insuranceFileList.length >= 1 ? insuranceFileList[0].response : '' }
+      return { ...state, insuranceFileList, insurancePreviewImage: insuranceFileList.length ? insuranceFileList[0].response : '' }
     },
     /* 身份证复印件 上传图片 */
     IDCardImgChange(state, { IDCardImgFileList }) {
-      return { ...state, IDCardImgFileList, IDCardImgPreviewImage: IDCardImgFileList.length >= 1 ? IDCardImgFileList[0].response : '' }
+      return { ...state, IDCardImgFileList, IDCardImgPreviewImage: IDCardImgFileList.length ? IDCardImgFileList[0].response : '' }
     },
     /* 安全责任书 上传图片 */
     safetyResponsibilityChange(state, { safetyResponsibilityFileList }) {
-      return { ...state, safetyResponsibilityFileList, safetyResponsibilityPreviewImage: safetyResponsibilityFileList.length >= 1 ? safetyResponsibilityFileList[0].response : '' }
+      return { ...state, safetyResponsibilityFileList, safetyResponsibilityPreviewImage: safetyResponsibilityFileList.length ? safetyResponsibilityFileList[0].response : '' }
     },
     // 预览图片
     lookPreview(state, { previewImage, previewVisible }) {
@@ -223,14 +223,14 @@ export default extend({
     },
     // 资格证查询驾驶员信息
     * queryByQualificationNo({ qualificationNo }, { get, put }) {
-      const response = yield get(`${urlPrefix}/queryByQualificationNo`, qualificationNo)
+      const response = yield get(`${urlPrefix}/queryByQualificationNo`, { qualificationNo })
       if (+response.code === 200) {
         yield put({ type: 'queryByQualificationNoSuccess', driver: response.result })
       }
     },
     // 资格证查询新驾驶员信息
     * queryNewByQualificationNo({ qualificationNo }, { get, put }) {
-      const response = yield get(`${urlPrefix}/queryByQualificationNo`, qualificationNo)
+      const response = yield get(`${urlPrefix}/queryByQualificationNo`, { qualificationNo })
       if (+response.code === 200) {
         yield put({ type: 'queryNewByQualificationNoSuccess', newDriver: response.result })
       }
@@ -243,17 +243,24 @@ export default extend({
         const page = yield select(state => state.driverStore.page)
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 驾驶员
     * update(playload, { post, put, select }) {
+      if (!playload.insurance) {
+        playload.insuranceCompany = ''
+        playload.qualificationNo = ''
+        playload.accidentInsuranceBeginDate = ''
+        playload.accidentInsuranceEndDate = ''
+      }
+
       const response = yield post(`${urlPrefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         const page = yield select(state => state.driverStore.page)
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 驾驶员图片
     * updateImg(playload, { post, put, select }) {
@@ -263,7 +270,7 @@ export default extend({
         const page = yield select(state => state.driverStore.page)
         yield put({ type: 'cleanImage' })
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除驾驶员
@@ -273,7 +280,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.driverStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

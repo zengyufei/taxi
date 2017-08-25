@@ -1,21 +1,19 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:59:28 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:59:28 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Checkbox, Button, Card } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Button, Card } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, driver } = props;
+let Detail = options => {
+  const { dispatch, driver } = options
 
   const formItemLayout = {
     labelCol: {
@@ -26,7 +24,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -38,72 +36,72 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   let jobDesc,
     educationDesc,
     marriageDesc,
-    politicsDesc;
+    politicsDesc
   switch (driver.job) {
     case 'MASTER_CLASS':
-      jobDesc = '主班';
-      break;
+      jobDesc = '主班'
+      break
     case 'DEPUTY_CLASS':
-      jobDesc = '主班';
-      break;
+      jobDesc = '主班'
+      break
     case 'FLEXIBLE_CLASS':
-      jobDesc = '机动班';
-      break;
+      jobDesc = '机动班'
+      break
   }
   switch (driver.education) {
     case 'PRIMARY_SCHOOL':
-      educationDesc = '小学';
-      break;
+      educationDesc = '小学'
+      break
     case 'MIDDLE_SCHOOL':
-      educationDesc = '初中';
-      break;
+      educationDesc = '初中'
+      break
     case 'HIGH_SCHOOL':
-      educationDesc = '高中';
-      break;
+      educationDesc = '高中'
+      break
     case 'JUNIOR_COLLEGE':
-      educationDesc = '大专';
-      break;
+      educationDesc = '大专'
+      break
     case 'UNDERGRADUATE':
-      educationDesc = '本科';
-      break;
+      educationDesc = '本科'
+      break
   }
   switch (driver.marriage) {
     case 'UNMARRIED':
-      marriageDesc = '未婚';
-      break;
+      marriageDesc = '未婚'
+      break
     case 'MARRIED':
-      marriageDesc = '已婚';
-      break;
+      marriageDesc = '已婚'
+      break
     case 'DIVORCE':
-      marriageDesc = '离婚';
-      break;
+      marriageDesc = '离婚'
+      break
     case 'WIDOWED':
-      marriageDesc = '丧偶';
-      break;
+      marriageDesc = '丧偶'
+      break
   }
   switch (driver.politics) {
     case 'MASSES':
-      politicsDesc = '群众';
-      break;
+      politicsDesc = '群众'
+      break
     case 'LEAGUE':
-      politicsDesc = '团员';
-      break;
+      politicsDesc = '团员'
+      break
     case 'PARTY':
-      politicsDesc = '党员';
-      break;
+      politicsDesc = '党员'
+      break
   }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'driverStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -122,10 +120,10 @@ let Detail = (props) => {
                   {driver.userName}
                 </FormItem>
                 <FormItem {...formItemLayout} label={(<span>性别&nbsp;</span>)}>
-                  {driver.sex == 'male' ? '男' : '女'}
+                  {driver.sex === 'male' ? '男' : '女'}
                 </FormItem>
                 <FormItem {...formItemLayout} label={(<span>状态&nbsp;</span>)}>
-                  {driver.driverStatus == 'WORKING' ? '在职' : '离职'}
+                  {driver.driverStatus === 'WORKING' ? '在职' : '离职'}
                 </FormItem>
                 <FormItem {...formItemLayout} label={(<span>岗位&nbsp;</span>)}>
                   {jobDesc}
@@ -176,7 +174,7 @@ let Detail = (props) => {
                   {politicsDesc}
                 </FormItem>
                 <FormItem {...formItemLayout} label={(<span>购买意外险&nbsp;</span>)}>
-                  {driver.insurance == true ? '有' : '无'}
+                  {driver.insurance === true ? '有' : '无'}
                 </FormItem>
                 <FormItem {...formItemLayout} label={(<span>保险公司&nbsp;</span>)}>
                   {driver.insuranceCompany}
@@ -222,7 +220,10 @@ let Detail = (props) => {
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+                    htmlType="button"
+                    size="large"
+                    style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -232,14 +233,13 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ driverStore }) {
   return {
     driver: driverStore.driver,
-  };
+  }
 }
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

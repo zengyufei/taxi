@@ -1,22 +1,20 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:15:45 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 15:15:45 
  */
-import TweenOne from 'rc-tween-one';
-import { connect } from 'dva';
-import { Form, Input, Icon, Row, Col, Button, Card, Upload, Modal, DatePicker } from 'antd';
-import moment from 'moment';
+import TweenOne from 'rc-tween-one'
+import { connect } from 'dva'
+import { Form, Input, Row, Col, Button, Card, DatePicker } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Update = (props) => {
-  const { dispatch, form, trafficViolation } = props;
-  const { getFieldDecorator } = form;
+let Update = options => {
+  const { dispatch, form, trafficViolation } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -27,7 +25,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -39,28 +37,28 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'trafficViolationStore/update',
           ...values,
-          violationTime: form.getFieldValue('violationTime') != undefined ? form.getFieldValue('violationTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-        });
+          violationTime: form.getFieldValue('violationTime') !== undefined ? form.getFieldValue('violationTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'trafficViolationStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -75,8 +73,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('qualificationNo', {
@@ -90,8 +88,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
@@ -105,8 +103,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('carNo', {
@@ -120,8 +118,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
@@ -135,8 +133,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         发生时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('violationTime', {
@@ -151,8 +149,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         详细地址&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('violationAddress', {
@@ -167,8 +165,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         违章代码&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('violationNo', {
@@ -183,8 +181,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         处理结果&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('punishResult', {
@@ -207,14 +205,13 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ trafficViolationStore }) {
   return {
     trafficViolation: trafficViolationStore.trafficViolation,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+export default Form.create()(connect(mapStateToProps)(Update))

@@ -1,23 +1,21 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 15:20:47 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 15:20:47 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Row, Col, Button, Card, DatePicker } from 'antd';
-import moment from 'moment';
+import { connect } from 'dva'
+import { Form, Input, Row, Col, Button, Card, DatePicker } from 'antd'
+import moment from 'moment'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Update = (props) => {
-  const { dispatch, form, transfer } = props;
-  const { getFieldDecorator } = form;
+let Update = options => {
+  const { dispatch, form, transfer } = options
+  const { getFieldDecorator } = form
 
   const formItemLayout = {
     labelCol: {
@@ -28,7 +26,7 @@ let Update = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -40,28 +38,28 @@ let Update = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         dispatch({
           type: 'transferStore/update',
           ...values,
-          transferDate: form.getFieldValue('transferDate') != undefined ? form.getFieldValue('transferDate').format('YYYY-MM-DD') : undefined,
-        });
+          transferDate: form.getFieldValue('transferDate') !== undefined ? form.getFieldValue('transferDate').format('YYYY-MM-DD') : undefined,
+        })
       }
-    });
-  };
+    })
+  }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'transferStore/toPage',
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -76,8 +74,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         旧用户从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('oldQualificationNo', {
                     rules: [{ required: true, whitespace: true, message: '请输入旧用户从业资格证号!' }],
@@ -91,8 +89,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         旧用户姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('oldUserName', {
                     initialValue: transfer.oldUserName,
@@ -105,8 +103,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('carNo', {
                     initialValue: transfer.carNo,
@@ -119,8 +117,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateNumber', {
                     initialValue: transfer.plateNumber,
@@ -133,8 +131,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         新车主从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('newQualificationNo', {
                     initialValue: transfer.newQualificationNo,
@@ -147,8 +145,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         新车主姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('newUserName', {
                     initialValue: transfer.newUserName,
@@ -161,8 +159,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         过户时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('transferDate', {
                     rules: [{ required: true, message: '请选择过户时间!' }],
@@ -174,8 +172,8 @@ let Update = (props) => {
                   label={(
                     <span>
                         经办人&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('opratorUser', {
                     initialValue: transfer.opratorUser,
@@ -188,7 +186,10 @@ let Update = (props) => {
                     <Button key="registerButton" type="primary" htmlType="submit" size="large">修改</Button>
                   </ZButton>
                   <Button
-                    key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }}
+                    key="returnLoginButton"
+                    htmlType="button"
+                    size="large"
+                    style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -198,14 +199,13 @@ let Update = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ transferStore }) {
   return {
     transfer: transferStore.transfer,
-  };
+  }
 }
 
-Update = Form.create()(Update);
-export default connect(mapStateToProps)(Update);
+export default Form.create()(connect(mapStateToProps)(Update))

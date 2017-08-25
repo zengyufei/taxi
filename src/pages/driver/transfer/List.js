@@ -1,5 +1,5 @@
 import { connect } from 'dva'
-import { Button, Popconfirm, Table, Upload, Modal } from 'antd'
+import { Form, Button, Popconfirm, Table, Upload, Modal } from 'antd'
 import qs from 'qs'
 
 import ZSearch from 'ZSearch'
@@ -276,4 +276,4 @@ const seachFields = [{
 }]
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(index)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(index))

@@ -1,19 +1,15 @@
-import { Form } from 'antd'
-
 import List from './List'
 import Add from './Add'
 import Update from './Update'
 
-const SysResource = option => {
-  const { form } = option
-
+const index = () => {
   return (
     <div>
-      <Add form={form} />
-      <Update form={form} />
-      <List form={form} />
+      <Add />
+      <Update />
+      <List />
     </div>
   )
 }
 
-export default Form.create()(SysResource)
+export default index

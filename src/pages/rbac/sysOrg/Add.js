@@ -6,8 +6,8 @@ import ZModal from 'ZModal'
 
 import { getFields, validate } from 'FormUtils'
 
-const Add = option => {
-  const { form, dispatch, sysOrgStore } = option
+const Add = options => {
+  const { form, dispatch, sysOrgStore } = options
   const { confirmLoading, visible: { add } } = sysOrgStore
 
   const onOk = () => {
@@ -140,5 +140,5 @@ const fields = [
 
 ]
 
-export default connect(mapStateToProps)(Form.create()(Add))
+export default Form.create()(connect(mapStateToProps)(Add))
 

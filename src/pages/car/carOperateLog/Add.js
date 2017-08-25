@@ -1,27 +1,23 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 13:59:17 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 16:16:43
  */
 import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox,
-  Button, Card, Radio, InputNumber, DatePicker, Alert, message, Upload, Modal, AutoComplete } from 'antd'
+import { Form, Input, Row, Col,
+  Button, Card, InputNumber, DatePicker, Upload, Modal, AutoComplete } from 'antd'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
-const RadioGroup = Radio.Group
-const { RangePicker, MonthPicker } = DatePicker
-const Option = Select.Option
+const { MonthPicker } = DatePicker
 
-let CarOperateLogAdd = props => {
-  const { dispatch, form, car, carNos } = props
+let Add = options => {
+  const { dispatch, form, car, carNos } = options
   const { getFieldDecorator } = form
-  const { plateList, previewVisible, previewImage } = props
+  const { plateList, previewVisible, previewImage } = options
 
   const formItemLayout = {
     labelCol: {
@@ -51,14 +47,14 @@ let CarOperateLogAdd = props => {
     e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        if (form.getFieldValue('plateNumber') == '') {
+        if (form.getFieldValue('plateNumber') === '') {
           Modal.info({
             title: '温馨提示',
             content: (
               '自编号不存在'
             ),
           })
-          return;
+          return
         }
         const yearMonth = form.getFieldValue('yearMonth') ? form.getFieldValue('yearMonth').format('YYYYMM') : 0
         dispatch({
@@ -68,28 +64,27 @@ let CarOperateLogAdd = props => {
         })
       }
     })
-  };
+  }
   /** 模糊查询 车辆自编号 */
   const handleSearch = value => {
     dispatch({
-      type: 'commonStore/queryLikeCarNo',
+      type: 'driverCommonStore/queryLikeCarNo',
       str: value,
     })
-  };
-  function queryByCarNo() {
+  }
+  const queryByCarNo = () => {
     dispatch({
       type: 'carStore/queryByCarNo',
       carNo: form.getFieldValue('carNo'),
     })
-    console.log(form.getFieldValue('carNo'))
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
       type: 'carOperateLogStore/queryPage',
     })
-  };
+  }
 
   // 预览图片
   const handlePreview = file => {
@@ -99,14 +94,14 @@ let CarOperateLogAdd = props => {
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     })
-  };
+  }
   // 删除图片
-  const handleCancel = e => {
+  const handleCancel = () => {
     console.log('handleCancel')
     dispatch({
       type: 'carOperateLogStore/unlookPreview',
     })
-  };
+  }
 
   return (
     <div>
@@ -137,13 +132,13 @@ let CarOperateLogAdd = props => {
                       <AutoComplete
                         dataSource={carNos}
                         onSearch={handleSearch}
-                        onSelect={queryByCarNo}
-                        onChange={queryByCarNo}
                         placeholder="车辆自编号"
                       />
                     )}
                   </Col>
-
+                  <Col span={4}>
+                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                  </Col>
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
@@ -297,17 +292,16 @@ let CarOperateLogAdd = props => {
       </TweenOneGroup>
     </div>
   )
-};
+}
 
-function mapStateToProps({ carStore, carOperateLogStore, commonStore }) {
+function mapStateToProps({ carStore, carOperateLogStore, driverCommonStore }) {
   return {
     car: carStore.car,
     plateList: carStore.plateList,
-    carNos: commonStore.carNos,
+    carNos: driverCommonStore.carNos,
     previewVisible: carOperateLogStore.previewVisible,
     previewImage: carOperateLogStore.previewImage,
 
   }
 }
-CarOperateLogAdd = Form.create()(CarOperateLogAdd)
-export default connect(mapStateToProps)(CarOperateLogAdd)
+export default Form.create()(connect(mapStateToProps)(Add))

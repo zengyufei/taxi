@@ -96,7 +96,7 @@ export default extend({
         ZMsg.success(response.msg)
         yield put({ type: 'insertSuccess' })
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 违章代码
     * update(playload, { post, put, select }) {
@@ -105,7 +105,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.punishStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

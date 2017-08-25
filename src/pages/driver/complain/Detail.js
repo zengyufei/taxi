@@ -1,22 +1,19 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-25 14:57:46 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-08-25 14:57:46 
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Upload, Modal,
-  Button, Card, Radio, InputNumber, Alert, message } from 'antd';
+import { connect } from 'dva'
+import { Form, Row, Col, Upload, Modal, Button, Card } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
 
-let Detail = (props) => {
-  const { dispatch, complain, imgURLList,previewVisible,previewImage } = props;
+let Detail = options => {
+  const { dispatch, complain, imgURLList, previewVisible, previewImage } = options
 
   const formItemLayout = {
     labelCol: {
@@ -27,7 +24,7 @@ let Detail = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -39,78 +36,78 @@ let Detail = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   // 预览图片
-  const lookPreview = (file) => {
+  const lookPreview = file => {
     dispatch({
       type: 'complainStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
   // 关闭预览图片
-  const unlookPreview = (e) => {
+  const unlookPreview = e => {
     dispatch({
       type: 'complainStore/unlookPreview',
-    });
-  };
-  //下载文件
+    })
+  }
+  // 下载文件
   const download = () => {
     dispatch({
       type: 'driverCommonStore/download',
       URL: complain.fileURL,
-    });
+    })
   }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'complainStore/toPage',
-    });
-  };
+    })
+  }
 
-  let complainTypeDesc;
+  let complainTypeDesc
   switch (complain.complainType) {
     case 'complain_one':
-      complainTypeDesc = '不打表营运';
-      break;
+      complainTypeDesc = '不打表营运'
+      break
     case 'complain_two':
-      complainTypeDesc = '不提供有效车票';
-      break;
+      complainTypeDesc = '不提供有效车票'
+      break
     case 'complain_three':
-      complainTypeDesc = '多收费';
-      break;
+      complainTypeDesc = '多收费'
+      break
     case 'complain_four':
-      complainTypeDesc = '服务态度差';
-      break;
+      complainTypeDesc = '服务态度差'
+      break
     case 'complain_five':
-      complainTypeDesc = '拒载';
-      break;
+      complainTypeDesc = '拒载'
+      break
     case 'complain_six':
-      complainTypeDesc = '咪表有问题';
-      break;
+      complainTypeDesc = '咪表有问题'
+      break
     case 'complain_seven':
-      complainTypeDesc = '拼客';
-      break;
+      complainTypeDesc = '拼客'
+      break
     case 'complain_eight':
-      complainTypeDesc = '绕路';
-      break;
+      complainTypeDesc = '绕路'
+      break
     case 'complain_nine':
-      complainTypeDesc = '危险驾驶';
-      break;
+      complainTypeDesc = '危险驾驶'
+      break
     case 'complain_ten':
-      complainTypeDesc = '误导乘客';
-      break;
+      complainTypeDesc = '误导乘客'
+      break
     case 'complain_eleven':
-      complainTypeDesc = '议价';
-      break;
+      complainTypeDesc = '议价'
+      break
     case 'complain_twelve':
-      complainTypeDesc = '中途甩客';
-      break;
+      complainTypeDesc = '中途甩客'
+      break
     case 'complain_thirteen':
-      complainTypeDesc = '其它类';
-      break;
+      complainTypeDesc = '其它类'
+      break
   }
 
   return (
@@ -125,8 +122,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         从业资格证号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.qualificationNo}
                 </FormItem>
@@ -135,8 +132,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         驾驶员姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.userName}
                 </FormItem>
@@ -145,8 +142,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.carNo}
                 </FormItem>
@@ -155,8 +152,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.plateNumber}
                 </FormItem>
@@ -165,8 +162,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         来电者姓名&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.callName}
                 </FormItem>
@@ -175,8 +172,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         来电者联系方式&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.callMobile}
                 </FormItem>
@@ -185,8 +182,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         来电时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.callTime}
                 </FormItem>
@@ -195,8 +192,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         发生时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.creditTime}
                 </FormItem>
@@ -205,8 +202,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         发生经过&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.creditDesc}
                 </FormItem>
@@ -215,8 +212,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         回复乘客时间&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.replyTime}
                 </FormItem>
@@ -225,8 +222,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         是否有责&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.inFault ? '是' : '否'}
                 </FormItem>
@@ -235,8 +232,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         处罚&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.punish ? '是' : '否'}
                 </FormItem>
@@ -245,8 +242,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         处理结果&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.punishResult}
                 </FormItem>
@@ -255,8 +252,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         投诉类型&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complainTypeDesc}
                 </FormItem>
@@ -265,8 +262,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         具体地址&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.detailAddress}
                 </FormItem>
@@ -275,8 +272,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         图片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   <div>
                     <Upload
@@ -294,8 +291,8 @@ let Detail = (props) => {
                   label={(
                     <span>
                         上传文件&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {complain.fileURL ? <Button type="danger" icon="download" onClick={download} >下载</Button> : '未上传'}
                 </FormItem>
@@ -309,8 +306,8 @@ let Detail = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
-};
+  )
+}
 
 function mapStateToProps({ complainStore }) {
   return {
@@ -318,8 +315,7 @@ function mapStateToProps({ complainStore }) {
     previewVisible: complainStore.previewVisible,
     imgURLList: complainStore.imgURLList,
     previewImage: complainStore.previewImage,
-  };
+  }
 }
 
-Detail = Form.create()(Detail);
-export default connect(mapStateToProps)(Detail);
+export default Form.create()(connect(mapStateToProps)(Detail))

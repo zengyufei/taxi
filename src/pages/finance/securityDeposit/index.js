@@ -1,14 +1,11 @@
-import { Form } from 'antd'
 import List from './List'
 
-const index = options => {
-  const { form } = options
-
+const index = () => {
   return (
     <div>
-      <List form={form} />
+      <List />
     </div>
   )
 }
 
-export default Form.create()(index)
+export default index

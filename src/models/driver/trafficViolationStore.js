@@ -96,7 +96,7 @@ export default extend({
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 修改 交通违法 页面
     * update(playload, { post, put }) {
@@ -104,7 +104,7 @@ export default extend({
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'queryPage' })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除交通违法
@@ -114,7 +114,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.trafficViolationStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

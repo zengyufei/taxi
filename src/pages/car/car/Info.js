@@ -15,7 +15,7 @@ import { Form, Row, Col,
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 
-let CarInfo = options => {
+const Info = options => {
   const { dispatch, car } = options
   const { previewVisible, previewImage, plateList, ownershipList, roadTransportList, certificateList } = options
 
@@ -311,5 +311,5 @@ function mapStateToProps({ carStore }) {
   }
 }
 
-CarInfo = Form.create()(CarInfo)
-export default connect(mapStateToProps)(CarInfo)
+export default Form.create()(connect(mapStateToProps)(Info))
+

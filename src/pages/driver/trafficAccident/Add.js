@@ -74,20 +74,20 @@ let Add = options => {
         dispatch({
           type: 'trafficAccidentStore/insert',
           ...values,
-          accidentTime: form.getFieldValue('accidentTime') != undefined ? form.getFieldValue('accidentTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
-          closeDate: form.getFieldValue('closeDate') != undefined ? form.getFieldValue('closeDate').format('YYYY-MM-DD') : undefined,
+          accidentTime: form.getFieldValue('accidentTime') !== undefined ? form.getFieldValue('accidentTime').format('YYYY-MM-DD HH:mm:ss') : undefined,
+          closeDate: form.getFieldValue('closeDate') !== undefined ? form.getFieldValue('closeDate').format('YYYY-MM-DD') : undefined,
           areaCode: form.getFieldValue('areaCode')[2],
         })
       }
     })
-  };
+  }
 
   /* 返回分页 */
   const toPage = e => {
     dispatch({
       type: 'trafficAccidentStore/toPage',
     })
-  };
+  }
 
   /** 模糊查询 车辆自编号 */
   const handleSearch = value => {
@@ -95,16 +95,16 @@ let Add = options => {
       type: 'driverCommonStore/queryLikeCarNo',
       str: value,
     })
-  };
+  }
   /** 自编号查询车信息 */
   const queryByCarNo = () => {
     dispatch({
       type: 'driverCommonStore/queryDriverListByOption',
       carNo: form.getFieldValue('carNo'),
     })
-  };
-  let carNo, 
-rbs = []
+  }
+  let carNo
+  let rbs = []
   const onCancel = () => {
     dispatch({
       type: 'driverCommonStore/onCancel',
@@ -113,7 +113,7 @@ rbs = []
     })
   }
 
-  if (drivers.length == 1) {
+  if (drivers.length === 1) {
     dispatch({
       type: 'driverCommonStore/queryDriver',
       drivers,
@@ -141,7 +141,7 @@ rbs = []
     })
     onCancel()
   }
-  if (driver.features != undefined || driver.features != null) {
+  if (driver.features) {
     carNo = JSON.parse(driver.features).carNo
   }
 
@@ -162,8 +162,8 @@ rbs = []
           <Col span={14}>
             <Form onSubmit={handleSubmit} style={{ maxWidth: '100%', marginTop: '10px' }}>
               <Card title="新增交通事故">
-                {getFieldDecorator('carId', { initialValue: driver != undefined ? driver.carId : '' })(<Input type="hidden" />)}
-                {getFieldDecorator('driverId', { initialValue: driver != undefined ? driver.id : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('carId', { initialValue: driver !== undefined ? driver.carId : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('driverId', { initialValue: driver !== undefined ? driver.id : '' })(<Input type="hidden" />)}
                 <FormItem
                   {...formItemLayout}
                   label={(
@@ -198,7 +198,7 @@ rbs = []
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver.features != undefined ? JSON.parse(driver.features).plateNumber : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver.features !== undefined ? JSON.parse(driver.features).plateNumber : '',
                   })(
                     <Input disabled />
                   )}
@@ -214,7 +214,7 @@ rbs = []
                 >
                   <Col span={18}>
                     {getFieldDecorator('qualificationNo', {
-                      initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.qualificationNo : '',
+                      initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.qualificationNo : '',
                     })(
                       <Input disabled />
                     )}
@@ -230,7 +230,7 @@ rbs = []
                   hasFeedback
                 >
                   {getFieldDecorator('userName', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.userName : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.userName : '',
                   })(
                     <Input disabled />
                   )}
@@ -495,9 +495,9 @@ rbs = []
                   </ZButton>
                   <Button
                     key="returnLoginButton"
-htmlType="button"
-size="large"
-style={{ marginLeft: '30px' }}
+                                        htmlType="button"
+                                        size="large"
+                                        style={{ marginLeft: '30px' }}
                     onClick={toPage}
                   >返回</Button>
                 </FormItem>
@@ -508,7 +508,7 @@ style={{ marginLeft: '30px' }}
       </TweenOneGroup>
     </div>
   )
-};
+}
 
 function mapStateToProps({ driverCommonStore }) {
   return {
@@ -519,5 +519,4 @@ function mapStateToProps({ driverCommonStore }) {
   }
 }
 
-Add = Form.create()(Add)
-export default connect(mapStateToProps)(Add)
+export default Form.create()(connect(mapStateToProps)(Add))

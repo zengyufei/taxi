@@ -16,7 +16,7 @@ const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 
 
-let AnnualVerificationInfo = options => {
+const Info = options => {
   const { dispatch, annualVerification } = options
   const { previewVisible, previewImage, plateList, synthesizeFileList, taximeterFileList, drivingLicenseFileList } = options
 
@@ -232,5 +232,5 @@ function mapStateToProps({ annualVerificationStore }) {
 
   }
 }
-AnnualVerificationInfo = Form.create()(AnnualVerificationInfo)
-export default connect(mapStateToProps)(AnnualVerificationInfo)
+
+export default Form.create()(connect(mapStateToProps)(Info))

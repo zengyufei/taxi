@@ -1,4 +1,5 @@
 import { connect } from 'dva'
+import { Form } from 'antd'
 
 import ZForm from 'ZForm'
 import ZModal from 'ZModal'
@@ -36,19 +37,12 @@ let UpdatePage = option => {
   )
 }
 
-/**
- * 订阅 model
- */
 function mapStateToProps({ sysResourceStore }) {
   return {
     sysResourceStore,
   }
 }
 
-/**
- * @param dispatch 从 connect 获得
- * @param form 从上层建筑获得
- */
 function mapDispatchToProps(dispatch, { form }) {
   return {
 
@@ -78,7 +72,7 @@ const fields = [
     key: 'resName',
     name: '资源名称',
     rules: [{
-      required: true, 
+      required: true,
       message: '请输入资源名称!',
     }],
   },
@@ -92,10 +86,10 @@ const fields = [
     key: 'permission',
     name: '权限标识',
     rules: [{
-      required: true, 
+      required: true,
       message: '请填写权限标识!',
     }],
   },
 ]
 
-export default connect(mapStateToProps, mapDispatchToProps)(UpdatePage)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(UpdatePage))

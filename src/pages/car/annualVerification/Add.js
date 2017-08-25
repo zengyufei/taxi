@@ -15,7 +15,7 @@ import { Form, Input, Icon, Row, Col,
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 
-let AnnualVerificationAdd = options => {
+const Add = options => {
   const { dispatch, form, car, carNos } = options
   const { getFieldDecorator } = form
   const { previewVisible, previewImage, plateList, synthesizeFileList, synthesizeFile, taximeterFileList, taximeterFile, drivingLicenseFileList, drivingLicenseFile } = options
@@ -48,7 +48,7 @@ let AnnualVerificationAdd = options => {
     e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        if (form.getFieldValue('plateNumber') == '') {
+        if (form.getFieldValue('plateNumber') === '') {
           Modal.info({
             title: '温馨提示',
             content: (
@@ -58,7 +58,7 @@ let AnnualVerificationAdd = options => {
           return
         }
         /*
-        if(synthesizeFile == ''){
+        if(synthesizeFile === ''){
           Modal.info({
             title: '温馨提示',
             content: (
@@ -67,7 +67,7 @@ let AnnualVerificationAdd = options => {
           })
           return ;
         }
-        if(drivingLicenseFile == ''){
+        if(drivingLicenseFile === ''){
           Modal.info({
             title: '温馨提示',
             content: (
@@ -76,7 +76,7 @@ let AnnualVerificationAdd = options => {
           })
           return ;
         }
-        if(taximeterFile == ''){
+        if(taximeterFile === ''){
           Modal.info({
             title: '温馨提示',
             content: (
@@ -105,14 +105,14 @@ let AnnualVerificationAdd = options => {
   /** 模糊查询 车辆自编号 */
   const handleSearch = value => {
     dispatch({
-      type: 'commonStore/queryLikeCarNo',
+      type: 'driverCommonStore/queryLikeCarNo',
       str: value,
     })
   }
-  function queryByCarNo(value) {
+  const queryByCarNo = () => {
     dispatch({
       type: 'carStore/queryByCarNo',
-      carNo: value,
+      carNo: form.getFieldValue('carNo'),
     })
   }
 
@@ -195,13 +195,13 @@ let AnnualVerificationAdd = options => {
                       <AutoComplete
                         dataSource={carNos}
                         onSearch={handleSearch}
-                        onSelect={queryByCarNo}
-                        onChange={queryByCarNo}
                         placeholder="车辆自编号"
                       />
                     )}
                   </Col>
-
+                  <Col span={4}>
+                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                  </Col>
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
@@ -261,7 +261,7 @@ let AnnualVerificationAdd = options => {
                   {getFieldDecorator('synthesizeFile')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={synthesizeFileList}
                         onPreview={handlePreview}
@@ -298,7 +298,7 @@ let AnnualVerificationAdd = options => {
                   {getFieldDecorator('drivingLicenseFile')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={drivingLicenseFileList}
                         onPreview={handlePreview}
@@ -335,7 +335,7 @@ let AnnualVerificationAdd = options => {
                   {getFieldDecorator('taximeterFile')(
                     <div >
                       <Upload
-                        action="/fileupload/image.htm"
+                        action={`${BASE_URL}/fileupload/image.htm`}
                         listType="picture-card"
                         fileList={taximeterFileList}
                         onPreview={handlePreview}
@@ -363,11 +363,11 @@ let AnnualVerificationAdd = options => {
   )
 }
 
-function mapStateToProps({ carStore, annualVerificationStore, commonStore }) {
+function mapStateToProps({ carStore, annualVerificationStore, driverCommonStore, }) {
   return {
     car: carStore.car,
     plateList: carStore.plateList,
-    carNos: commonStore.carNos,
+    carNos: driverCommonStore.carNos,
     previewVisible: annualVerificationStore.previewVisible,
     previewImage: annualVerificationStore.previewImage,
     synthesizeFileList: annualVerificationStore.synthesizeFileList,
@@ -379,5 +379,4 @@ function mapStateToProps({ carStore, annualVerificationStore, commonStore }) {
 
   }
 }
-AnnualVerificationAdd = Form.create()(AnnualVerificationAdd)
-export default connect(mapStateToProps)(AnnualVerificationAdd)
+export default Form.create()(connect(mapStateToProps)(Add))

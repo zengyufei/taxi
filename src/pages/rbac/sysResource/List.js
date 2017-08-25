@@ -1,6 +1,6 @@
 import { connect } from 'dva'
 import ZSearch from 'ZSearch'
-import { Button, Popconfirm, Table } from 'antd'
+import { Form, Button, Popconfirm, Table } from 'antd'
 import { getColumns } from 'TableUtils'
 
 const List = option => {
@@ -40,7 +40,7 @@ const List = option => {
     pagination: false,
     defaultExpandAllRows: true,
     rowSelection: {
-      onChange: (selectedRowKeys, selectedRows) => {
+      onChange: () => {
       },
       getCheckboxProps: record => ({
         disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -106,11 +106,10 @@ const fields = [
   {
     key: 'resName',
     name: '资源名称',
-  },
-  {
+  }, {
     key: 'permission',
     name: '权限标识',
   },
 ]
 
-export default connect(mapStateToProps, mapDispatchToProps)(List)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))

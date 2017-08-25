@@ -1,5 +1,5 @@
 import { connect } from 'dva'
-import { Button, Popconfirm, Table, Upload, Modal } from 'antd'
+import { Form, Button, Popconfirm, Table, Upload, Modal } from 'antd'
 import qs from 'qs'
 
 import ZSearch from 'ZSearch'
@@ -19,7 +19,7 @@ let index = option => {
 
   /**
    * 上传文件
-   
+
    */
   const importCar = {
     name: 'file',
@@ -355,6 +355,18 @@ const fields = [{
   name: '入职日期',
   key: 'entryDate',
 }, {
+  name: '保险到期日期',
+  key: 'accidentInsuranceEndDate',
+}, {
+  name: '驾驶证到期日期',
+  key: 'licenseEndDate',
+}, {
+  name: '劳动合同到期日期',
+  key: 'labourContractEndDate',
+}, {
+  name: '经营合同到期日期',
+  key: 'manageContractEndDate',
+}, {
   name: '政治面貌',
   key: 'politics',
   enums: {
@@ -372,4 +384,4 @@ const fields = [{
 }]
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(index)
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(index))
