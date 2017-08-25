@@ -1,73 +1,24 @@
 import { connect } from 'dva'
-import { Form, Input, Button, Icon, Popconfirm, Alert, Table, message, Upload, Modal } from 'antd'
-import styles from './Page.css'
+import { Button, Popconfirm, Table, Upload, Modal } from 'antd'
+import qs from 'qs'
+
+import ZSearch from 'ZSearch'
+import { getColumns } from 'TableUtils'
+import { getFields, getSearchFields } from 'FormUtils'
+
 import Add from './Add'
 import Update from './Update'
 import Detail from './Detail'
-import qs from 'qs'
 
-const FormItem = Form.Item
-const { tokenSessionKey, resourceSessionKey } = constant
+const { tokenSessionKey } = constant
 
 let index = option => {
   const { loading, methods, form, res, register, page } = option
   const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload } = methods
 
-  /* 跳转网址页面 */
-  open(text) {
-    window.open(text)
-  }
-
-  /* 详情 */
-  toDetail(govtPraise) {
-    dispatch({
-      type: 'govtPraiseStore/toEdit',
-      res: 'detail',
-      govtPraise,
-    })
-  }
-  /* 添加 */
-  toAdd() {
-    dispatch({
-      type: 'govtPraiseStore/toRegister',
-      res: 'add',
-    })
-  }
-  /* 编辑 */
-  toEdit(govtPraise) {
-    dispatch({
-      type: 'govtPraiseStore/toEdit',
-      res: 'update',
-      govtPraise,
-    })
-  }
-
-  /* 删除 */
-  confirm(id) {
-    dispatch({
-      type: 'govtPraiseStore/deleteById',
-      id,
-    })
-  }
-
-  
-  /* 导出 */
-  toExport() {
-    const carNo = form.getFieldValue('carNo')
-    const plateNumber = form.getFieldValue('plateNumber')
-    const params = {
-      carNo,
-      plateNumber,
-    }
-    // 删除空值、undefind
-    Object.keys(params).map(v => params[v] || delete params[v])
-    const paramsForGet = (params && qs.stringify(params)) || ''
-    window.location.href = `${BASE_URL}/driver/govtPraise/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
-  }
 
   /**
    * 上传文件
-   
    */
   const importCar = {
     name: 'file',
@@ -98,8 +49,8 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'govtPraise_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('govtPraise_condin') || ['carNo', 'plateNumber']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
+    fields: getFields(fields, local.get('govtPraise_condin') || ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
     item: {
     },
     onSearch,
@@ -135,110 +86,15 @@ let index = option => {
     a = <Detail key="detail" />
   }
 
-  const fields = [{
-    name: '自编号',
-    
-    key: 'carNo',
-  }, {
-    name: '车牌号',
-    
-    key: 'plateNumber',
-  }, {
-    name: '姓名',
-    
-    key: 'userName',
-  }, {
-    name: '资格证',
-    
-    key: 'qualificationNo',
-  }, {
-    name: '文件名称',
-    
-    key: 'praiseFileName',
-  }, {
-    name: '政府部门',
-    
-    key: 'govtOrg',
-  }, {
-    name: '表彰时间',
-    
-    key: 'creditDate',
-  }, {
-    name: '等级',
-    
-    key: 'praiseGrade',
-    render: text => {
-      if (text == 'COUNTRY') {
-        return '国家级'
-      } else if (text == 'PROVINCE') {
-        return '省级'
-      } else if (text == 'CITY') {
-        return '市级'
-      } else {
-        return '区级'
-      }
-    },
-  }, {
-    name: '网址链接',
-    
-    key: 'newsUrl',
-    render: text => {
-      return <a onClick={() => open(text)}>{text}</a>
-    },
-  }, {
-    name: '操作',
-    key: 'operation',
-    render: (text, record) => (
-      <span>
-        <ZButton permission="driver:govt:query">
-          <Button type="primary" onClick={() => toDetail(record)}>详情</Button>&nbsp;
-        </ZButton>
-        <ZButton permission="driver:govt:update">
-          <Button type="primary" onClick={() => toEdit(record)}>编辑</Button>&nbsp;
-        </ZButton>
-        {/* <Popconfirm title="是否确定要删除?" onConfirm={() => confirm(record.id)} onCancel={cancel}>
-         <Button type="primary">删除</Button>&nbsp;
-         </Popconfirm> */}
-      </span>
-    ),
-  }]
 
   return (
     <div>
       {
         register ? a : <div>
-          <div>
-            <ZButton permission="driver:govt:insert">
-              <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-            </ZButton>
-            <ZButton permission="driver:govt:export">
-              <Popconfirm title="是否确定要导出" onConfirm={toExport} >
-                <Button type="primary" icon="export" >导出</Button>&nbsp;
-              </Popconfirm>
-            </ZButton>
-            <ZButton permission="driver:govt:import">
-              <Upload {...importCar}>
-                <Button type="primary" icon="download" >导入</Button>
-              </Upload>
-            </ZButton>
+          <div style={{ padding: '20px' }}>
+            <ZSearch {...searchBarProps} />
           </div>
-          <div className={styles.query}>
-            <Form layout="inline" onSubmit={query}>
-              <FormItem label={(<span>自编号&nbsp;</span>)}>
-                {getFieldDecorator('carNo')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>车牌号&nbsp;</span>)}>
-                {getFieldDecorator('plateNumber')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>姓名&nbsp;</span>)}>
-                {getFieldDecorator('userName')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>资格证&nbsp;</span>)}>
-                {getFieldDecorator('qualificationNo')(<Input />)}
-              </FormItem>
-              <Button type="primary" htmlType="submit">查询</Button>
-            </Form>
-          </div>
+
           <Table
             rowKey="id"
             dataSource={(page && page.dataList) || []}
@@ -250,26 +106,8 @@ let index = option => {
               pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
               showSizeChanger: true, // 是否显示可以设置几条一页的选项
-              onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
-                form.validateFields((err, values) => {
-                  dispatch({
-                    type: 'govtPraiseStore/queryPage',
-                    pageNo: current,
-                    pageSize,
-                    ...values,
-                  })
-                })
-              },
-              onChange(page, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
-                form.validateFields((err, values) => {
-                  dispatch({
-                    type: 'govtPraiseStore/queryPage',
-                    pageNo: page,
-                    pageSize,
-                    ...values,
-                  })
-                })
-              },
+              onShowSizeChange,
+              onChange,
               showTotal() { // 设置显示一共几条数据
                 return `共 ${(page && page.totalCount) || 0} 条数据`
               },
@@ -279,7 +117,7 @@ let index = option => {
       }
     </div>
   )
-};
+}
 
 const mapStateToProps = ({ loading, govtPraiseStore }) => {
   return {
@@ -327,6 +165,15 @@ const mapDispatchToProps = (dispatch, { form }) => {
         })
       },
 
+      /* 删除 */
+      confirm(id) {
+        dispatch({
+          type: 'govtPraiseStore/deleteById',
+          id,
+        })
+      },
+
+
       /* 导出 */
       toExport() {
         const carNo = form.getFieldValue('carNo')
@@ -338,7 +185,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
         // 删除空值、undefind
         Object.keys(params).map(v => params[v] || delete params[v])
         const paramsForGet = (params && qs.stringify(params)) || ''
-        window.location.href = `${BASE_URL}/govtPraise/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
+        window.location.href = `${BASE_URL}/driver/govtPraise/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
       },
 
 
@@ -387,4 +234,41 @@ const mapDispatchToProps = (dispatch, { form }) => {
     },
   }
 }
+
+const fields = [{
+  name: '自编号',
+  key: 'carNo',
+}, {
+  name: '车牌号',
+  key: 'plateNumber',
+}, {
+  name: '姓名',
+  key: 'userName',
+}, {
+  name: '资格证',
+  key: 'qualificationNo',
+}, {
+  name: '文件名称',
+  key: 'praiseFileName',
+}, {
+  name: '政府部门',
+  key: 'govtOrg',
+}, {
+  name: '表彰时间',
+  key: 'creditDate',
+}, {
+  name: '等级',
+  key: 'praiseGrade',
+  enums: {
+    COUNTRY: '国家级',
+    PROVINCE: '省级',
+    CITY: '市级',
+    DISTRICT: '区级',
+  },
+}, {
+  name: '网址链接',
+  key: 'newsUrl',
+  type: 'href',
+}]
+
 export default connect(mapStateToProps, mapDispatchToProps)(index)

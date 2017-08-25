@@ -27,14 +27,15 @@ let index = option => {
       <Button type="primary" icon="close-circle-o" onClick={manage}>经营合同已到期</Button>&nbsp;
     </div>
   )
+  const searchFieldPick = ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'identity', 'job', 'driverStatus', 'sex', 'politics', 'insurance']
   const searchBarProps = {
     form,
     showLabel: true,
     showReset: true,
     btns,
-    searchCacheKey: 'monthQuota_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('monthQuota_condin') || ['carNo', 'plateNumber']).values(),
+    searchCacheKey: 'archives_condin',
+    searchFields: getSearchFields(fields, searchFieldPick).values(),
+    fields: getFields(fields, local.get('archives_condin') || ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'identity', 'job']).values(),
     item: {
     },
     onSearch,
@@ -58,7 +59,7 @@ let index = option => {
       )
     },
   }]
-  const tableColumns = getColumns(fields).enhance(operatorColumn).values()
+  const tableColumns = getColumns(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'job']).enhance(operatorColumn).values()
 
   let a
   if (res === 'update') {
@@ -229,28 +230,55 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
 const fields = [{
   name: '自编号',
-  
   key: 'carNo',
 }, {
   name: '车牌号',
-  
   key: 'plateNumber',
 }, {
   name: '姓名',
-  
   key: 'userName',
 }, {
   name: '资格证',
-  
   key: 'qualificationNo',
 }, {
+  name: '身份证',
+  key: 'identity',
+}, {
   name: '岗位',
-  
   key: 'job',
   enums: {
     MASTER_CLASS: '主班',
     DEPUTY_CLASS: '副班',
     FLEXIBLE_CLASS: '机动班',
+  },
+}, {
+  name: '状态',
+  key: 'driverStatus',
+  enums: {
+    WORKING: '在职',
+    DIMISSION: '离职',
+  },
+}, {
+  name: '性别',
+  key: 'sex',
+  enums: {
+    male: '男',
+    female: '女',
+  },
+}, {
+  name: '政治面貌',
+  key: 'politics',
+  enums: {
+    MASSES: '群众',
+    LEAGUE: '团员',
+    PARTY: '党员',
+  },
+}, {
+  name: '保险',
+  key: 'insurance',
+  enums: {
+    true: '是',
+    false: '否',
   },
 }]
 

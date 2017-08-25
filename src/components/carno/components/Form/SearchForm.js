@@ -21,15 +21,6 @@ const FormItem = Form.Item
 const HSearchForm = option => {
   const { fields, search = {}, form, showLabel, showReset, onSearch, onReset, formItemLayout = {} } = option
   const assginFormItemLayout = {
-    itemCol: {
-      span: 8,
-    },
-    labelCol: {
-      span: showLabel ? 7 : 0,
-    },
-    wrapperCol: {
-      span: showLabel ? 16 : 24,
-    },
     btnCol: {
       span: 6,
     },
@@ -52,12 +43,17 @@ const HSearchForm = option => {
   return (
     <Form layout="inline" >
       <Row>
-        {fields.map((field, index) =>
-          (<Col {...assginFormItemLayout.itemCol} key={`itemKey${index}`}>
-            <FormItem className={styles.formItem} label={getLabelName(field)} help={field.help} key={field.key} labelCol={assginFormItemLayout.labelCol} wrapperCol={assginFormItemLayout.wrapperCol} >
+        {fields.map((field, index) => {
+          const finalFormItemLayout = { assginFormItemLayout, ...field.formItemLayout }
+          const itemCol = finalFormItemLayout.itemCol || { span: 8 }
+          const labelCol = finalFormItemLayout.labelCol || { span: showLabel ? 7 : 0 }
+          const wrapperCol = finalFormItemLayout.wrapperCol || { span: showLabel ? 16 : 24 }
+          return (<Col {...itemCol} key={`itemKey${index}`}>
+            <FormItem className={styles.formItem} label={getLabelName(field)} help={field.help} key={field.key} labelCol={labelCol} wrapperCol={wrapperCol} >
               {FormUtil.createFieldDecorator(field, search, form.getFieldDecorator)}
             </FormItem>
-          </Col>),
+          </Col>)
+        }
         )}
         <Col {...assginFormItemLayout.btnCol} key={'itemKeySubmit'}>
           <FormItem style={{ marginBottom: 15, marginLeft: 30 }}>

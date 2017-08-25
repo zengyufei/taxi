@@ -1,18 +1,20 @@
 import { connect } from 'dva'
-import { Form, Input, Button, Icon, Popconfirm, Alert, Table, Upload, Modal, DatePicker } from 'antd'
-import styles from './Page.css'
+import { Button, Popconfirm, Table, Upload, Modal } from 'antd'
+import qs from 'qs'
+
+import ZSearch from 'ZSearch'
+import { getColumns } from 'TableUtils'
+import { getFields, getSearchFields } from 'FormUtils'
+
 import Add from './Add'
 import Update from './Update'
 import Detail from './Detail'
-import qs from 'qs'
 
-const FormItem = Form.Item
 const { tokenSessionKey } = constant
 
 let index = option => {
   const { loading, page, methods, form, res, register } = option
   const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload } = methods
-
 
   /**
    * 上传文件
@@ -46,8 +48,8 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'transfer_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('transfer_condin') || ['carNo', 'plateNumber']).values(),
+    searchFields: getSearchFields(seachFields).values(),
+    fields: getFields(seachFields, local.get('transfer_condin') || ['carNo', 'plateNumber', 'opratorUser', 'startDate']).values(),
     item: {
     },
     onSearch,
@@ -82,86 +84,13 @@ let index = option => {
     a = <Detail key="detail" />
   }
 
-  const fields = [{
-    name: '自编号',
-    
-    key: 'carNo',
-  }, {
-    name: '车牌号',
-    
-    key: 'plateNumber',
-  }, {
-    name: '旧车主姓名',
-    
-    key: 'oldUserName',
-  }, {
-    name: '旧车主资格证',
-    
-    key: 'oldQualificationNo',
-  }, {
-    name: '新车主姓名',
-    
-    key: 'newUserName',
-  }, {
-    name: '新车主从业资格证',
-    
-    key: 'newQualificationNo',
-  }, {
-    name: '过户时间',
-    
-    key: 'transferDate',
-  }, {
-    name: '操作',
-    key: 'operation',
-    render: (text, record) => (
-      <span>
-        <ZButton permission="driver:transfer:query">
-          <Button type="primary" onClick={() => toDetail(record)}>详情</Button>&nbsp;
-        </ZButton>
-        <ZButton permission="driver:transfer:update">
-          <Button type="primary" onClick={() => toEdit(record)}>编辑</Button>&nbsp;
-        </ZButton>
-      </span>
-    ),
-  }]
 
   return (
     <div>
       {
         register ? a : <div>
-          <div>
-            <ZButton permission="driver:transfer:insert">
-              <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-            </ZButton>
-            <ZButton permission="driver:transfer:export">
-              <Popconfirm title="是否确定要导出" onConfirm={toExport} >
-                <Button type="primary" icon="export" >导出</Button>&nbsp;
-              </Popconfirm>
-            </ZButton>
-            <ZButton permission="driver:transfer:import">
-              <Upload {...importCar}>
-                <Button type="primary" icon="download" >导入</Button>
-              </Upload>
-            </ZButton>
-          </div>
-          <div className={styles.query}>
-            <Form layout="inline" onSubmit={query}>
-              <FormItem label={(<span>自编号&nbsp;</span>)}>
-                {getFieldDecorator('carNo')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>车牌号&nbsp;</span>)}>
-                {getFieldDecorator('plateNumber')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>经办人&nbsp;</span>)}>
-                {getFieldDecorator('opratorUser')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>过户日期&nbsp;</span>)}>
-                {getFieldDecorator('startDate')(
-                  <DatePicker />
-                )}
-              </FormItem>
-              <Button type="primary" htmlType="submit">查询</Button>
-            </Form>
+          <div style={{ padding: '20px' }}>
+            <ZSearch {...searchBarProps} />
           </div>
           <Table
             rowKey="id"
@@ -174,26 +103,8 @@ let index = option => {
               pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
               showSizeChanger: true, // 是否显示可以设置几条一页的选项
-              onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
-                form.validateFields((err, values) => {
-                  dispatch({
-                    type: 'transferStore/queryPage',
-                    pageNo: current,
-                    pageSize,
-                    ...values,
-                  })
-                })
-              },
-              onChange(page, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
-                form.validateFields((err, values) => {
-                  dispatch({
-                    type: 'transferStore/queryPage',
-                    pageNo: page,
-                    pageSize,
-                    ...values,
-                  })
-                })
-              },
+              onShowSizeChange,
+              onChange,
               showTotal() { // 设置显示一共几条数据
                 return `共 ${(page && page.totalCount) || 0} 条数据`
               },
@@ -221,6 +132,11 @@ const mapDispatchToProps = (dispatch, { form }) => {
     methods: {
 
       onSearch(values) {
+        if (values) {
+          if (values.startDate) {
+            values.startDate = moment(values.startDate).format('YYYY-MM-DD')
+          }
+        }
         dispatch({
           type: 'transferStore/queryPage',
           ...values,
@@ -320,4 +236,44 @@ const mapDispatchToProps = (dispatch, { form }) => {
     },
   }
 }
+
+const fields = [{
+  name: '自编号',
+  key: 'carNo',
+}, {
+  name: '车牌号',
+  key: 'plateNumber',
+}, {
+  name: '旧车主姓名',
+  key: 'oldUserName',
+}, {
+  name: '旧车主资格证',
+  key: 'oldQualificationNo',
+}, {
+  name: '新车主姓名',
+  key: 'newUserName',
+}, {
+  name: '新车主从业资格证',
+  key: 'newQualificationNo',
+}, {
+  name: '过户时间',
+  key: 'transferDate',
+}]
+
+const seachFields = [{
+  name: '自编号',
+  key: 'carNo',
+}, {
+  name: '车牌号',
+  key: 'plateNumber',
+}, {
+  name: '经办人',
+  key: 'opratorUser',
+}, {
+  name: '过户日期',
+  key: 'startDate',
+  type: 'date',
+}]
+
+
 export default connect(mapStateToProps, mapDispatchToProps)(index)

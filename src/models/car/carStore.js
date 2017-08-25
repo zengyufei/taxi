@@ -174,7 +174,7 @@ export default extend({
     },
 
     * queryByCarNo({ carNo }, { get, put }) {
-      const response = yield get(`${prefix}/queryByCarNo`, { carNo })
+      const response = yield get(`${prefix}/queryByCarNo`, { carNo: carNo })
       if (+response.code === 200) {
         yield put({ type: 'queryByCarNoSuccess', car: response.result })
       } else {

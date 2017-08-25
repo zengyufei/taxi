@@ -6,22 +6,22 @@
  * 4. 从对象再获取对象点出来的在按需加载下面
  * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
  */
-import TweenOne from 'rc-tween-one';
+import TweenOne from 'rc-tween-one'
 
-import { connect } from 'dva';
+import { connect } from 'dva'
 import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox,
-  Button, Card, Radio, InputNumber, DatePicker, Alert, message, Upload, Modal, AutoComplete } from 'antd';
+  Button, Card, Radio, InputNumber, DatePicker, Alert, message, Upload, Modal, AutoComplete } from 'antd'
 
-const TweenOneGroup = TweenOne.TweenOneGroup;
-const FormItem = Form.Item;
-const RadioGroup = Radio.Group;
-const { RangePicker, MonthPicker } = DatePicker;
-const Option = Select.Option;
+const TweenOneGroup = TweenOne.TweenOneGroup
+const FormItem = Form.Item
+const RadioGroup = Radio.Group
+const { RangePicker, MonthPicker } = DatePicker
+const Option = Select.Option
 
-let CarOperateLogAdd = (props) => {
-  const { dispatch, form, car, carNos } = props;
-  const { getFieldDecorator } = form;
-  const { plateList, previewVisible, previewImage } = props;
+let CarOperateLogAdd = props => {
+  const { dispatch, form, car, carNos } = props
+  const { getFieldDecorator } = form
+  const { plateList, previewVisible, previewImage } = props
 
   const formItemLayout = {
     labelCol: {
@@ -32,7 +32,7 @@ let CarOperateLogAdd = (props) => {
       xs: { span: 24 },
       sm: { span: 14 },
     },
-  };
+  }
   const tailFormItemLayout = {
     wrapperCol: {
       xs: {
@@ -44,11 +44,11 @@ let CarOperateLogAdd = (props) => {
         offset: 6,
       },
     },
-  };
+  }
 
   /* 提交事件 */
-  const addCarOperateLog = (e) => {
-    e.preventDefault();
+  const addCarOperateLog = e => {
+    e.preventDefault()
     form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         if (form.getFieldValue('plateNumber') == '') {
@@ -57,55 +57,55 @@ let CarOperateLogAdd = (props) => {
             content: (
               '自编号不存在'
             ),
-          });
+          })
           return;
         }
-        const yearMonth = form.getFieldValue('yearMonth') ? form.getFieldValue('yearMonth').format('YYYYMM') : 0;
+        const yearMonth = form.getFieldValue('yearMonth') ? form.getFieldValue('yearMonth').format('YYYYMM') : 0
         dispatch({
           type: 'carOperateLogStore/insert',
           ...values,
           yearMonth,
-        });
+        })
       }
-    });
+    })
   };
   /** 模糊查询 车辆自编号 */
-  const handleSearch = (value) => {
+  const handleSearch = value => {
     dispatch({
       type: 'commonStore/queryLikeCarNo',
       str: value,
-    });
+    })
   };
   function queryByCarNo() {
     dispatch({
       type: 'carStore/queryByCarNo',
       carNo: form.getFieldValue('carNo'),
-    });
-    console.log(form.getFieldValue('carNo'));
+    })
+    console.log(form.getFieldValue('carNo'))
   }
 
   /* 返回分页 */
-  const toPage = (e) => {
+  const toPage = e => {
     dispatch({
       type: 'carOperateLogStore/queryPage',
-    });
+    })
   };
 
   // 预览图片
-  const handlePreview = (file) => {
-    console.log('handlePreview');
+  const handlePreview = file => {
+    console.log('handlePreview')
     dispatch({
       type: 'carOperateLogStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
+    })
   };
   // 删除图片
-  const handleCancel = (e) => {
-    console.log('handleCancel');
+  const handleCancel = e => {
+    console.log('handleCancel')
     dispatch({
       type: 'carOperateLogStore/unlookPreview',
-    });
+    })
   };
 
   return (
@@ -126,8 +126,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         自编号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   <Col span={18}>
@@ -150,8 +150,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         车牌号&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
@@ -165,8 +165,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         车辆照片&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('plateImage')(
                     <div >
@@ -187,8 +187,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         选择年月份&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                 >
                   {getFieldDecorator('yearMonth', {
                     rules: [{ required: true, message: '请选择年月份!' }],
@@ -199,14 +199,14 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                        车辆月度行驶里程&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('travelMileage', {
                     rules: [{ required: true, message: '请输入车辆月度行驶里程!' }],
                   })(
-                    <InputNumber min={0} max={1000000}/>
+                    <InputNumber min={0} max={1000000} />
                   )}
                   (公里)
                 </FormItem>
@@ -215,8 +215,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         车辆月度营运里程&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('operateMileage')(
@@ -229,8 +229,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         车辆月度营业收入&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('incomeAmount', {
@@ -245,8 +245,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         车辆月度载客次数&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('passengerTimes', {
@@ -261,8 +261,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         车辆月度客运量&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('passengerCapacity')(
@@ -275,8 +275,8 @@ let CarOperateLogAdd = (props) => {
                   label={(
                     <span>
                         车辆月度耗电量&nbsp;
-                      </span>
-                    )}
+                    </span>
+                  )}
                   hasFeedback
                 >
                   {getFieldDecorator('powerConsume')(
@@ -296,7 +296,7 @@ let CarOperateLogAdd = (props) => {
         </Row>
       </TweenOneGroup>
     </div>
-  );
+  )
 };
 
 function mapStateToProps({ carStore, carOperateLogStore, commonStore }) {
@@ -307,7 +307,7 @@ function mapStateToProps({ carStore, carOperateLogStore, commonStore }) {
     previewVisible: carOperateLogStore.previewVisible,
     previewImage: carOperateLogStore.previewImage,
 
-  };
+  }
 }
-CarOperateLogAdd = Form.create()(CarOperateLogAdd);
-export default connect(mapStateToProps)(CarOperateLogAdd);
+CarOperateLogAdd = Form.create()(CarOperateLogAdd)
+export default connect(mapStateToProps)(CarOperateLogAdd)

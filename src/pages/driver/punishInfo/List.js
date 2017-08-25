@@ -1,36 +1,21 @@
-import { connect } from 'dva';
-import { Form, Input, Button, Icon, Popconfirm, Alert, Table, Upload, Modal, Select } from 'antd';
-import styles from './Page.css';
-import Add from './Add';
-import Update from './Update';
+import { connect } from 'dva'
+import { Button, Table, Upload, Modal } from 'antd'
 
-const FormItem = Form.Item;
-const { tokenSessionKey, resourceSessionKey } = constant;
+import ZSearch from 'ZSearch'
+import { getColumns } from 'TableUtils'
+import { getFields } from 'FormUtils'
 
-let index = (option) => {
-  const { loading, methods, form, res, register, page } = option;
-  const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload } = methods;
+import Add from './Add'
+import Update from './Update'
 
-  /* 添加 */
-  toAdd() {
-    dispatch({
-      type: 'punishInfoStore/toRegister',
-      res: 'add',
-    });
-  }
-  /* 编辑 */
-  toEdit(punishInfo) {
-    dispatch({
-      type: 'punishInfoStore/toEdit',
-      res: 'update',
-      punishInfo,
-    });
-  }
+const { tokenSessionKey } = constant
 
-  ;
+let index = option => {
+  const { loading, methods, form, res, register, page } = option
+  const { onSearch, toAdd, toEdit, onShowSizeChange, onChange, handlerUpload } = methods
+
   /**
    * 上传文件
-   
    */
   const importCar = {
     name: 'file',
@@ -42,11 +27,6 @@ let index = (option) => {
     <div>
       <ZButton permission="driver:punishInfo:insert">
         <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-      </ZButton>
-      <ZButton permission="driver:punishInfo:export">
-        <Popconfirm title="是否确定要导出" onConfirm={toExport} >
-          <Button type="primary" icon="export" >导出</Button>&nbsp;
-        </Popconfirm>
       </ZButton>
       <ZButton permission="driver:punishInfo:import">
         <Upload {...importCar}>
@@ -60,9 +40,7 @@ let index = (option) => {
     showLabel: true,
     showReset: true,
     btns,
-    searchCacheKey: 'punishInfo_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('punishInfo_condin') || ['carNo', 'plateNumber']).values(),
+    fields: getFields(fields, ['punishCode']).values(),
     item: {
     },
     onSearch,
@@ -76,9 +54,6 @@ let index = (option) => {
     render: (text, record) => {
       return (
         <span>
-          <ZButton permission="driver:punishInfo:query">
-            <Button type="primary" onClick={() => toDetail(record)}>详情</Button>&nbsp;
-          </ZButton>
           <ZButton permission="driver:punishInfo:update">
             <Button type="primary" onClick={() => toEdit(record)}>编辑</Button>&nbsp;
           </ZButton>
@@ -88,98 +63,44 @@ let index = (option) => {
   }]
   const tableColumns = getColumns(fields).enhance(operatorColumn).values()
 
-  let a;
+  let a
   if (res === 'add') {
-    a = <Add key="add" />;
+    a = <Add key="add" />
   } else if (res === 'update') {
-    a = <Update key="update" />;
+    a = <Update key="update" />
   }
-
-  const fields = [{
-    name: '违章编码',
-    
-    key: 'punishCode',
-  }, {
-    name: '违章描述',
-    
-    key: 'punishDesc',
-  }, {
-    name: '操作',
-    key: 'operation',
-    render: (text, record) => (
-      <span>
-        <ZButton permission="driver:punishInfo:update">
-          <Button type="primary" onClick={() => toEdit(record)}>编辑</Button>&nbsp;
-        </ZButton>
-      </span>
-    ),
-  }];
 
   return (
     <div>
       {
-        register ? a          :        <div>
-          <div>
-            <ZButton permission="driver:punishInfo:insert">
-              <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-            </ZButton>
-            <ZButton permission="driver:punishInfo:import">
-              <Upload {...importCar}>
-                <Button type="primary" icon="download" >导入</Button>
-              </Upload>
-            </ZButton>
+        register ? a : <div>
+          <div style={{ padding: '20px' }}>
+            <ZSearch {...searchBarProps} />
           </div>
-          <div className={styles.query}>
-            <Form layout="inline" onSubmit={query}>
-              <FormItem
-                label={(<span>违章编码&nbsp;</span>)}
-              >
-                {getFieldDecorator('punishCode')(<Input />)}
-              </FormItem>
-              <Button type="primary" htmlType="submit">查询</Button>
-            </Form>
-          </div>
+
           <Table
             rowKey="id"
             dataSource={(page && page.dataList) || []}
             columns={tableColumns}
             loading={loading}
             bordered
-            pagination={{  // 分页
+            pagination={{ // 分页
               total: (page && +page.totalCount) || 0, // 总数量
-              pageSize: (page && +page.pageSize) || 10,  // 显示几条一页
+              pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
-              showSizeChanger: true,  // 是否显示可以设置几条一页的选项
-              onShowSizeChange(current, pageSize) {  // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
-                form.validateFields((err, values) => {
-              　　dispatch({
-                    type: 'punishInfoStore/queryPage',
-                    pageNo: current,
-                    pageSize,
-                    ...values,
-                  });
-                });
-              },
-              onChange(page, pageSize) {  // 点击改变页数的选项时调用函数，current:将要跳转的页数
-                form.validateFields((err, values) => {
-                  dispatch({
-                    type: 'punishInfoStore/queryPage',
-                    pageNo: page,
-                    pageSize,
-                    ...values,
-                  });
-                });
-              },
-              showTotal() {  // 设置显示一共几条数据
-                return `共 ${(page && page.totalCount) || 0} 条数据`;
+              showSizeChanger: true, // 是否显示可以设置几条一页的选项
+              onShowSizeChange,
+              onChange,
+              showTotal() { // 设置显示一共几条数据
+                return `共 ${(page && page.totalCount) || 0} 条数据`
               },
             }}
           />
         </div>
       }
     </div>
-  );
-};
+  )
+}
 
 const mapStateToProps = ({ loading, punishInfoStore }) => {
   return {
@@ -187,7 +108,7 @@ const mapStateToProps = ({ loading, punishInfoStore }) => {
     register: punishInfoStore.register,
     res: punishInfoStore.res,
     page: punishInfoStore.page,
-  };
+  }
 }
 
 
@@ -203,14 +124,6 @@ const mapDispatchToProps = (dispatch, { form }) => {
         })
       },
 
-      /* 详情 */
-      toDetail(punishInfo) {
-        dispatch({
-          type: 'punishInfoStore/toEdit',
-          res: 'detail',
-          punishInfo,
-        })
-      },
       /* 添加 */
       toAdd() {
         dispatch({
@@ -226,21 +139,6 @@ const mapDispatchToProps = (dispatch, { form }) => {
           punishInfo,
         })
       },
-
-      /* 导出 */
-      toExport() {
-        const carNo = form.getFieldValue('carNo')
-        const plateNumber = form.getFieldValue('plateNumber')
-        const params = {
-          carNo,
-          plateNumber,
-        }
-        // 删除空值、undefind
-        Object.keys(params).map(v => params[v] || delete params[v])
-        const paramsForGet = (params && qs.stringify(params)) || ''
-        window.location.href = `${BASE_URL}/punishInfo/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
-      },
-
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
         dispatch({
@@ -287,4 +185,15 @@ const mapDispatchToProps = (dispatch, { form }) => {
     },
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(index);
+
+
+const fields = [{
+  name: '违章编码',
+  key: 'punishCode',
+}, {
+  name: '违章描述',
+  key: 'punishDesc',
+}]
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(index)

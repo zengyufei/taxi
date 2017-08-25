@@ -141,11 +141,11 @@ const getFields = (originFields, fieldKeys, extraFields) => {
     fields = fields.filter(field => {
       for (let i in keys) {
         const item = keys[i]
-        if (item !== field.key) {
-          return true
+        if (item === field.key) {
+          return false
         }
       }
-      return false
+      return true
     })
     return chain
   }
@@ -197,7 +197,7 @@ const getFields = (originFields, fieldKeys, extraFields) => {
           const item = fields[i]
           if (item.key == key) {
             field = item
-				 		continue
+            continue
           }
         }
         if (!field) {

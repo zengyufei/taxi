@@ -37,6 +37,9 @@ const fieldTypes = {
   invalid: value => {
     return +value === 1 ? '有效' : '无效'
   },
+  href: value => {
+    return <a onClick={() => window.open(value)}>{value}</a>
+  },
 }
 
 /*

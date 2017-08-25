@@ -25,12 +25,12 @@ export default extend({
     },
     // 模糊查询 车辆自编号
     * queryLikeCarNo({ str }, { post, put }) {
-      const response = yield post('/common/queryLikeCarNo', str)
+      const response = yield post('/common/queryLikeCarNo', {str: str})
       yield put({ type: 'queryLikeCarNoSuccess', carNos: response })
     },
     // 根据车辆自编号 查询 在职人员
     * queryDriverListByOption({ carNo }, { post, put }) {
-      const response = yield post('/common/queryDriverListByOption', carNo)
+      const response = yield post('/common/queryDriverListByOption', {carNo: carNo})
       if (response.length === 0) {
         ZMsg.success('该车辆没有在职人员使用')
       } else {

@@ -28,28 +28,32 @@ let index = option => {
   }
 
   const btns = (
-    <div>
-      <ZButton permission="driver:driver:insert">
-        <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-      </ZButton>
-      <Button type="primary" icon="clock-circle-o" onClick={accidentring}>保险即将到期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={accident}>保险已到期</Button>&nbsp;
-      <Button type="primary" icon="clock-circle-o" onClick={licensering}>驾驶证即将到期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={license}>驾驶证已到期</Button>&nbsp;
-      <Button type="primary" icon="clock-circle-o" onClick={labourring}>劳动合同即将到期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={labour}>劳动合同已到期</Button>&nbsp;
-      <Button type="primary" icon="clock-circle-o" onClick={managering}>经营合同即将到期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={manage}>经营合同已到期</Button>&nbsp;
-      <ZButton permission="driver:driver:export">
-        <Popconfirm title="是否确定要导出" onConfirm={toExport} >
-          <Button type="primary" icon="export" >导出</Button>&nbsp;
-        </Popconfirm>
-      </ZButton>
-      <ZButton permission="driver:driver:import">
-        <Upload {...importCar}>
-          <Button type="primary" icon="download" >导入</Button>
-        </Upload>
-      </ZButton>
+    <div style={{ marginTop: '-30px' }}>
+      <div style={{ marginBottom: '3px' }}>
+        <Button type="primary" icon="clock-circle-o" onClick={labourring}>劳动合同即将到期</Button>&nbsp;
+        <Button type="primary" icon="close-circle-o" onClick={labour}>劳动合同已到期</Button>&nbsp;
+        <Button type="primary" icon="clock-circle-o" onClick={managering}>经营合同即将到期</Button>&nbsp;
+        <Button type="primary" icon="close-circle-o" onClick={manage}>经营合同已到期</Button>&nbsp;
+      </div>
+      <div style={{ marginBottom: '3px' }}>
+        <ZButton permission="driver:driver:insert">
+          <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
+        </ZButton>
+        <ZButton permission="driver:driver:export">
+          <Popconfirm title="是否确定要导出" onConfirm={toExport} >
+            <Button type="primary" icon="export" >导出</Button>&nbsp;
+          </Popconfirm>
+        </ZButton>
+        <ZButton permission="driver:driver:import">
+          <Upload {...importCar}>
+            <Button type="primary" icon="download" >导入</Button>
+          </Upload>
+        </ZButton>
+        <Button type="primary" icon="clock-circle-o" onClick={accidentring}>保险即将到期</Button>&nbsp;
+        <Button type="primary" icon="close-circle-o" onClick={accident}>保险已到期</Button>&nbsp;
+        <Button type="primary" icon="clock-circle-o" onClick={licensering}>驾驶证即将到期</Button>&nbsp;
+        <Button type="primary" icon="close-circle-o" onClick={license}>驾驶证已到期</Button>&nbsp;
+      </div>
     </div>
   )
   const searchBarProps = {
@@ -58,7 +62,7 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'driver_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'identity', 'job', 'driverStatus', 'sex', 'politics', 'insurance']).values(),
     fields: getFields(fields, local.get('driver_condin') || ['carNo', 'plateNumber']).values(),
     item: {
     },
@@ -94,54 +98,6 @@ let index = option => {
   } else if (res === 'detail') {
     a = <Detail key="detail" />
   }
-
-  const fields = [{
-    name: '自编号',
-    key: 'carNo',
-  }, {
-    name: '车牌号',
-    key: 'plateNumber',
-  }, {
-    name: '姓名',
-    key: 'userName',
-  }, {
-    name: '性别',
-    key: 'sex',
-    enums: {
-      male: '男',
-      female: '女',
-    },
-  }, {
-    name: '状态',
-    key: 'driverStatus',
-    enums: {
-      WORKING: '在职',
-      DIMISSION: '离职',
-    },
-  }, {
-    name: '岗位',
-    key: 'job',
-    enums: {
-      MASTER_CLASS: '主班',
-      DEPUTY_CLASS: '副班',
-      FLEXIBLE_CLASS: '机动班',
-    },
-  }, {
-    name: '资格证',
-    key: 'qualificationNo',
-  }, {
-    name: '电话',
-    key: 'mobile',
-  }, {
-    name: '身份证',
-    key: 'identity',
-  }, {
-    name: '年龄',
-    key: 'age',
-  }, {
-    name: '入职日期',
-    key: 'entryDate',
-  }]
 
   return (
     <div>
@@ -182,8 +138,6 @@ const mapStateToProps = ({ loading, driverStore, driverCommonStore }) => {
     res: driverStore.res,
     page: driverStore.page,
     areacodes: driverCommonStore.areacodes,
-    UPLOADPATH: driverStore.UPLOADPATH,
-
   }
 }
 
@@ -352,4 +306,70 @@ const mapDispatchToProps = (dispatch, { form }) => {
     },
   }
 }
+
+
+const fields = [{
+  name: '自编号',
+  key: 'carNo',
+}, {
+  name: '车牌号',
+  key: 'plateNumber',
+}, {
+  name: '姓名',
+  key: 'userName',
+}, {
+  name: '性别',
+  key: 'sex',
+  enums: {
+    male: '男',
+    female: '女',
+  },
+}, {
+  name: '状态',
+  key: 'driverStatus',
+  enums: {
+    WORKING: '在职',
+    DIMISSION: '离职',
+  },
+}, {
+  name: '岗位',
+  key: 'job',
+  enums: {
+    MASTER_CLASS: '主班',
+    DEPUTY_CLASS: '副班',
+    FLEXIBLE_CLASS: '机动班',
+  },
+}, {
+  name: '资格证',
+  key: 'qualificationNo',
+}, {
+  name: '电话',
+  key: 'mobile',
+}, {
+  name: '身份证',
+  key: 'identity',
+}, {
+  name: '年龄',
+  key: 'age',
+}, {
+  name: '入职日期',
+  key: 'entryDate',
+}, {
+  name: '政治面貌',
+  key: 'politics',
+  enums: {
+    MASSES: '群众',
+    LEAGUE: '团员',
+    PARTY: '党员',
+  },
+}, {
+  name: '保险',
+  key: 'insurance',
+  enums: {
+    true: '是',
+    false: '否',
+  },
+}]
+
+
 export default connect(mapStateToProps, mapDispatchToProps)(index)

@@ -16,7 +16,6 @@ let index = option => {
   const { loading, methods, form, res, register, page } = option
   const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload } = methods
 
-
   /**
    * 上传文件
    
@@ -50,8 +49,8 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'complain_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('complain_condin') || ['carNo', 'plateNumber']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'complainType', 'inFault', 'punish']).values(),
+    fields: getFields(fields, local.get('complain_condin') || ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'complainType', 'inFault', 'punish']).values(),
     item: {
     },
     onSearch,
@@ -86,67 +85,7 @@ let index = option => {
     a = <Detail key="detail" />
   }
 
-  const fields = [{
-    name: '自编号',
-    key: 'carNo',
-  }, {
-    name: '车牌号',
-    key: 'plateNumber',
-  }, {
-    name: '姓名',
-    key: 'userName',
-  }, {
-    name: '资格证',
-    key: 'qualificationNo',
-  }, {
-    name: '来电者姓名',
-    key: 'callName',
-  }, {
-    name: '来电者联系方式',
-    key: 'callMobile',
-  }, {
-    name: '投诉类型',
-    key: 'complainType',
-    enums: {
-      complain_one: '不打表营运',
-      complain_two: '不提供有效车票',
-      complain_three: '多收费',
-      complain_four: '服务态度差',
-      complain_five: '拒载',
-      complain_six: '咪表有问题',
-      complain_seven: '拼客',
-      complain_eight: '绕路',
-      complain_nine: '危险驾驶',
-      complain_ten: '误导乘客',
-      complain_eleven: '议价',
-      complain_twelve: '中途甩客',
-      complain_thirteen: '其它类',
-    },
-  }, {
-    name: '来电时间',
-    key: 'callTime',
-  }, {
-    name: '事情发生时间',
-    key: 'creditTime',
-  }, {
-    name: '回复乘客时间',
-    key: 'replyTime',
-  }, {
-    name: '驾驶员是否有责',
-    key: 'inFault',
-    enums: {
-      true: '是',
-      false: '否',
-    },
-  }, {
-    name: '是否考核',
-    key: 'punish',
-    enums: {
-      true: '是',
-      false: '否',
-    },
-  }]
-
+  console.log(page && page.dataList)
   return (
     <div>
       {
@@ -187,7 +126,6 @@ const mapStateToProps = ({ loading, complainStore }) => {
     page: complainStore.page,
   }
 }
-
 
 const mapDispatchToProps = (dispatch, { form }) => {
   return {
@@ -294,4 +232,66 @@ const mapDispatchToProps = (dispatch, { form }) => {
     },
   }
 }
+
+const fields = [{
+  name: '自编号',
+  key: 'carNo',
+}, {
+  name: '车牌号',
+  key: 'plateNumber',
+}, {
+  name: '姓名',
+  key: 'userName',
+}, {
+  name: '资格证',
+  key: 'qualificationNo',
+}, {
+  name: '来电者姓名',
+  key: 'callName',
+}, {
+  name: '来电者联系方式',
+  key: 'callMobile',
+}, {
+  name: '投诉类型',
+  key: 'complainType',
+  enums: {
+    complain_one: '不打表营运',
+    complain_two: '不提供有效车票',
+    complain_three: '多收费',
+    complain_four: '服务态度差',
+    complain_five: '拒载',
+    complain_six: '咪表有问题',
+    complain_seven: '拼客',
+    complain_eight: '绕路',
+    complain_nine: '危险驾驶',
+    complain_ten: '误导乘客',
+    complain_eleven: '议价',
+    complain_twelve: '中途甩客',
+    complain_thirteen: '其它类',
+  },
+}, {
+  name: '来电时间',
+  key: 'callTime',
+}, {
+  name: '事情发生时间',
+  key: 'creditTime',
+}, {
+  name: '回复乘客时间',
+  key: 'replyTime',
+}, {
+  name: '驾驶员是否有责',
+  key: 'inFault',
+  enums: {
+    true: '是',
+    false: '否',
+  },
+}, {
+  name: '是否考核',
+  key: 'punish',
+  enums: {
+    true: '是',
+    false: '否',
+  },
+}]
+
 export default connect(mapStateToProps, mapDispatchToProps)(index)

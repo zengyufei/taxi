@@ -44,7 +44,7 @@ let AnnualVerificationInfo = options => {
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
       type: 'annualVerificationStore/queryPage',
     })
@@ -52,8 +52,6 @@ let AnnualVerificationInfo = options => {
 
   // 预览图片
   const handlePreview = file => {
-    console.log('handlePreview')
-    console.log(file)
     dispatch({
       type: 'annualVerificationStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
@@ -61,8 +59,7 @@ let AnnualVerificationInfo = options => {
     })
   }
   // 删除图片
-  const handleCancel = e => {
-    console.log('handleCancel')
+  const handleCancel = () => {
     dispatch({
       type: 'annualVerificationStore/unlookPreview',
     })

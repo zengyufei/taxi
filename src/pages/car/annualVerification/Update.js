@@ -96,8 +96,6 @@ let AnnualVerificationUpdate = options => {
   }
   // 预览图片
   const handlePreview = file => {
-    console.log('handlePreview')
-    console.log(file)
     dispatch({
       type: 'annualVerificationStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
@@ -105,8 +103,7 @@ let AnnualVerificationUpdate = options => {
     })
   }
   // 删除图片
-  const handleCancel = e => {
-    console.log('handleCancel')
+  const handleCancel = () => {
     dispatch({
       type: 'annualVerificationStore/unlookPreview',
     })

@@ -51,8 +51,8 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'commonPraise_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('commonPraise_condin') || ['carNo', 'plateNumber']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
+    fields: getFields(fields, local.get('commonPraise_condin') || ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
     item: {
     },
     onSearch,

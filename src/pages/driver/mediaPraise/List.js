@@ -1,69 +1,21 @@
 import { connect } from 'dva'
-import { Form, Input, Button, Icon, Popconfirm, Alert, Table, message, Upload, Modal } from 'antd'
-import styles from './Page.css'
+import { Button, Popconfirm, Table, Upload, Modal } from 'antd'
+import qs from 'qs'
+
+import ZSearch from 'ZSearch'
+import { getColumns } from 'TableUtils'
+import { getFields, getSearchFields } from 'FormUtils'
+
 import Add from './Add'
 import Update from './Update'
 import Detail from './Detail'
-import qs from 'qs'
 
-const FormItem = Form.Item
-const { tokenSessionKey, resourceSessionKey } = constant
+const { tokenSessionKey } = constant
 
 let index = option => {
   const { loading, methods, form, res, register, page } = option
   const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload } = methods
 
-  /* 跳转网址页面 */
-  open(text) {
-    window.open(text)
-  }
-
-  /* 详情 */
-  toDetail(mediaPraise) {
-    dispatch({
-      type: 'mediaPraiseStore/toEdit',
-      res: 'detail',
-      mediaPraise,
-    })
-  }
-  /* 添加 */
-  toAdd() {
-    dispatch({
-      type: 'mediaPraiseStore/toRegister',
-      res: 'add',
-    })
-  }
-  /* 编辑 */
-  toEdit(mediaPraise) {
-    dispatch({
-      type: 'mediaPraiseStore/toEdit',
-      res: 'update',
-      mediaPraise,
-    })
-  }
-
-  /* 删除 */
-  confirm(id) {
-    dispatch({
-      type: 'mediaPraiseStore/deleteById',
-      id,
-    })
-  }
-
-  
-  /* 导出 */
-  toExport() {
-    const carNo = form.getFieldValue('carNo')
-    const plateNumber = form.getFieldValue('plateNumber')
-    const params = {
-      carNo,
-      plateNumber,
-    }
-    // 删除空值、undefind
-    Object.keys(params).map(v => params[v] || delete params[v])
-    const paramsForGet = (params && qs.stringify(params)) || ''
-    window.location.href = `${BASE_URL}/driver/mediaPraise/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
-  }
   /**
    * 上传文件
    
@@ -97,8 +49,8 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'media_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('media_condin') || ['carNo', 'plateNumber']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
+    fields: getFields(fields, local.get('media_condin') || ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
     item: {
     },
     onSearch,
@@ -133,110 +85,14 @@ let index = option => {
     a = <Detail key="detail" />
   }
 
-  const fields = [{
-    name: '自编号',
-    
-    key: 'carNo',
-  }, {
-    name: '车牌号',
-    
-    key: 'plateNumber',
-  }, {
-    name: '姓名',
-    
-    key: 'userName',
-  }, {
-    name: '资格证',
-    
-    key: 'qualificationNo',
-  }, {
-    name: '报道名称',
-    
-    key: 'praiseFileName',
-  }, {
-    name: '媒体协会',
-    
-    key: 'mediaOrg',
-  }, {
-    name: '表彰时间',
-    
-    key: 'creditDate',
-  }, {
-    name: '等级',
-    
-    key: 'praiseGrade',
-    render: text => {
-      if (text == 'COUNTRY') {
-        return '国家级'
-      } else if (text == 'PROVINCE') {
-        return '省级'
-      } else if (text == 'CITY') {
-        return '市级'
-      } else {
-        return '区级'
-      }
-    },
-  }, {
-    name: '网址链接',
-    
-    key: 'newsUrl',
-    render: text => {
-      return <a onClick={() => open(text)}>{text}</a>
-    },
-  }, {
-    name: '操作',
-    key: 'operation',
-    render: (text, record) => (
-      <span>
-        <ZButton permission="driver:media:query">
-          <Button type="primary" onClick={() => toDetail(record)}>详情</Button>&nbsp;
-        </ZButton>
-        <ZButton permission="driver:media:update">
-          <Button type="primary" onClick={() => toEdit(record)}>编辑</Button>&nbsp;
-        </ZButton>
-        {/* <Popconfirm title="是否确定要删除?" onConfirm={() => confirm(record.id)} onCancel={cancel}>
-         <Button type="primary">删除</Button>&nbsp;
-         </Popconfirm> */}
-      </span>
-    ),
-  }]
-
   return (
     <div>
       {
         register ? a : <div>
-          <div>
-            <ZButton permission="driver:media:insert">
-              <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-            </ZButton>
-            <ZButton permission="driver:media:export">
-              <Popconfirm title="是否确定要导出" onConfirm={toExport} >
-                <Button type="primary" icon="export" >导出</Button>&nbsp;
-              </Popconfirm>
-            </ZButton>
-            <ZButton permission="driver:media:import">
-              <Upload {...importCar}>
-                <Button type="primary" icon="download" >导入</Button>
-              </Upload>
-            </ZButton>
+          <div style={{ padding: '20px' }}>
+            <ZSearch {...searchBarProps} />
           </div>
-          <div className={styles.query}>
-            <Form layout="inline" onSubmit={query}>
-              <FormItem label={(<span>自编号&nbsp;</span>)}>
-                {getFieldDecorator('carNo')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>车牌号&nbsp;</span>)}>
-                {getFieldDecorator('plateNumber')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>姓名&nbsp;</span>)}>
-                {getFieldDecorator('userName')(<Input />)}
-              </FormItem>
-              <FormItem label={(<span>资格证&nbsp;</span>)}>
-                {getFieldDecorator('qualificationNo')(<Input />)}
-              </FormItem>
-              <Button type="primary" htmlType="submit">查询</Button>
-            </Form>
-          </div>
+
           <Table
             rowKey="id"
             dataSource={(page && page.dataList) || []}
@@ -248,26 +104,8 @@ let index = option => {
               pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
               showSizeChanger: true, // 是否显示可以设置几条一页的选项
-              onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
-                form.validateFields((err, values) => {
-                  dispatch({
-                    type: 'mediaPraiseStore/queryPage',
-                    pageNo: current,
-                    pageSize,
-                    ...values,
-                  })
-                })
-              },
-              onChange(page, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
-                form.validateFields((err, values) => {
-                  dispatch({
-                    type: 'mediaPraiseStore/queryPage',
-                    pageNo: page,
-                    pageSize,
-                    ...values,
-                  })
-                })
-              },
+              onShowSizeChange,
+              onChange,
               showTotal() { // 设置显示一共几条数据
                 return `共 ${(page && page.totalCount) || 0} 条数据`
               },
@@ -277,7 +115,7 @@ let index = option => {
       }
     </div>
   )
-};
+}
 
 const mapStateToProps = ({ loading, mediaPraiseStore }) => {
   return {
@@ -302,11 +140,11 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
 
       /* 详情 */
-      toDetail(monthQuota) {
+      toDetail(mediaPraise) {
         dispatch({
           type: 'mediaPraiseStore/toEdit',
           res: 'detail',
-          monthQuota,
+          mediaPraise,
         })
       },
       /* 添加 */
@@ -317,13 +155,22 @@ const mapDispatchToProps = (dispatch, { form }) => {
         })
       },
       /* 编辑 */
-      toEdit(monthQuota) {
+      toEdit(mediaPraise) {
         dispatch({
           type: 'mediaPraiseStore/toEdit',
           res: 'update',
-          monthQuota,
+          mediaPraise,
         })
       },
+
+      /* 删除 */
+      confirm(id) {
+        dispatch({
+          type: 'mediaPraiseStore/deleteById',
+          id,
+        })
+      },
+
 
       /* 导出 */
       toExport() {
@@ -336,7 +183,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
         // 删除空值、undefind
         Object.keys(params).map(v => params[v] || delete params[v])
         const paramsForGet = (params && qs.stringify(params)) || ''
-        window.location.href = `${BASE_URL}/monthQuota/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
+        window.location.href = `${BASE_URL}/driver/mediaPraise/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
       },
 
 
@@ -385,4 +232,41 @@ const mapDispatchToProps = (dispatch, { form }) => {
     },
   }
 }
+
+const fields = [{
+  name: '自编号',
+  key: 'carNo',
+}, {
+  name: '车牌号',
+  key: 'plateNumber',
+}, {
+  name: '姓名',
+  key: 'userName',
+}, {
+  name: '资格证',
+  key: 'qualificationNo',
+}, {
+  name: '报道名称',
+  key: 'praiseFileName',
+}, {
+  name: '媒体协会',
+  key: 'mediaOrg',
+}, {
+  name: '表彰时间',
+  key: 'creditDate',
+}, {
+  name: '等级',
+  key: 'praiseGrade',
+  enums: {
+    COUNTRY: '国家级',
+    PROVINCE: '省级',
+    CITY: '市级',
+    DISTRICT: '区级',
+  },
+}, {
+  name: '网址链接',
+  key: 'newsUrl',
+  type: 'href',
+}]
+
 export default connect(mapStateToProps, mapDispatchToProps)(index)

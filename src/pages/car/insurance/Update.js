@@ -10,7 +10,7 @@ import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
 import { Form, Input, Icon, Select, Row, Col,
-  Button, Card, InputNumber, DatePicker, Upload, Modal } from 'antd'
+  Button, Card, InputNumber, DatePicker, Upload, Modal, Checkbox } from 'antd'
 import moment from 'moment'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
@@ -21,6 +21,7 @@ let InsuranceUpdate = options => {
   const { dispatch, form, insurance } = options
   const { getFieldDecorator } = form
   const { plateList, previewVisible, previewImage, insuranceFile, insuranceList } = options
+  const { oneInsurance, twoInsurance, threeInsurance, fourInsurance, fiveInsurance } = options;
 
   const formItemLayout = {
     labelCol: {
@@ -52,12 +53,34 @@ let InsuranceUpdate = options => {
       if (!err) {
         const insuranceBuyDate = form.getFieldValue('insuranceBuyDate') ? form.getFieldValue('insuranceBuyDate').format('YYYY-MM-DD') : null
         const insuranceExpireDate = form.getFieldValue('insuranceExpireDate') ? form.getFieldValue('insuranceExpireDate').format('YYYY-MM-DD') : null
+        let bizInsuranceStr='';
+        if(insurance.insuranceType === 'BUSINESS') {
+          if(form.getFieldValue('insurance').includes('车损险赔偿金额')){
+            bizInsuranceStr += '车损险赔偿金额_'+form.getFieldValue('oneNumber')+',';
+          }
+          if(form.getFieldValue('insurance').includes('第三者责任险最高赔偿金额')){
+            bizInsuranceStr += '第三者责任险最高赔偿金额_'+form.getFieldValue('twoNumber')+',';
+          }
+          if(form.getFieldValue('insurance').includes('不计免赔险最高赔偿金额')){
+            bizInsuranceStr += '不计免赔险最高赔偿金额_'+form.getFieldValue('threeNumber')+',';
+          }
+          if(form.getFieldValue('insurance').includes('自燃险赔偿金额')){
+            bizInsuranceStr += '自燃险赔偿金额_'+form.getFieldValue('fourNumber')+',';
+          }
+          if(form.getFieldValue('insurance').includes('承运人责任险最高赔偿金额（每座）')){
+            bizInsuranceStr += '承运人责任险最高赔偿金额（每座）_'+form.getFieldValue('fiveNumber')+',';
+          }
+          if(bizInsuranceStr.length > 0) {
+            bizInsuranceStr = bizInsuranceStr.substring(0, bizInsuranceStr.length-1);
+          }
+        }
         dispatch({
           type: 'insuranceStore/updateNotNull',
           ...values,
           insuranceBuyDate,
           insuranceExpireDate,
           insuranceFile,
+          bizInsuranceStr,
         })
       }
     })
@@ -98,6 +121,55 @@ let InsuranceUpdate = options => {
       <div className="ant-upload-text">点击上传文件</div>
     </div>
   )
+
+  //根据选择保险种类  可填写数字更改
+  const inInsurance = (e) => {
+    dispatch({
+      type: 'insuranceStore/inInsurance',
+      oneInsurance : e.includes('车损险赔偿金额'),
+      twoInsurance : e.includes('第三者责任险最高赔偿金额'),
+      threeInsurance : e.includes('不计免赔险最高赔偿金额'),
+      fourInsurance : e.includes('自燃险赔偿金额'),
+      fiveInsurance : e.includes('承运人责任险最高赔偿金额（每座）'),
+    });
+  }
+
+  let oneNumber,twoNumber,threeNumber,fourNumber,fiveNumber;
+  let insuranceInitialValue=[];
+  if(insurance.bizInsuranceStr !== undefined && insurance.bizInsuranceStr !== null){
+    insurance.bizInsuranceStr.split(',').forEach((value)=>{
+      if(value.split('_').includes('车损险赔偿金额')) {
+        insuranceInitialValue.push('车损险赔偿金额');
+        if(value.split('_').length > 1){
+          oneNumber = value.split('_')[1];
+        }
+      }
+      if(value.split('_').includes('第三者责任险最高赔偿金额')) {
+        insuranceInitialValue.push('第三者责任险最高赔偿金额');
+        if(value.split('_').length > 1){
+          twoNumber = value.split('_')[1];
+        }
+      }
+      if(value.split('_').includes('不计免赔险最高赔偿金额')) {
+        insuranceInitialValue.push('不计免赔险最高赔偿金额');
+        if(value.split('_').length > 1) {
+          threeNumber = value.split('_')[1];
+        }
+      }
+      if(value.split('_').includes('自燃险赔偿金额')) {
+        insuranceInitialValue.push('自燃险赔偿金额');
+        if(value.split('_').length > 1) {
+          fourNumber = value.split('_')[1];
+        }
+      }
+      if(value.split('_').includes('承运人责任险最高赔偿金额（每座）')) {
+        insuranceInitialValue.push('承运人责任险最高赔偿金额（每座）');
+        if(value.split('_').length > 1) {
+          fiveNumber = value.split('_')[1];
+        }
+      }
+    })
+  }
 
   return (
     <div>
@@ -201,23 +273,71 @@ let InsuranceUpdate = options => {
                     <Input />
                   )}
                 </FormItem>
+                {
+                  insurance.insuranceType === 'BUSINESS' ?
+                    <FormItem
+                      {...formItemLayout}
+                      label={(
+                      <span>
+                          保险种类&nbsp;
+                        </span>
+                      )}
+                    >
+                      {
+                        <div>
+                          {getFieldDecorator('insurance',{initialValue:insuranceInitialValue})(
+                            <Checkbox.Group onChange={inInsurance}>
+                              <Row>
+                                <Col span={20}><Checkbox value="车损险赔偿金额">车损险赔偿金额</Checkbox></Col>
+                                {
+                                  oneInsurance ? <Col span={2}>
+                                    {getFieldDecorator('oneNumber', {initialValue:oneNumber})(
+                                      <InputNumber min={0} />
+                                    )}
+                                  </Col> : <Col span={2}><InputNumber min={0} defaultValue={oneNumber} disabled /></Col>
+                                }
+                                <Col span={20}><Checkbox value="第三者责任险最高赔偿金额">第三者责任险最高赔偿金额</Checkbox></Col>
+                                {
+                                  twoInsurance ? <Col span={2}>
+                                    {getFieldDecorator('twoNumber', {initialValue:twoNumber} )(
+                                      <InputNumber min={0} />
+                                    )}
+                                  </Col> : <Col span={2}><InputNumber min={0} defaultValue={twoNumber} disabled /></Col>
+                                }
+                                <Col span={20}><Checkbox value="不计免赔险最高赔偿金额">不计免赔险最高赔偿金额</Checkbox></Col>
+                                {
+                                  threeInsurance ? <Col span={2}>
+                                    {getFieldDecorator('threeNumber', {initialValue:threeNumber})(
+                                      <InputNumber min={0} />
+                                    )}
+                                  </Col> : <Col span={2}><InputNumber min={0} defaultValue={threeNumber} disabled /></Col>
+                                }
+                                <Col span={20}><Checkbox value="自燃险赔偿金额">自燃险赔偿金额</Checkbox></Col>
+                                {
+                                  fourInsurance ? <Col span={2}>
+                                    {getFieldDecorator('fourNumber', {initialValue:fourNumber})(
+                                      <InputNumber min={0} />
+                                    )}
+                                  </Col> : <Col span={2}><InputNumber min={0} defaultValue={fourNumber} disabled /></Col>
+                                }
+                                <Col span={20}><Checkbox value="承运人责任险最高赔偿金额（每座）">承运人责任险最高赔偿金额（每座）</Checkbox></Col>
+                                {
+                                  fiveInsurance ? <Col span={2}>
+                                    {getFieldDecorator('fiveNumber', {initialValue:fiveNumber})(
+                                      <InputNumber min={0} />
+                                    )}
+                                  </Col> : <Col span={2}><InputNumber min={0} defaultValue={fiveNumber} disabled /></Col>
+                                }
+                              </Row>
+                            </Checkbox.Group>
+                          )}
+                        </div>
+                      }
+                    </FormItem>
+                    : ''
+                }
                 <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        保险名称 &nbsp;
-                    </span>
-                  )}
-                  hasFeedback
-                >
-                  {getFieldDecorator('insuranceName', {
-                    initialValue: insurance.insuranceName,
-                  })(
-                    <Input />
-                  )}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
+                {...formItemLayout}
                   label={(
                     <span>
                         保险金额 &nbsp;
@@ -320,6 +440,12 @@ function mapStateToProps({ insuranceStore }) {
     plateList: insuranceStore.plateList,
     insuranceFile: insuranceStore.insuranceFile,
     insuranceList: insuranceStore.insuranceList,
+
+    oneInsurance: insuranceStore.oneInsurance,
+    twoInsurance: insuranceStore.twoInsurance,
+    threeInsurance: insuranceStore.threeInsurance,
+    fourInsurance: insuranceStore.fourInsurance,
+    fiveInsurance: insuranceStore.fiveInsurance,
   }
 }
 InsuranceUpdate = Form.create()(InsuranceUpdate)

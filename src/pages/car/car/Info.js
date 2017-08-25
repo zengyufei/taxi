@@ -51,8 +51,6 @@ let CarInfo = options => {
 
   // 预览图片
   const handlePreview = file => {
-    console.log('handlePreview')
-    console.log(file)
     dispatch({
       type: 'carStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
@@ -61,7 +59,6 @@ let CarInfo = options => {
   }
   // 删除图片
   const handleCancel = () => {
-    console.log('handleCancel')
     dispatch({
       type: 'carStore/unlookPreview',
     })

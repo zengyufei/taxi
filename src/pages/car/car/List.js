@@ -264,7 +264,6 @@ const mapDispatchToProps = (dispatch, { form }) => {
         }
         if (info.file.status === 'done') {
           // console.log(`${info.file.name} file uploaded successfully`);
-          console.log(info)
           Modal.info({
             title: '导入结果',
             content: (

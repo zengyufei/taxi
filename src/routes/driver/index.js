@@ -48,7 +48,7 @@ module.exports = (app, auth) => {
       },
     },
 
-    /* {
+    {
       path: 'govtPraise',
       getComponent(nextState, cb) {
         require.ensure([], require => {
@@ -163,7 +163,7 @@ module.exports = (app, auth) => {
           }
         }, 'transfer')
       },
-    }, */
+    },
 
 
   ]

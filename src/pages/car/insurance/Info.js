@@ -144,12 +144,12 @@ let InsuranceInfo = (props) => {
                   {...formItemLayout}
                   label={(
                     <span>
-                        保险名称 &nbsp;
+                        保险种类 &nbsp;
                       </span>
                     )}
                   hasFeedback
                 >
-                  {insurance.insuranceName}
+                  {insurance.bizInsuranceStr.replace(/_/g,'=')}
                 </FormItem>
                 <FormItem
                   {...formItemLayout}

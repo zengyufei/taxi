@@ -2,7 +2,7 @@
  * @Author: zengyufei 
  * @Date: 2017-08-23 15:40:50 
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-24 16:55:08
+ * @Last Modified time: 2017-08-25 11:42:20
  */
 import { connect } from 'dva'
 import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
@@ -199,7 +199,6 @@ const mapDispatchToProps = (dispatch, { form }) => {
             values.yearMonth = moment(new Date(values.yearMonth)).format('YYYYMM')
           }
         }
-        console.log(values)
         dispatch({
           type: 'carOperateLogStore/queryPage',
           ...values,

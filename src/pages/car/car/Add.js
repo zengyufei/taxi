@@ -116,7 +116,6 @@ let CarAdd = options => {
 
   // 上传车辆车牌图片
   const plateChange = ({ fileList }) => {
-    console.log(fileList)
     dispatch({
       type: 'carStore/plateChange',
       plateList: fileList,
@@ -147,7 +146,6 @@ let CarAdd = options => {
 
   // 预览图片
   const handlePreview = file => {
-    console.log(file)
     dispatch({
       type: 'carStore/lookPreview',
       previewImage: file.url || file.thumbUrl,

@@ -23,6 +23,12 @@ export default extend({
     res: 'insurance',
     businessInsuranceList: [],
     trafficInsuranceList: [],
+
+    oneInsurance: false,
+    twoInsurance: false,
+    threeInsurance: false,
+    fourInsurance: false,
+    fiveInsurance: false,
   },
 
   reducers: {
@@ -45,6 +51,12 @@ export default extend({
         businessInsuranceFile: '',
         trafficInsuranceList: [],
         trafficInsuranceFile: '',
+
+        oneInsurance: false,
+        twoInsurance: false,
+        threeInsurance: false,
+        fourInsurance: false,
+        fiveInsurance: false,
       }
     },
     toEdit(state, action) {
@@ -56,12 +68,38 @@ export default extend({
       if (action.insurance.plateImage != null) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.insurance.plateImage, status: 'done' }]
       }
+      let oneInsurance=false, twoInsurance=false, threeInsurance=false, fourInsurance=false, fiveInsurance=false;
+      if(action.insurance.bizInsuranceStr !== undefined && action.insurance.bizInsuranceStr !== null){
+        action.insurance.bizInsuranceStr.split(',').forEach((value)=> {
+          if (value.split('_').includes('车损险赔偿金额')) {
+            oneInsurance=true;
+          }
+          if (value.split('_').includes('第三者责任险最高赔偿金额')) {
+            twoInsurance=true;
+          }
+          if (value.split('_').includes('不计免赔险最高赔偿金额')) {
+            threeInsurance=true;
+          }
+          if (value.split('_').includes('自燃险赔偿金额')) {
+            fourInsurance=true;
+          }
+          if (value.split('_').includes('承运人责任险最高赔偿金额（每座）')) {
+            fiveInsurance=true;
+          }
+        })
+      }
+
       return { ...state,
         pageState: true,
         res: action.res,
         insurance: action.insurance,
         insuranceList,
         insuranceFile: '',
+        oneInsurance: oneInsurance,
+        twoInsurance: twoInsurance,
+        threeInsurance: threeInsurance,
+        fourInsurance: fourInsurance,
+        fiveInsurance: fiveInsurance,
         plateList }
     },
     toInfo(state, action) {
@@ -101,6 +139,15 @@ export default extend({
     },
     unlookPreview(state) {
       return { ...state, previewVisible: false }
+    },
+    inInsuranceSuccess(state, action) {
+      return { ...state,
+        oneInsurance: action.oneInsurance,
+        twoInsurance: action.twoInsurance,
+        threeInsurance: action.threeInsurance,
+        fourInsurance: action.fourInsurance,
+        fiveInsurance: action.fiveInsurance,
+      }
     },
 
   },
@@ -170,6 +217,7 @@ export default extend({
           insuranceBuyDate: playload.businessInsuranceBuyDate,
           insuranceExpireDate: playload.businessInsuranceExpireDate,
           insuranceFile: playload.businessInsuranceFile,
+          bizInsuranceStr: playload.bizInsuranceStr,
         }
         const response = yield post(`${prefix}/insert`, insurance)
         if (+response.code !== 200) {
@@ -191,7 +239,7 @@ export default extend({
     },
     // 修改
     * updateNotNull(playload, { post, put, select }) {
-      const response = yield post(`${prefix}/update`, playload)
+      const response = yield post(`${prefix}/updateNotNull`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         const page = yield select(state => state.insuranceStore.page)
@@ -213,6 +261,17 @@ export default extend({
         const page = yield select(state => state.insuranceStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       } else { ZMsg.error(response.msg) }
+    },
+    // 保险种类
+    * inInsurance({ oneInsurance, twoInsurance, threeInsurance, fourInsurance, fiveInsurance }, {put}) {
+        yield put({
+          type: 'inInsuranceSuccess',
+          oneInsurance: oneInsurance,
+          twoInsurance: twoInsurance,
+          threeInsurance: threeInsurance,
+          fourInsurance: fourInsurance,
+          fiveInsurance: fiveInsurance,
+        })
     },
 
   },

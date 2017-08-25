@@ -101,7 +101,6 @@ export default extend({
     },
     // 修改  预留金 页面
     * update(playload, { post, put, select }) {
-      console.log(playload)
       const response = yield post(`${prefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
