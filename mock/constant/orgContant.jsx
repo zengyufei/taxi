@@ -1,6 +1,6 @@
 
 // 组织机构
-export const firstOrgs = {
+const firstOrgs = {
   中智仿真: 'zzfz-000',
   俊雄集团有限公司: 'zzfz-001',
   志坤集团有限公司: 'zzfz-002',
@@ -10,7 +10,7 @@ export const firstOrgs = {
   城投集团有限公司: 'zzfz-006',
 }
 
-export const secondOrgs = {
+const secondOrgs = {
   拓达科技有限公司: 'zzfz-000-001',
   恒普有限公司: 'zzfz-000-002',
   斯维尔科技有限公司: 'zzfz-000-003',
@@ -61,7 +61,7 @@ export const secondOrgs = {
   腾乐方科技有限公司: 'zzfz-006-006',
 }
 
-export const threeOrgs = {
+const threeOrgs = {
   拓达科技有限公司子公司市场部: 'zzfz-000-001-001',
   拓达科技有限公司子公司营销部: 'zzfz-000-001-002',
   拓达科技有限公司子公司研发部: 'zzfz-000-001-003',
@@ -358,4 +358,10 @@ export const threeOrgs = {
   腾乐方科技有限公司生产部: 'zzfz-006-006-005',
   腾乐方科技有限公司PMC部: 'zzfz-006-006-006',
 
+}
+
+module.exports = {
+	firstOrgs,
+	secondOrgs,
+	threeOrgs,
 }

@@ -8,8 +8,8 @@ module.exports = {
 
 
   localIp: {
-    baseUrl: 'http://192.168.46.239:8080',
-    uploadUrl: 'http://192.168.46.239:8080/upload',
+    baseUrl: 'http://192.168.46.227:9000',
+    uploadUrl: 'http://192.168.46.227:9000/upload',
   },
 
 

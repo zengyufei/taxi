@@ -91,8 +91,8 @@ export default extend({
       yield put({ type: 'queryPageSuccess', page: response.result, register: false })
     },
     // 新增营业外收入
-    * insert(playload, { get, put }) {
-      const response = yield get(`${prefix}/insert`, playload)
+    * insert(playload, { post, put }) {
+      const response = yield post(`${prefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         yield put({ type: 'insertSuccess' })
@@ -100,11 +100,10 @@ export default extend({
       } else { ZMsg.error(response.msg) }
     },
     // 修改 营业外收入 页面
-    * update(playload, { get, put, select }) {
-      const response = yield get(`${prefix}/update`, playload)
-      if (+response.code === 200) { ZMsg.success(response.msg) } else { ZMsg.error(response.msg) }
-
-      if (response.code === 200) {
+    * update(playload, { post, put, select }) {
+      const response = yield post(`${prefix}/update`, playload)
+      if (+response.code === 200) {
+        ZMsg.success(response.msg)
         const page = yield select(state => state.nonBusinessIncomeStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       }

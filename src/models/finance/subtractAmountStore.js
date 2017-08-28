@@ -106,7 +106,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.securityDepositStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除核减金额明细

@@ -146,6 +146,7 @@ let Update = options => {
                       <Radio value={'CLOTHING_INCOME'}>服装收入</Radio>
                       <Radio value={'LABEL_INCOME'}>标识贴收入</Radio>
                       <Radio value={'BILL_INCOME'}>票据收入</Radio>
+                      <Radio value={'SEATCOVER_INCOME'}>座套收入</Radio>
                       <Radio value={'ORTHER_INCOME'}>其它收入</Radio>
                     </RadioGroup>
                   )}
@@ -169,6 +170,34 @@ let Update = options => {
                   {...formItemLayout}
                   label={(
                     <span>
+                        数量&nbsp;
+                    </span>
+                  )}
+                >
+                  {getFieldDecorator('count', {
+                    initialValue: nonBusinessIncome.count,
+                  })(
+                    <InputNumber min={0} max={9999999} />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        单价&nbsp;
+                    </span>
+                  )}
+                >
+                  {getFieldDecorator('unitPrice', {
+                    initialValue: nonBusinessIncome.unitPrice,
+                  })(
+                    <InputNumber min={0} max={9999999} />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
                         金额&nbsp;
                     </span>
                   )}
@@ -178,6 +207,20 @@ let Update = options => {
                     initialValue: nonBusinessIncome.amount,
                   })(
                     <InputNumber min={0} max={9999999} />
+                  )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        经办人&nbsp;
+                    </span>
+                  )}
+                >
+                  {getFieldDecorator('opratorUser', {
+                    initialValue: nonBusinessIncome.opratorUser,
+                  })(
+                    <Input />
                   )}
                 </FormItem>
                 <FormItem

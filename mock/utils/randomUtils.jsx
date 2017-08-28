@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 
   /**
    * 取得范围随机整数

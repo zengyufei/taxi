@@ -2,22 +2,26 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Router } from 'dva/router'
 import App from 'pages/app'
-import { auth } from 'utils'
+import { authenticated, isLoginAndRedirectLoginPage } from 'utils/auth'
 
-/* const registerModel = (app, model) => {
+const registerModel = (app, model) => {
   if (!(app._models.filter(m => m.namespace === model.namespace).length === 1)) {
     app.model(model)
   }
-} */
+}
 
 const Routers = function({ history, app }) {
   const routes = [
+    require('./login')(app),
     {
       path: '/',
       component: App,
       getIndexRoute(nextState, cb) {
         require.ensure([], require => {
-          cb(null, { component: require('pages/home') })
+          if (isLoginAndRedirectLoginPage()) {
+            registerModel(app, require('models/homeStore'))
+            cb(null, { component: require('pages/home') })
+          }
         }, 'home')
       },
       /* onEnter() {
@@ -26,13 +30,12 @@ const Routers = function({ history, app }) {
         }, 'root')
       }, */
       childRoutes: [
-        ...require('./rbac')(app, auth),
-        ...require('./car')(app, auth),
-        ...require('./driver')(app, auth),
-        ...require('./finance')(app, auth),
+        ...require('./rbac')(app, authenticated),
+        ...require('./car')(app, authenticated),
+        ...require('./driver')(app, authenticated),
+        ...require('./finance')(app, authenticated),
       ],
     },
-    require('./login')(app),
     require('./404'),
   ]
 

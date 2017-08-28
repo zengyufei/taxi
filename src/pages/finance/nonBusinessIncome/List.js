@@ -257,6 +257,7 @@ const fields = [{
     CLOTHING_INCOME: '服装收入',
     LABEL_INCOME: '标识贴收入',
     BILL_INCOME: '票据收入',
+    SEATCOVER_INCOME: '座套收入',
     ORTHER_INCOME: '其它收入',
   },
 }, {

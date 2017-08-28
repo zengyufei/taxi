@@ -1,8 +1,8 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 15:00:30 
- * @Last Modified by: zengyufei 
- * @Last Modified time: 2017-08-25 15:00:30 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 15:00:30
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 15:00:30
  */
 import TweenOne from 'rc-tween-one'
 
@@ -55,7 +55,7 @@ let Detail = options => {
   const download = () => {
     dispatch({
       type: 'driverCommonStore/download',
-      URL: govtPraise.fileURL,
+      URL: UPLOAD_URL+govtPraise.fileURL,
     })
   }
 

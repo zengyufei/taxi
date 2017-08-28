@@ -1,6 +1,6 @@
-const orgContant = require('./orgContant')
-const resourceContant = require('./resourceContant')
-const areaContant = require('./areaContant')
+const orgContant = require('./orgContant.jsx')
+const resourceContant = require('./resourceContant.jsx')
+const areaContant = require('./areaContant.jsx')
 
 const roles = [
   '系统管理员', '一级管理员', '二级管理员', '三级管理员', '四级管理员', '五级管理员',

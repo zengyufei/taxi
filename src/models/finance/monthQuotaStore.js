@@ -105,7 +105,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.monthQuotaStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除月缴定额

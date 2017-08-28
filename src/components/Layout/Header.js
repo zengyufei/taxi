@@ -64,7 +64,7 @@ const Header = option => {
             }}
             title={<span>
               <Icon type="user" />
-              {currentRole.roleName}
+              {currentRole ? currentRole.roleName : ''}
             </span>}
           >
             {/*  <Menu.Item key="modifyPassword">

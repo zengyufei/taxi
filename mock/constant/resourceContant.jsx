@@ -1,4 +1,4 @@
-export const permissions = {
+const permissions = {
   系统管理: 'rbac:*',
   组织机构管理: 'rbac:sysOrg:*',
   用户管理: 'rbac:sysMember:*',
@@ -35,14 +35,14 @@ export const permissions = {
 }
 
 // 资源
-export const firstResources = {
+const firstResources = {
   系统管理: '001',
   车辆管理: '002',
   驾驶员管理: '003',
   财务管理: '004',
 }
 
-export const secondResources = {
+const secondResources = {
   组织机构管理: '001-001',
   用户管理: '001-002',
   角色管理: '001-003',
@@ -70,11 +70,18 @@ export const secondResources = {
   安全保证金管理: '004-004',
 }
 
-export const threeResources = {
+const threeResources = {
   新增用户: '001-002-001',
 
   新增车辆: '002-001-001',
   修改车辆: '002-001-002',
 
   新增车辆年审: '002-002-001',
+}
+
+module.exports = {
+	permissions,
+	firstResources,
+	secondResources,
+	threeResources,
 }

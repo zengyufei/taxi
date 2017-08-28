@@ -1,6 +1,6 @@
-const dataUtils = require('./dataUtils')
-const randomUtils = require('./randomUtils')
-const jsonUtils = require('./jsonUtils')
-const mockUtils = require('./mockUtils')
+const dataUtils = require('./dataUtils.jsx')
+const randomUtils = require('./randomUtils.jsx')
+const jsonUtils = require('./jsonUtils.jsx')
+const mockUtils = require('./mockUtils.jsx')
 
 module.exports = { mockUtils, dataUtils, randomUtils, jsonUtils }

@@ -1,4 +1,4 @@
-export const areas = [
+const areas = [
   {
     id: 1, code: 44, codeName: '广东省', parentCode: 0, parentName: '中国', fullName: '广东省',
   }, {
@@ -1999,3 +1999,6 @@ export const areas = [
     id: 999, code: 610902, codeName: '汉滨区', parentCode: 6109, fullName: '陕西省安康市汉滨区',
   }, { id: 1000, code: 430422, codeName: '衡南县', parentCode: 4304, fullName: '湖南省衡阳市衡南县' }]
 
+module.exports = {
+	areas,
+}

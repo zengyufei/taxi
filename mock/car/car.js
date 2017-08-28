@@ -2,7 +2,7 @@ const qs = require('qs')
 const { mock } = require('mockjs')
 const R = require('ramda')
 const _ = require('lodash')
-const { mockUtils: { init, add, update, del, queryById, queryPage, queryByIds, reload, queryList } } = require('../utils')
+const { mockUtils: { init, add, update, del, queryById, queryPage, queryByIds, reload, queryList } } = require('../utils/index.jsx')
 
 const prefix = 'car'
 const queryPageOption = ['account', 'mobile', 'roleId', 'locked', 'initPwd', 'available', 'realName', 'orgNo']

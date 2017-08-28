@@ -68,23 +68,27 @@ export default extend({
       if (action.insurance.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.insurance.plateImage, status: 'done' }]
       }
-      let oneInsurance=false, twoInsurance=false, threeInsurance=false, fourInsurance=false, fiveInsurance=false;
-      if(action.insurance.bizInsuranceStr !== undefined && action.insurance.bizInsuranceStr !== null){
-        action.insurance.bizInsuranceStr.split(',').forEach((value)=> {
+      let oneInsurance = false, 
+twoInsurance = false, 
+threeInsurance = false, 
+fourInsurance = false, 
+fiveInsurance = false
+      if (action.insurance.bizInsuranceStr !== undefined && action.insurance.bizInsuranceStr !== null) {
+        action.insurance.bizInsuranceStr.split(',').forEach(value => {
           if (value.split('_').includes('车损险赔偿金额')) {
-            oneInsurance=true;
+            oneInsurance = true
           }
           if (value.split('_').includes('第三者责任险最高赔偿金额')) {
-            twoInsurance=true;
+            twoInsurance = true
           }
           if (value.split('_').includes('不计免赔险最高赔偿金额')) {
-            threeInsurance=true;
+            threeInsurance = true
           }
           if (value.split('_').includes('自燃险赔偿金额')) {
-            fourInsurance=true;
+            fourInsurance = true
           }
           if (value.split('_').includes('承运人责任险最高赔偿金额（每座）')) {
-            fiveInsurance=true;
+            fiveInsurance = true
           }
         })
       }
@@ -95,11 +99,11 @@ export default extend({
         insurance: action.insurance,
         insuranceList,
         insuranceFile: '',
-        oneInsurance: oneInsurance,
-        twoInsurance: twoInsurance,
-        threeInsurance: threeInsurance,
-        fourInsurance: fourInsurance,
-        fiveInsurance: fiveInsurance,
+        oneInsurance,
+        twoInsurance,
+        threeInsurance,
+        fourInsurance,
+        fiveInsurance,
         plateList }
     },
     toInfo(state, action) {
@@ -263,27 +267,24 @@ export default extend({
       } else { ZMsg.error(response.msg) }
     },
     // 保险种类
-    * inInsurance({ oneInsurance, twoInsurance, threeInsurance, fourInsurance, fiveInsurance }, {put}) {
-        yield put({
-          type: 'inInsuranceSuccess',
-          oneInsurance: oneInsurance,
-          twoInsurance: twoInsurance,
-          threeInsurance: threeInsurance,
-          fourInsurance: fourInsurance,
-          fiveInsurance: fiveInsurance,
-        })
+    * inInsurance({ oneInsurance, twoInsurance, threeInsurance, fourInsurance, fiveInsurance }, { put }) {
+      yield put({
+        type: 'inInsuranceSuccess',
+        oneInsurance,
+        twoInsurance,
+        threeInsurance,
+        fourInsurance,
+        fiveInsurance,
+      })
     },
 
   },
 
   subscriptions: {
     setup({ dispatch, listen }) {
-      listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'queryPage',
-          pageNo: 1,
-          pageSize: 10,
-        })
+      listen(`/${prefix}`, ({ query }) => {
+        const option = Object.keys(query).length ? { type: 'warnList' } : { type: 'queryPage' }
+        dispatch({ ...option, ...query })
       })
     },
 

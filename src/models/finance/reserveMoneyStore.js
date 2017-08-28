@@ -104,9 +104,9 @@ export default extend({
       const response = yield post(`${prefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
-        const page = yield select(state => state.nonBusinessIncomeStore.page)
+        const page = yield select(state => state.reserveMoneyStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
     // 删除 预留金

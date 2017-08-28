@@ -87,6 +87,9 @@ module.exports = (webpackConfig, env) => {
           if (uploadUrl) {
             if (/\/$/.test(uploadUrl)) { pluginsDefinitions.UPLOAD_URL = JSON.stringify(uploadUrl) } else { pluginsDefinitions.UPLOAD_URL = JSON.stringify(`${uploadUrl}/`) }
           }
+        } else if (env === 'production') {
+          pluginsDefinitions.BASE_URL = JSON.stringify('/')
+          pluginsDefinitions.UPLOAD_URL = JSON.stringify('/upload/')
         }
         webpackConfig.plugins[x].definitions = _.assign({}, webpackConfig.plugins[x].definitions, pluginsDefinitions)
       }
@@ -106,6 +109,16 @@ module.exports = (webpackConfig, env) => {
     webpackConfig.plugins.push(new ExtractTextPlugin('static/[name]-[chunkhash:6].css', { allChunks: true }))
   }
 
+  if (env === 'production') {
+    webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
+      output: {
+        comments: false, // remove all comments
+      },
+      compress: {
+        warnings: false,
+      },
+    }))
+  }
   webpackConfig.plugins.push(new HtmlWebpackPlugin({
     title: '中智仿真',
     filename: 'index.html',

@@ -74,15 +74,10 @@ const Menus = option => {
     for (let menu of item.children) {
       if (menu.url && pathToRegexp(menu.url).exec(location.pathname)) {
         currentMenu = menu
+        // openKeys.push(`${item.id}`)
         break
       }
     }
-  }
-
-
-  let menuProps = {
-    onOpenChange,
-    openKeys,
   }
 
   // 在树结构中查找
@@ -97,14 +92,22 @@ const Menus = option => {
         }
       }
     }
-    getPath(array, current)
+    getPath(array, current, id)
     return result
   }
 
   if (currentMenu) {
     defaultSelectedKeys = getPathArray(menus, currentMenu, 'id')
+    // defaultSelectedKeys = [`${currentMenu.id}`]
   } else {
     defaultSelectedKeys = ['0']
+  }
+
+  let menuProps = {
+    key: JSON.stringify(defaultSelectedKeys),
+    onOpenChange,
+    openKeys,
+    defaultSelectedKeys,
   }
 
   const onClick = e => {
@@ -118,7 +121,7 @@ const Menus = option => {
       mode="inline"
       theme={isDarkTheme ? 'dark' : 'light'}
       onClick={onClick}
-      defaultSelectedKeys={defaultSelectedKeys}
+
     >
       <Menu.Item key="0">
         <Link to="/">

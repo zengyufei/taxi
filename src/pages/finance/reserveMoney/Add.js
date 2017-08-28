@@ -1,13 +1,13 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 14:51:24 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 14:51:24
  * @Last Modified by: zengyufei
  * @Last Modified time: 2017-08-25 15:31:07
  */
 import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
-import { Form, Input, Row, Col, Button, Card, Radio, InputNumber, DatePicker, AutoComplete, Modal } from 'antd'
+import { Form, Input, Row, Col, Button, Card, Radio, InputNumber, DatePicker, AutoComplete, Modal, message } from 'antd'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
@@ -50,6 +50,7 @@ let Add = options => {
           type: 'reserveMoneyStore/insert',
           ...values,
           payDate: form.getFieldValue('payDate') !== undefined ? form.getFieldValue('payDate').format('YYYY-MM-DD') : undefined,
+          submitDate: form.getFieldValue('submitDate') !== undefined ? form.getFieldValue('submitDate').format('YYYY-MM-DD') : undefined,
         })
       }
     })
@@ -60,6 +61,22 @@ let Add = options => {
     dispatch({
       type: 'reserveMoneyStore/toPage',
     })
+  }
+
+  //结算
+  const settle = () => {
+    const totalAmount = form.getFieldValue('totalAmount');
+    const accidentSubAmount = form.getFieldValue('accidentSubAmount');
+    const violationSubAmount = form.getFieldValue('violationSubAmount');
+    const chargingSubAmount = form.getFieldValue('chargingSubAmount');
+    const otherSubAmount = form.getFieldValue('otherSubAmount');
+    if(totalAmount > 0){
+      form.setFieldsValue({
+        refundAmount : (totalAmount * 100 - accidentSubAmount * 100 - violationSubAmount * 100 - chargingSubAmount * 100 - otherSubAmount * 100)/100
+      });
+    } else {
+      message.info('请填写预留金金额');
+    }
   }
 
   /** 模糊查询 车辆自编号 */
@@ -218,9 +235,20 @@ let Add = options => {
                 >
                   {getFieldDecorator('totalAmount', {
                     rules: [{ required: true, message: '请输入预留金金额!' }],
+                    initialValue: 0,
                   })(
-                    <InputNumber min={0} max={9999999} />
+                    <InputNumber min={0} max={9999999} precision={2}/>
                   )}
+                </FormItem>
+                <FormItem
+                  {...formItemLayout}
+                  label={(
+                    <span>
+                        缴纳日期&nbsp;
+                    </span>
+                  )}
+                >
+                  {getFieldDecorator('submitDate', {})(<DatePicker />)}
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
@@ -230,8 +258,8 @@ let Add = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('accidentSubAmount')(
-                    <InputNumber min={0} max={9999999} />
+                  {getFieldDecorator('accidentSubAmount', {initialValue: 0})(
+                    <InputNumber min={0} max={9999999} precision={2}/>
                   )}
                 </FormItem>
                 <FormItem
@@ -242,8 +270,8 @@ let Add = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('violationSubAmount')(
-                    <InputNumber min={0} max={9999999} />
+                  {getFieldDecorator('violationSubAmount', {initialValue: 0})(
+                    <InputNumber min={0} max={9999999} precision={2}/>
                   )}
                 </FormItem>
                 <FormItem
@@ -254,8 +282,8 @@ let Add = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('chargingSubAmount')(
-                    <InputNumber min={0} max={9999999} />
+                  {getFieldDecorator('chargingSubAmount', {initialValue: 0})(
+                    <InputNumber min={0} max={9999999} precision={2}/>
                   )}
                 </FormItem>
                 <FormItem
@@ -266,8 +294,8 @@ let Add = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('otherSubAmount')(
-                    <InputNumber min={0} max={9999999} />
+                  {getFieldDecorator('otherSubAmount', {initialValue: 0})(
+                    <InputNumber min={0} max={9999999} precision={2}/>
                   )}
                 </FormItem>
                 <FormItem
@@ -279,7 +307,7 @@ let Add = options => {
                   )}
                 >
                   {getFieldDecorator('refundAmount')(
-                    <InputNumber min={0} max={9999999} />
+                    <InputNumber precision={2} disabled/>
                   )}
                 </FormItem>
                 <FormItem
@@ -295,6 +323,9 @@ let Add = options => {
                 <FormItem {...tailFormItemLayout}>
                   <ZButton permission="finance:reserveMoney:insert">
                     <Button key="registerButton" type="primary" htmlType="submit" size="large">保存</Button>
+                  </ZButton>
+                  <ZButton permission="finance:reserveMoney:insert">
+                    <Button type="primary" size="large" style={{ marginLeft: '30px' }} onClick={settle}>结算</Button>
                   </ZButton>
                   <Button key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }} onClick={toPage}>返回</Button>
                 </FormItem>

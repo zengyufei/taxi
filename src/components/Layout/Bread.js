@@ -1,4 +1,3 @@
-import pathToRegexp from 'path-to-regexp'
 import { Breadcrumb, Icon } from 'antd'
 import { Link } from 'dva/router'
 import { flatten } from 'utils/treeFlatten'

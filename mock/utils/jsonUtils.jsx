@@ -60,4 +60,4 @@ const jsonUtils = {
 }
 
 
-export default jsonUtils
+module.exports = jsonUtils

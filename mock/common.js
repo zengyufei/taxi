@@ -1,4 +1,4 @@
-const { areaContant } = require('./constant')
+const { areaContant } = require('./constant/index.jsx')
 
 const { areas } = areaContant
 

@@ -48,11 +48,9 @@ export default extend({
     },
     // 下载文件
     * download({ URL }, { post }) {
-      const response = yield post('/common/download', URL)
+      const response = yield post('/common/download', {URL:URL})
       if (+response.code === 200) {
         ZMsg.success(response.msg)
-      } else {
-        ZMsg.error(response.msg)
       }
     },
   },

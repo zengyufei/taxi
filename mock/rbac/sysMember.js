@@ -2,8 +2,8 @@ const qs = require('qs')
 const { mock } = require('mockjs')
 const R = require('ramda')
 const _ = require('lodash')
-const { mockUtils: { init, add, update, del, queryById, queryPage, queryByIds, reload, queryList } } = require('../utils')
-const { orgContant } = require('../constant')
+const { mockUtils: { init, add, update, del, queryById, queryPage, queryByIds, reload, queryList } } = require('../utils/index.jsx')
+const { orgContant } = require('../constant/index.jsx')
 
 const { firstOrgs, secondOrgs, threeOrgs } = orgContant
 

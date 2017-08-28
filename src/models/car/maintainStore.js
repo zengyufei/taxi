@@ -148,12 +148,9 @@ export default extend({
 
   subscriptions: {
     setup({ dispatch, listen }) {
-      listen(`/${prefix}`, () => {
-        dispatch({
-          type: 'queryPage',
-          pageNo: 1,
-          pageSize: 10,
-        })
+      listen(`/${prefix}`, ({ query }) => {
+        const option = Object.keys(query).length ? { type: 'warnList' } : { type: 'queryPage' }
+        dispatch({ ...option, ...query })
       })
     },
 

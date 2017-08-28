@@ -300,12 +300,9 @@ export default extend({
             pageSize: 10,
           })
         },
-        '/archives': () => {
-          dispatch({
-            type: 'queryPage',
-            pageNo: 1,
-            pageSize: 10,
-          })
+        '/archives': ({ query }) => {
+          let option = { type: 'queryPage' }
+          dispatch({ ...option, ...query })
         },
       })
     },

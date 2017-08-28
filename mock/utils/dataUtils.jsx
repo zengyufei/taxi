@@ -129,7 +129,7 @@ const dataUtils = {
         if (Number.isInteger(val)) {
           newData = newData.filter(item => (+item[key] !== +val))
         } else {
-          newData = newData.filter(item => item[key].indexOf(val) === -1)
+          newData = newData.filter(item => item[key].indexOf(val) == -1)
         }
       } else {
         return newData
@@ -215,4 +215,4 @@ const dataUtils = {
 
 }
 
-export default dataUtils
+module.exports = dataUtils

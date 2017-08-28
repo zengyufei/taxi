@@ -1,10 +1,10 @@
 const qs = require('qs')
-const sysResource = require('./sysResource')
+const sysResource = require('../before/sysResource')
 const { mock } = require('mockjs')
 const R = require('ramda')
 const _ = require('lodash')
-const { randomUtils, mockUtils: { init, add, update, del, queryById, queryByIds, reload, queryList, queryPage } } = require('../utils')
-const { roles, orgContant: { firstOrgs, secondOrgs, threeOrgs } } = require('../constant')
+const { randomUtils, mockUtils: { init, add, update, del, queryById, queryByIds, reload, queryList, queryPage } } = require('../utils/index.jsx')
+const { roles, orgContant: { firstOrgs, secondOrgs, threeOrgs } } = require('../constant/index.jsx')
 
 const orgNos = _.assign(R.values(firstOrgs), R.values(secondOrgs), R.values(threeOrgs))
 

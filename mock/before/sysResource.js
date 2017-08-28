@@ -1,21 +1,20 @@
 const qs = require('qs')
 const { mock } = require('mockjs')
 const R = require('ramda')
-const { mockUtils: { init, add, update, del, queryById, queryPage, reload, queryList } } = require('../utils')
-const { areaContant: { areas }, orgContant: { firstOrgs, secondOrgs, threeOrgs } } = require('../constant')
+const _ = require('lodash')
+const { jsonUtils, mockUtils: { init, add, update, del, queryById, reload, queryList } } = require('../utils/index.jsx')
+const { resourceContant } = require('../constant/index.jsx')
 
-const newData = R.partition(e => e.parentCode === 0, areas)
-const provinceDatas = newData[0]
-const cityDatas = newData[1]
-const provinces = R.pluck('code')(provinceDatas)
-const citys = R.pluck('code')(cityDatas)
+const { permissions, firstResources, secondResources, threeResources } = resourceContant
+const map = jsonUtils.objToStrMap(permissions)
+const resNames = Object.keys(permissions)
 
-const prefix = 'sysOrg'
-const queryPageOption = ['orgNo', 'parentOrgNo', 'orgName', 'available', 'province', 'city', 'address']
+const finalResources = _.assign(firstResources, secondResources, threeResources)
+
+const prefix = 'sysResource'
 const timeOut = 1000
 
 const queryAllUrl = `GET /${prefix}/queryAll.htm`
-const queryPageUrl = `GET /${prefix}/queryPage.htm`
 const queryByIdUrl = `GET /${prefix}/queryById.htm`
 const insertUrl = `POST /${prefix}/insert.htm`
 const deleteByIdUrl = `GET /${prefix}/deleteById.htm`
@@ -24,76 +23,51 @@ const updateNotNullUrl = `POST /${prefix}/updateNotNull.htm`
 const reloadUrl = `GET /${prefix}/reload.htm`
 
 const primaryKey = 'id'
-const defaultPageNo = 1
-const defaultPageSize = 10
-
-const firstOrgNameKeys = Object.keys(firstOrgs)
-const secondOrgNameKeys = Object.keys(secondOrgs)
-const threeOrgNameKeys = Object.keys(threeOrgs)
-
-const orgNameKeys = [...firstOrgNameKeys, ...secondOrgNameKeys, ...threeOrgNameKeys]
-
-const values = new Map()
-Object.keys(firstOrgs).forEach(key => {
-  values.set(key, firstOrgs[key])
-})
-Object.keys(secondOrgs).forEach(key => {
-  values.set(key, secondOrgs[key])
-})
-Object.keys(threeOrgs).forEach(key => {
-  values.set(key, threeOrgs[key])
-})
 
 const mockOption = {
-  'result|301': [{
+  [`result|${map.size}`]: [{
     'id|+1': 1,
-    'orgName|+1': orgNameKeys,
-    orgNo() {
-      return values.get(this.orgName)
+    'parentId|1-100': 1,
+    'resName|+1': resNames,
+    hierarchy() {
+      return firstResources[this.resName] ? 'one' : secondResources[this.resName] ? 'two' : 'three'
     },
-    parentOrgNo() {
-      const orgName = values.get(this.orgName)
-      const lastIndexOf = orgName.lastIndexOf('-')
-      return orgName.lastIndexOf('-', lastIndexOf - 1) > -1 ? orgName.substring(0, lastIndexOf) : ''
+    resNo() {
+      return finalResources[this.resName]
     },
-    'priority|1-100': 1,
-    'available|1-2': true,
-    description: '@cparagraph(1, 2)',
-    provinceName: '@province',
-    cityName: '@city',
-    'province|1': provinces,
-    'city|1': citys,
-    address: '@county(true)',
+    parentResNo() {
+      const resName = finalResources[this.resName]
+      return resName ? resName.substring(0, resName.lastIndexOf('-')) : '-1'
+    },
+    permission() {
+      return map.get(this.resName)
+    },
+
     createTime: '@datetime',
     updateTime: '@datetime',
   }],
 }
 
+
 // 数据持久
 init(prefix, mock(mockOption).result)
+// role 调用
+function reloadData() {
+  init(prefix, mock(mockOption).result)
+}
 
 module.exports = {
+
+  reloadData, // role 调用
 
   /**
    * 查询所有
    */
   [queryAllUrl]: (req, res) => {
     const list = queryList(prefix)
-    res.json({
-      result: list,
-    })
-  },
-
-  /**
-   * 查询
-   */
-  [queryPageUrl]: (req, res) => {
-    const urlParam = qs.parse(req.query)
-    const { pageNo = defaultPageNo, pageSize = defaultPageSize } = urlParam
-    const pageList = queryPage(prefix, +pageNo, +pageSize, queryPageOption, urlParam)
     setTimeout(() => {
       res.json({
-        result: pageList,
+        result: list,
       })
     }, timeOut)
   },
@@ -123,7 +97,28 @@ module.exports = {
     let body = qs.parse(req.body)
     const list = queryList(prefix)
     body.id = list.length + 1
-    body.orgNo = `${list.length + 1}`
+
+    /* const dataList = queryList(prefix, 'parentResNo', body.parentResNo)
+    const dataLen = (dataList && dataList.length) || 0
+    const resNo = dataLen > 100 ? dataLen : dataLen > 10 ? `0${dataLen}` : `00${dataLen}`
+    if (body.parentResNo) {
+      body.resNo = `${body.parentResNo}-${resNo}`
+      const len = body.parentResNo.split('-').length
+      switch (len) {
+        case 1:
+          body.hierarchy = 2
+          break
+        default:
+          body.hierarchy = 3
+          break
+      }
+    } else {
+      const len = firstResources.length + 1
+      body.resNo = len > 100 ? `${len}` : len > 10 ? `0${len}` : `00${len}`
+      body.parentResNo = ''
+      body.hierarchy = 1
+    }
+    body.parentResNo || (body.parentResNo = '') */
     add(prefix, body)
     setTimeout(() => {
       res.json({
