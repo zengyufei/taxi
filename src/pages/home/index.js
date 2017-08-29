@@ -77,12 +77,12 @@ const Home = options => {
             </Card>
           }
 
-          {/* 综合审 */}
+          {/* 营运证年审 */}
           {
             synthesizeing.totalCount > 0 && <Card
               title={
                 <div>
-                  <span style={{ color: 'rgb(255, 131, 0)', fontWeight: 'bold', fontSize: 14 }}>综合审</span>
+                  <span style={{ color: 'rgb(255, 131, 0)', fontWeight: 'bold', fontSize: 14 }}>营运证年审</span>
                   <span> 即将到期</span>
                 </div>}
               style={{ marginLeft: 15, width: '20%', float: 'left', marginBottom: 30 }}
@@ -96,7 +96,7 @@ const Home = options => {
             synthesize.totalCount > 0 && <Card
               title={
                 <div>
-                  <span style={{ color: 'red', fontWeight: 'bold', fontSize: 14 }}>综合审</span>
+                  <span style={{ color: 'red', fontWeight: 'bold', fontSize: 14 }}>营运证年审</span>
                   <span> 已到期</span>
                 </div>}
               style={{ marginLeft: 15, width: '20%', float: 'left', marginBottom: 30 }}

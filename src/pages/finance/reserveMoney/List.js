@@ -14,7 +14,7 @@ const { tokenSessionKey } = constant
 
 let index = option => {
   const { loading, page, methods, form, res, register } = option
-  const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload } = methods
+  const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload, requestSave, auditSave, requestEdit, auditEdit } = methods
 
 
   /**
@@ -49,8 +49,8 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'sreserveMoney_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('sreserveMoney_condin') || ['carNo', 'plateNumber']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'createTime']).values(),
+    fields: getFields(fields, local.get('sreserveMoney_condin') || ['carNo', 'plateNumber', 'createTime']).values(),
     item: {
     },
     onSearch,
@@ -62,14 +62,63 @@ let index = option => {
     name: '操作',
     // 扩展字段的render支持自定义渲染
     render: (text, record) => {
+      let EDIT = false
+      let AUDIT_SAVE = false
+      let AUDIT_EDIT = false
+      let READ_ONLY = false
+      if (record.auditStatus === 'EDIT') {
+        EDIT = true
+      } else if (record.auditStatus === 'AUDIT_SAVE') {
+        AUDIT_SAVE = true
+      } else if (record.auditStatus === 'AUDIT_EDIT') {
+        AUDIT_EDIT = true
+      } else if (record.auditStatus === 'READ_ONLY') {
+        READ_ONLY = true
+      }
+
       return (
         <span>
           <ZButton permission="finance:reserveMoney:query">
             <Button type="primary" onClick={() => toDetail(record)}>详情</Button>&nbsp;
           </ZButton>
-          <ZButton permission="finance:reserveMoney:update">
-            <Button type="primary" onClick={() => toEdit(record)}>编辑</Button>&nbsp;
-          </ZButton>
+          {
+            EDIT ? <div>
+              <ZButton permission="finance:reserveMoney:update">
+                <Button type="primary" onClick={() => toEdit(record)}>编辑</Button>&nbsp;
+              </ZButton>
+              <ZButton permission="finance:reserveMoney:requestSave">
+                <Button type="primary" onClick={() => requestSave(record.id)}>申请保存</Button>&nbsp;
+              </ZButton>
+            </div> : ''
+          }
+          {
+            AUDIT_SAVE ?
+              <div>
+                <ZButton permission="finance:reserveMoney:auditSave">
+                  <Button type="primary" onClick={() => auditSave(record.id, true)}>保存同意</Button>&nbsp;
+                  <Button type="primary" onClick={() => auditSave(record.id, false)}>保存不同意</Button>&nbsp;
+                </ZButton>
+              </div>
+              : ''
+          }
+
+          {
+            READ_ONLY ? <div>
+              <ZButton permission="finance:reserveMoney:requestEdit">
+                <Button type="primary" onClick={() => requestEdit(record.id)}>申请修改</Button>&nbsp;
+              </ZButton>
+            </div> : ''
+          }
+          {
+            AUDIT_EDIT ?
+              <div>
+                <ZButton permission="finance:reserveMoney:auditEdit">
+                  <Button type="primary" onClick={() => auditEdit(record.id, true)}>修改同意</Button>&nbsp;
+                  <Button type="primary" onClick={() => auditEdit(record.id, false)}>修改不同意</Button>&nbsp;
+                </ZButton>
+              </div>
+              : ''
+          }
         </span>
       )
     },
@@ -132,9 +181,47 @@ const mapDispatchToProps = (dispatch, { form }) => {
     methods: {
 
       onSearch(values) {
+        if (values) {
+          if (values.createTime) {
+            values.submitDateStart = moment(new Date(values.createTime)).format('YYYY-MM-DD')
+            values.submitDateEnd = moment(new Date(values.createTime)).format('YYYY-MM-DD')
+            delete values.createTime
+          }
+        }
         dispatch({
           type: 'reserveMoneyStore/queryPage',
           ...values,
+        })
+      },
+
+      /* 申请保存 */
+      requestSave(id) {
+        dispatch({
+          type: 'reserveMoneyStore/requestSave',
+          id,
+        })
+      },
+      /* 保存确认 */
+      auditSave(id, confirm) {
+        dispatch({
+          type: 'reserveMoneyStore/auditSave',
+          id,
+          confirm,
+        })
+      },
+      /* 申请修改 */
+      requestEdit(id) {
+        dispatch({
+          type: 'reserveMoneyStore/requestEdit',
+          id,
+        })
+      },
+      /* 申请确认 */
+      auditEdit(id, confirm) {
+        dispatch({
+          type: 'reserveMoneyStore/auditEdit',
+          id,
+          confirm,
         })
       },
 
@@ -259,6 +346,7 @@ const fields = [{
 }, {
   name: '缴纳日期',
   key: 'createTime',
+  type: 'date',
 }, {
   name: '离职日期',
   key: 'leaveDate',

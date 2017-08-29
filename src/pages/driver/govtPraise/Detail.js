@@ -51,13 +51,6 @@ let Detail = options => {
       type: 'govtPraiseStore/unlookPreview',
     })
   }
-  // 下载文件
-  const download = () => {
-    dispatch({
-      type: 'driverCommonStore/download',
-      URL: UPLOAD_URL+govtPraise.fileURL,
-    })
-  }
 
   /* 返回分页 */
   const toPage = e => {
@@ -206,7 +199,7 @@ let Detail = options => {
                     </span>
                   )}
                 >
-                  {govtPraise.fileURL ? <Button type="danger" icon="download" onClick={download} >下载</Button> : '未上传'}
+                  {govtPraise.fileURL ? <a type="danger" icon="download" href={BASE_URL+ '/common/download.htm?url='+ govtPraise.fileURL} >下载</a> : '未上传'}
                 </FormItem>
 
                 <FormItem {...tailFormItemLayout}>

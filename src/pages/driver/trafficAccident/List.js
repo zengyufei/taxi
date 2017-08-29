@@ -137,8 +137,8 @@ const mapDispatchToProps = (dispatch, { form }) => {
       onSearch(values) {
         if (values) {
           if (values.accidentTime) {
-            values.startAccidentTime = form.getFieldValue('accidentTime')[0].format('YYYY-MM-DD 00:00:00')
-            values.endAccidentTime = form.getFieldValue('accidentTime')[1].format('YYYY-MM-DD 00:00:00')
+            values.startAccidentTime = form.getFieldValue('accidentTime').format('YYYY-MM-DD 00:00:00')
+            values.endAccidentTime = form.getFieldValue('accidentTime').format('YYYY-MM-DD 23:59:59')
             delete values.accidentTime
           }
         }
@@ -260,7 +260,7 @@ const fields = [{
 }, {
   name: '肇事时间',
   key: 'accidentTime',
-  type: 'dateRange',
+  type: 'date',
 }, {
   name: '车量类型',
   key: 'canDriverCar',

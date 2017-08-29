@@ -1,8 +1,8 @@
 /*
  * @Author: zengyufei 
  * @Date: 2017-08-25 14:56:45 
- * @Last Modified by: zengyufei 
- * @Last Modified time: 2017-08-25 14:56:45 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-29 09:40:23
  */
 import { connect } from 'dva'
 import { Form, Button, Popconfirm, Table, Upload, Modal } from 'antd'
@@ -57,7 +57,7 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'commonPraise_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'creditTime']).values(),
     fields: getFields(fields, local.get('commonPraise_condin') || ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
     item: {
     },
@@ -141,6 +141,13 @@ const mapDispatchToProps = (dispatch, { form }) => {
     methods: {
 
       onSearch(values) {
+        if (values) {
+          if (values.creditTime) {
+            values.startTime = moment(new Date(values.creditTime)).format('YYYY-MM-DD')
+            values.endTime = moment(new Date(values.creditTime)).format('YYYY-MM-DD')
+            delete values.creditTime
+          }
+        }
         dispatch({
           type: 'commonPraiseStore/queryPage',
           ...values,
@@ -258,6 +265,7 @@ const fields = [{
 }, {
   name: '事情发生时间',
   key: 'creditTime',
+  type: 'date',
 }, {
   name: '事情发生经过',
   key: 'creditDesc',

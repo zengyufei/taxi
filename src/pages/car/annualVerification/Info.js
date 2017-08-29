@@ -118,7 +118,7 @@ const Info = options => {
                   {...formItemLayout}
                   label={(
                     <span>
-                        综合审有效期截止时间&nbsp;
+                        营运证年审有效期截止时间&nbsp;
                     </span>
                   )}
                 >
@@ -128,7 +128,7 @@ const Info = options => {
                   {...formItemLayout}
                   label={(
                     <span>
-                        综合审有效扫描件&nbsp;
+                        营运证年审有效扫描件&nbsp;
                     </span>
                   )}
                 >

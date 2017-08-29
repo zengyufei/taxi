@@ -28,11 +28,14 @@ const Header = option => {
     confirmLoading: appStore.confirmLoading,
     onOk() {
       validate(form, fields)(values => {
-        console.log(values)
-      })
-      dispatch({
-        type: 'appStore/updateState',
-        visible: false,
+        if (values.newPassword !== values.newReplacePassword) {
+          ZMsg.error('两次输入的新密码不相同')
+          return
+        }
+        dispatch({
+          type: 'appStore/resetPassword',
+          ...values,
+        })
       })
     },
     onCancel() {
@@ -67,9 +70,9 @@ const Header = option => {
               {currentRole ? currentRole.roleName : ''}
             </span>}
           >
-            {/*  <Menu.Item key="modifyPassword">
+            <Menu.Item key="modifyPassword">
               修改密码
-            </Menu.Item> */}
+            </Menu.Item>
             <Menu.Item key="logout">
               注销
             </Menu.Item>
@@ -92,9 +95,13 @@ const fields = [
   {
     key: 'oldPassword',
     name: '原密码',
+    type: 'password',
     required: true,
     rules: [
       {
+        required: true,
+        message: '请输入原密码',
+      }, {
         min: 6,
         message: '密码长度至少 6 位字符',
       }, {
@@ -109,8 +116,12 @@ const fields = [
   {
     key: 'newPassword',
     name: '新密码',
+    type: 'password',
     rules: [
       {
+        required: true,
+        message: '请输入原密码',
+      }, {
         min: 6,
         message: '密码长度至少 6 位字符',
       }, {
@@ -125,8 +136,12 @@ const fields = [
   {
     key: 'newReplacePassword',
     name: '重输入新密码',
+    type: 'password',
     rules: [
       {
+        required: true,
+        message: '请输入原密码',
+      }, {
         min: 6,
         message: '密码长度至少 6 位字符',
       }, {

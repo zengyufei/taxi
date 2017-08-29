@@ -2,7 +2,7 @@
  * @Author: zengyufei
  * @Date: 2017-08-24 11:41:55
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-25 15:00:00
+ * @Last Modified time: 2017-08-29 10:30:01
  */
 import TweenOne from 'rc-tween-one'
 
@@ -54,7 +54,6 @@ const fields = [
     name: '户籍',
     type: 'area',
     rules: [
-      { required: true, message: '请选择籍贯!' },
       {
         validator(rule, value, callback) {
           if (value === undefined) {
@@ -72,7 +71,6 @@ const fields = [
     name: '籍贯',
     type: 'area',
     rules: [
-      { required: true, message: '请选择籍贯!' },
       {
         validator(rule, value, callback) {
           if (value === undefined) {
@@ -628,7 +626,6 @@ let Update = options => {
                   )}
                 >
                   {getFieldDecorator('emergencyContact', {
-                    rules: [{ required: true, message: '请输入紧急联系人姓名!' }],
                     initialValue: driver.emergencyContact,
                   })(<Input />)}
                 </FormItem>
@@ -641,7 +638,7 @@ let Update = options => {
                   )}
                 >
                   {getFieldDecorator('emergencyMobile', {
-                    rules: [{ required: true, message: '请输入紧急联系人手机号!' }, { pattern: /^1[34578]\d{9}$/, message: '手机格式错误!' }],
+                    rules: [{ pattern: /^1[34578]\d{9}$/, message: '手机格式错误!' }],
                     initialValue: driver.emergencyMobile,
                   })(<Input />)}
                 </FormItem>

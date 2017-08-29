@@ -134,7 +134,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
       onSearch(values) {
         if (values) {
           if (values.startDate) {
-            values.startDate = moment(values.startDate).format('YYYY-MM-DD')
+            values.startDate = moment(new Date(values.startDate)).format('YYYY-MM-DD')
           }
         }
         dispatch({

@@ -50,6 +50,13 @@ export default extend({
       sessionCache.removeAll()
       yield put(routerRedux.push('/login'))
     },
+
+    * resetPassword(payload, { postMessage, update }) {
+      const { code } = yield postMessage('/sysMember/resetPassword', payload, { successMsg: '修改密码成功', errorMsg: '修改密码失败' })
+      if (code === 200) {
+        yield update({ visible: false })
+      }
+    },
   },
   reducers: {
   },

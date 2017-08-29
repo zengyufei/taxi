@@ -62,7 +62,7 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'driver_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'identity', 'job', 'driverStatus', 'sex', 'politics', 'insurance']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'identity', 'job', 'driverStatus', 'sex', 'politics', 'insurance', 'entryDate', 'leaveDate']).values(),
     fields: getFields(fields, local.get('driver_condin') || ['carNo', 'plateNumber']).values(),
     item: {
     },
@@ -148,6 +148,16 @@ const mapDispatchToProps = (dispatch, { form }) => {
     methods: {
 
       onSearch(values) {
+        if (values) {
+          if (values.entryDate) {
+            values.entryStartDate = moment(new Date(values.entryDate)).format('YYYY-MM-DD')
+            values.entryEndDate = moment(new Date(values.entryDate)).format('YYYY-MM-DD')
+          }
+          if (values.leaveDate) {
+            values.leaveStartDate = moment(new Date(values.leaveDate)).format('YYYY-MM-DD')
+            values.leaveEndDate = moment(new Date(values.leaveDate)).format('YYYY-MM-DD')
+          }
+        }
         dispatch({
           type: 'driverStore/queryPage',
           ...values,
@@ -354,6 +364,11 @@ const fields = [{
 }, {
   name: '入职日期',
   key: 'entryDate',
+  type: 'date',
+}, {
+  name: '离职日期',
+  key: 'leaveDate',
+  type: 'date',
 }, {
   name: '保险到期日期',
   key: 'accidentInsuranceEndDate',

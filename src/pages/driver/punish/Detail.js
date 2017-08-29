@@ -48,7 +48,7 @@ let Detail = options => {
   let punishTypeDesc
   switch (punish.punishType) {
     case 'punish_one':
-      punishTypeDesc = '私调计价表'
+      punishTypeDesc = '私调计价器、视频监控'
       break
     case 'punish_two':
       punishTypeDesc = '在车站、码头、机场、口岸区域及市区主干道两侧街道专用候客站不遵守有关规定，妨碍营运秩序'

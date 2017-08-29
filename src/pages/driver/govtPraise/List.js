@@ -49,7 +49,7 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'govtPraise_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'creditDate']).values(),
     fields: getFields(fields, local.get('govtPraise_condin') || ['carNo', 'plateNumber', 'userName', 'qualificationNo']).values(),
     item: {
     },
@@ -135,6 +135,13 @@ const mapDispatchToProps = (dispatch, { form }) => {
     methods: {
 
       onSearch(values) {
+        if (values) {
+          if (values.creditDate) {
+            values.startTime = moment(new Date(values.creditDate)).format('YYYY-MM-DD')
+            values.endTime = moment(new Date(values.creditDate)).format('YYYY-MM-DD')
+            delete values.creditDate
+          }
+        }
         dispatch({
           type: 'govtPraiseStore/queryPage',
           ...values,
@@ -256,6 +263,7 @@ const fields = [{
 }, {
   name: '表彰时间',
   key: 'creditDate',
+  type: 'date',
 }, {
   name: '等级',
   key: 'praiseGrade',

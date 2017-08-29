@@ -112,10 +112,47 @@ export default extend({
     // 删除营业外收入
     * deleteById({ id }, { get, put, select }) {
       const response = yield get(`${prefix}/deleteById`, id)
-      if (+response.code === 200) { ZMsg.success(response.msg) } else { ZMsg.error(response.msg) }
+      if (+response.code === 200) { ZMsg.success(response.msg) }
 
       const page = yield select(state => state.nonBusinessIncomeStore.page)
       yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
+    },
+
+    //申请保存
+    * requestSave({id}, { get, put, select }) {
+      const response = yield get(`${prefix}/requestSave`, {id: id})
+      if (+response.code === 200) {
+        ZMsg.success(response.msg)
+        const page = yield select(state => state.nonBusinessIncomeStore.page)
+        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
+      }
+    },
+    //保存确认
+    * auditSave({id, confirm}, { get, put, select }) {
+      const response = yield get(`${prefix}/auditSave`, {id: id, confirm: confirm})
+      if (+response.code === 200) {
+        ZMsg.success(response.msg)
+        const page = yield select(state => state.nonBusinessIncomeStore.page)
+        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
+      }
+    },
+    //申请修改
+    * requestEdit({id}, { get, put, select }) {
+      const response = yield get(`${prefix}/requestEdit`, {id: id})
+      if (+response.code === 200) {
+        ZMsg.success(response.msg)
+        const page = yield select(state => state.nonBusinessIncomeStore.page)
+        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
+      }
+    },
+    //修改确认
+    * auditEdit({id, confirm}, { get, put, select }) {
+      const response = yield get(`${prefix}/auditEdit`, {id: id, confirm: confirm})
+      if (+response.code === 200) {
+        ZMsg.success(response.msg)
+        const page = yield select(state => state.nonBusinessIncomeStore.page)
+        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
+      }
     },
 
   },

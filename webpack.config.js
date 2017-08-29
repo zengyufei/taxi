@@ -88,7 +88,7 @@ module.exports = (webpackConfig, env) => {
             if (/\/$/.test(uploadUrl)) { pluginsDefinitions.UPLOAD_URL = JSON.stringify(uploadUrl) } else { pluginsDefinitions.UPLOAD_URL = JSON.stringify(`${uploadUrl}/`) }
           }
         } else if (env === 'production') {
-          pluginsDefinitions.BASE_URL = JSON.stringify('/')
+          pluginsDefinitions.BASE_URL = JSON.stringify('')
           pluginsDefinitions.UPLOAD_URL = JSON.stringify('/upload/')
         }
         webpackConfig.plugins[x].definitions = _.assign({}, webpackConfig.plugins[x].definitions, pluginsDefinitions)
@@ -113,6 +113,8 @@ module.exports = (webpackConfig, env) => {
     webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin({
       output: {
         comments: false, // remove all comments
+        // drop_debugger: true,
+        // drop_console: true,
       },
       compress: {
         warnings: false,

@@ -48,6 +48,13 @@ function mapDispatchToProps(dispatch, { form }) {
 
     onOk() {
       validate(form, fields)(values => {
+        if (values) {
+          if (values.parentResNo) {
+            values.hierarchy = values.parentResNo.split('-').length === 1 ? 'two' : 'three'
+          } else {
+            values.hierarchy = 'one'
+          }
+        }
         dispatch({
           type: 'sysResourceStore/update',
           ...values,

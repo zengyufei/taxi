@@ -46,13 +46,6 @@ export default extend({
       driver = drivers[index]
       yield put({ type: 'queryDriverSuccess', driver })
     },
-    // 下载文件
-    * download({ URL }, { post }) {
-      const response = yield post('/common/download', {URL:URL})
-      if (+response.code === 200) {
-        ZMsg.success(response.msg)
-      }
-    },
   },
   reducers: {
     // 模糊查询 从业资格证编号

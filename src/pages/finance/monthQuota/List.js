@@ -48,8 +48,8 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'monthQuota_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber']).values(),
-    fields: getFields(fields, local.get('monthQuota_condin') || ['carNo', 'plateNumber']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'yearMonth']).values(),
+    fields: getFields(fields, local.get('monthQuota_condin') || ['carNo', 'plateNumber', 'yearMonth']).values(),
     item: {
     },
     onSearch,
@@ -133,6 +133,11 @@ const mapDispatchToProps = (dispatch, { form }) => {
     methods: {
 
       onSearch(values) {
+        if (values) {
+          if (values.yearMonth) {
+            values.yearMonth = moment(new Date(values.yearMonth)).format('YYYYMM')
+          }
+        }
         dispatch({
           type: 'monthQuotaStore/queryPage',
           ...values,
@@ -240,6 +245,7 @@ const fields = [{
 }, {
   name: '年月',
   key: 'yearMonth',
+  type: 'yearMonth',
 }, {
   name: '出勤天数',
   key: 'workDays',

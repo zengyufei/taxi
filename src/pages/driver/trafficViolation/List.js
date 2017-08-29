@@ -137,8 +137,8 @@ const mapDispatchToProps = (dispatch, { form }) => {
       onSearch(values) {
         if (values) {
           if (values.violationTime) {
-            values.startTime = form.getFieldValue('violationTime')[0].format('YYYY-MM-DD 00:00:00')
-            values.endTime = form.getFieldValue('violationTime')[1].format('YYYY-MM-DD 00:00:00')
+            values.startTime = form.getFieldValue('violationTime').format('YYYY-MM-DD 00:00:00')
+            values.endTime = form.getFieldValue('violationTime').format('YYYY-MM-DD 23:59:59')
             delete values.violationTime
           }
         }
@@ -262,7 +262,7 @@ const fields = [{
 }, {
   name: '发生时间',
   key: 'violationTime',
-  type: 'dateRange',
+  type: 'date',
 }, {
   name: '处理结果',
   key: 'punishResult',

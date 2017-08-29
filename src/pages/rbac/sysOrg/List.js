@@ -119,7 +119,6 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
 
       onSearch(values) {
-        console.log(values)
         if (values) {
           if (values.provinceAndCity && values.provinceAndCity.length) {
             values.province = values.provinceAndCity[0]

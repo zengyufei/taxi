@@ -8,25 +8,13 @@ const fieldTypes = {
   number: value => value,
   textarea: value => value,
   datetime: value => {
-    return value ? moment(new Date(parseInt(value, 10))).format('YYYY-MM-DD HH:mm:ss') : ''
+    return value
   },
-  yearMonth: (value, field) => {
-    if (value) {
-      if (field.parse) {
-        return moment(value, field.parse).format(field.format || 'YYYY-MM')
-      }
-      moment(new Date(value)).format(field.format || 'YYYY-MM')
-    }
-    return ''
+  yearMonth: value => {
+    return value
   },
-  date: (value, field) => {
-    if (value) {
-      if (field.parse) {
-        return moment(value, field.parse).format(field.format || 'YYYY-MM-DD')
-      }
-      moment(new Date(value)).format(field.format || 'YYYY-MM-DD')
-    }
-    return ''
+  date: value => {
+    return value
   },
   enum: (value, field) => {
     return field.enums[value]

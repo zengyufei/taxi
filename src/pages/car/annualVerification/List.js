@@ -60,8 +60,8 @@ const List = options => {
   const btns = (
     <div>
       <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-      <Button type="primary" icon="clock-circle-o" onClick={synthesizeing}>综合审即将过期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={synthesize}>综合审已过期</Button>&nbsp;
+      <Button type="primary" icon="clock-circle-o" onClick={synthesizeing}>营运证年审即将过期</Button>&nbsp;
+      <Button type="primary" icon="close-circle-o" onClick={synthesize}>营运证年审已过期</Button>&nbsp;
       <Button type="primary" icon="clock-circle-o" onClick={drivingLicenseing}>行驶证即将过期</Button>&nbsp;
       <Button type="primary" icon="close-circle-o" onClick={drivingLicense}>行驶证已过期</Button>&nbsp;
       <Button type="primary" icon="clock-circle-o" onClick={taximetering}>计价器即将过期</Button>&nbsp;
@@ -301,7 +301,7 @@ const fields = [{
   name: '车牌号',
   key: 'plateNumber',
 }, {
-  name: '综合审有效期截止时间',
+  name: '营运证年审有效期截止时间',
   key: 'synthesizeDate',
 }, {
   name: '行驶证有效期截止时间',

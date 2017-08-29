@@ -48,7 +48,7 @@ let index = options => {
     showReset: true,
     btns,
     searchCacheKey: 'punish_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'punishType']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'punishType', 'creditTime']).values(),
     fields: getFields(fields, local.get('punish_condin') || ['carNo', 'plateNumber']).values(),
     item: {
     },
@@ -132,6 +132,13 @@ const mapDispatchToProps = (dispatch, { form }) => {
     methods: {
 
       onSearch(values) {
+        if (values) {
+          if (values.creditTime) {
+            values.startTime = moment(new Date(values.creditTime)).format('YYYY-MM-DD')
+            values.endTime = moment(new Date(values.creditTime)).format('YYYY-MM-DD')
+            delete values.creditTime
+          }
+        }
         dispatch({
           type: 'punishStore/queryPage',
           ...values,
@@ -281,6 +288,7 @@ const fields = [{
 }, {
   name: '发生时间',
   key: 'creditTime',
+  type: 'date',
 }, {
   name: '发生经过',
   key: 'creditDesc',

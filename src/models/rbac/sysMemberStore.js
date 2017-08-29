@@ -6,7 +6,7 @@ const moduleName = '用户'
 const prefix = 'sysMember'
 const queryPageUrl = `${prefix}/queryPage`
 const addUrl = `${prefix}/insert`
-const updateUrl = `${prefix}/update`
+const updateUrl = `${prefix}/updateNotNull`
 const deleteByIdUrl = `${prefix}/deleteById`
 
 export default extend({

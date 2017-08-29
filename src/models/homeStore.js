@@ -1,4 +1,5 @@
 import { extend } from 'ModelUtils'
+import { hasPermission } from 'utils/auth'
 
 const prefix = 'home'
 
@@ -40,7 +41,7 @@ export default extend({
     // 产权证
     [ownershipingKey]: local.get(ownershipingKey) || {},
     [ownershipKey]: local.get(ownershipKey) || {},
-    // 车辆信息
+    // 营运证年审
     [synthesizeingKey]: local.get(synthesizeingKey) || {},
     [synthesizeKey]: local.get(synthesizeKey) || {},
     // 行驶证
@@ -335,36 +336,49 @@ export default extend({
     setup({ dispatch, listen }) {
       listen({
         '/': () => {
-          // 车辆
-          dispatch({ type: roadTransportingKey })
-          dispatch({ type: roadTransportKey })
-          dispatch({ type: ownershipingKey })
-          dispatch({ type: ownershipKey })
+          // 车辆信息
+          if (hasPermission('car:car:*')) {
+            dispatch({ type: roadTransportingKey })
+            dispatch({ type: roadTransportKey })
+            dispatch({ type: ownershipingKey })
+            dispatch({ type: ownershipKey })
+          }
 
-          dispatch({ type: synthesizeingKey })
-          dispatch({ type: synthesizeKey })
-          dispatch({ type: drivingLicenseingKey })
-          dispatch({ type: drivingLicenseKey })
-          dispatch({ type: taximeteringKey })
-          dispatch({ type: taximeterKey })
+          // 车辆年审
+          if (hasPermission('car:annualVerification:*')) {
+            dispatch({ type: synthesizeingKey })
+            dispatch({ type: synthesizeKey })
+            dispatch({ type: drivingLicenseingKey })
+            dispatch({ type: drivingLicenseKey })
+            dispatch({ type: taximeteringKey })
+            dispatch({ type: taximeterKey })
+          }
 
-          dispatch({ type: planFinishingKey })
-          dispatch({ type: planFinishKey })
+          // 二级维护
+          if (hasPermission('car:maintain:*')) {
+            dispatch({ type: planFinishingKey })
+            dispatch({ type: planFinishKey })
+          }
 
-          dispatch({ type: insuranceForceingKey })
-          dispatch({ type: insuranceForceKey })
-          dispatch({ type: insuranceBusinessingKey })
-          dispatch({ type: insuranceBusinessKey })
+          // 保险
+          if (hasPermission('car:insurance:*')) {
+            dispatch({ type: insuranceForceingKey })
+            dispatch({ type: insuranceForceKey })
+            dispatch({ type: insuranceBusinessingKey })
+            dispatch({ type: insuranceBusinessKey })
+          }
 
           // 驾驶员
-          dispatch({ type: accidentringKey })
-          dispatch({ type: accidentKey })
-          dispatch({ type: licenseringKey })
-          dispatch({ type: licenseKey })
-          dispatch({ type: labourringKey })
-          dispatch({ type: labourKey })
-          dispatch({ type: manageringKey })
-          dispatch({ type: manageKey })
+          if (hasPermission('driver:driver:*') || hasPermission('driver:archives:*')) {
+            dispatch({ type: accidentringKey })
+            dispatch({ type: accidentKey })
+            dispatch({ type: licenseringKey })
+            dispatch({ type: licenseKey })
+            dispatch({ type: labourringKey })
+            dispatch({ type: labourKey })
+            dispatch({ type: manageringKey })
+            dispatch({ type: manageKey })
+          }
         },
       })
     },

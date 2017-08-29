@@ -1,22 +1,20 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-28 17:56:24 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-28 18:02:46
  */
 import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
-import { Form, Input, Icon, Row, Col,
-  Button, Card, DatePicker, Upload, Modal, AutoComplete } from 'antd'
+import { Form, Input, Icon, Row, Col, Button, Card, DatePicker, Upload, Modal, AutoComplete } from 'antd'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
 
 const Add = options => {
-  const { dispatch, form, car, carNos } = options
+  const { methods, form, car, carNos } = options
+  const { addAnnualVerification, handleSearch, queryByCarNo, toPage, synthesizeFileChange, drivingLicenseFileChange, taximeterFileChange, handlePreview, handleCancel } = methods
   const { getFieldDecorator } = form
   const { previewVisible, previewImage, plateList, synthesizeFileList, synthesizeFile, taximeterFileList, taximeterFile, drivingLicenseFileList, drivingLicenseFile } = options
 
@@ -43,121 +41,6 @@ const Add = options => {
     },
   }
 
-  /* 提交事件 */
-  const addAnnualVerification = e => {
-    e.preventDefault()
-    form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        if (form.getFieldValue('plateNumber') === '') {
-          Modal.info({
-            title: '温馨提示',
-            content: (
-              '自编号不存在'
-            ),
-          })
-          return
-        }
-        /*
-        if(synthesizeFile === ''){
-          Modal.info({
-            title: '温馨提示',
-            content: (
-              "没有上传营运证年审有效扫描件"
-            )
-          })
-          return ;
-        }
-        if(drivingLicenseFile === ''){
-          Modal.info({
-            title: '温馨提示',
-            content: (
-              "没有上传行驶证有效扫描件"
-            )
-          })
-          return ;
-        }
-        if(taximeterFile === ''){
-          Modal.info({
-            title: '温馨提示',
-            content: (
-              "没有上传计价器年审有效期截止时间扫描件"
-            )
-          })
-          return ;
-        } */
-        const synthesizeDate = form.getFieldValue('synthesizeDate') ? form.getFieldValue('synthesizeDate').format('YYYY-MM-DD') : null
-        const drivingLicenseDate = form.getFieldValue('drivingLicenseDate') ? form.getFieldValue('drivingLicenseDate').format('YYYY-MM-DD') : null
-        const taximeterDate = form.getFieldValue('taximeterDate') ? form.getFieldValue('taximeterDate').format('YYYY-MM-DD') : null
-
-        dispatch({
-          type: 'annualVerificationStore/insert',
-          ...values,
-          synthesizeDate,
-          drivingLicenseDate,
-          taximeterDate,
-          synthesizeFile,
-          drivingLicenseFile,
-          taximeterFile,
-        })
-      }
-    })
-  }
-  /** 模糊查询 车辆自编号 */
-  const handleSearch = value => {
-    dispatch({
-      type: 'driverCommonStore/queryLikeCarNo',
-      str: value,
-    })
-  }
-  const queryByCarNo = () => {
-    dispatch({
-      type: 'carStore/queryByCarNo',
-      carNo: form.getFieldValue('carNo'),
-    })
-  }
-
-  /* 返回分页 */
-  const toPage = e => {
-    dispatch({
-      type: 'annualVerificationStore/queryPage',
-    })
-  }
-
-  // 上传营运证年审有效扫描件
-  const synthesizeFileChange = ({ fileList }) => {
-    dispatch({
-      type: 'annualVerificationStore/synthesizeFileChange',
-      synthesizeFileList: fileList,
-    })
-  }
-  // 上传行驶证有效扫描件
-  const drivingLicenseFileChange = ({ fileList }) => {
-    dispatch({
-      type: 'annualVerificationStore/drivingLicenseFileChange',
-      drivingLicenseFileList: fileList,
-    })
-  }
-  // 上传计价器年审有效期截止时间扫描件
-  const taximeterFileChange = ({ fileList }) => {
-    dispatch({
-      type: 'annualVerificationStore/taximeterFileChange',
-      taximeterFileList: fileList,
-    })
-  }
-  // 预览图片
-  const handlePreview = file => {
-    dispatch({
-      type: 'annualVerificationStore/lookPreview',
-      previewImage: file.url || file.thumbUrl,
-      previewVisible: true,
-    })
-  }
-  // 删除图片
-  const handleCancel = () => {
-    dispatch({
-      type: 'annualVerificationStore/unlookPreview',
-    })
-  }
   // 添加图片样式
   const uploadButton = (
     <div>
@@ -171,7 +54,7 @@ const Add = options => {
       <TweenOneGroup>
         <Row key="0">
           <Col span={16}>
-            <Form onSubmit={addAnnualVerification} style={{ maxWidth: '100%', marginTop: '10px' }}>
+            <Form onSubmit={e => addAnnualVerification(e, synthesizeFile, drivingLicenseFile, taximeterFile)} style={{ maxWidth: '100%', marginTop: '10px' }}>
               <Card title="新增车辆年审">
                 <FormItem>
                   {getFieldDecorator('carId', { initialValue: car ? car.id : 0,
@@ -200,7 +83,7 @@ const Add = options => {
                     )}
                   </Col>
                   <Col span={4}>
-                    <Button style={{ marginLeft: '30px' }}  onClick={queryByCarNo}>查询</Button>
+                    <Button style={{ marginLeft: '30px' }} onClick={queryByCarNo}>查询</Button>
                   </Col>
                 </FormItem>
                 <FormItem
@@ -363,7 +246,7 @@ const Add = options => {
   )
 }
 
-function mapStateToProps({ carStore, annualVerificationStore, driverCommonStore, }) {
+function mapStateToProps({ carStore, annualVerificationStore, driverCommonStore }) {
   return {
     car: carStore.car,
     plateList: carStore.plateList,
@@ -379,4 +262,132 @@ function mapStateToProps({ carStore, annualVerificationStore, driverCommonStore,
 
   }
 }
-export default Form.create()(connect(mapStateToProps)(Add))
+
+const mapDispatchToProps = (dispatch, { form }) => {
+  return {
+    methods: {
+
+      /* 提交事件 */
+      addAnnualVerification(e, synthesizeFile, drivingLicenseFile, taximeterFile) {
+        e.preventDefault()
+        form.validateFieldsAndScroll((err, values) => {
+          if (!err) {
+            if (form.getFieldValue('plateNumber') === '') {
+              Modal.info({
+                title: '温馨提示',
+                content: (
+                  '自编号不存在'
+                ),
+              })
+              return
+            }
+            const synthesizeDate = form.getFieldValue('synthesizeDate') ? form.getFieldValue('synthesizeDate').format('YYYY-MM-DD') : null
+            const drivingLicenseDate = form.getFieldValue('drivingLicenseDate') ? form.getFieldValue('drivingLicenseDate').format('YYYY-MM-DD') : null
+            const taximeterDate = form.getFieldValue('taximeterDate') ? form.getFieldValue('taximeterDate').format('YYYY-MM-DD') : null
+
+            dispatch({
+              type: 'annualVerificationStore/insert',
+              ...values,
+              synthesizeDate,
+              drivingLicenseDate,
+              taximeterDate,
+              synthesizeFile,
+              drivingLicenseFile,
+              taximeterFile,
+            })
+          }
+        })
+      },
+      /** 模糊查询 车辆自编号 */
+      handleSearch(value) {
+        dispatch({
+          type: 'driverCommonStore/queryLikeCarNo',
+          str: value,
+        })
+      },
+      queryByCarNo() {
+        dispatch({
+          type: 'carStore/queryByCarNo',
+          carNo: form.getFieldValue('carNo'),
+        })
+      },
+
+      /* 返回分页 */
+      toPage() {
+        dispatch({
+          type: 'annualVerificationStore/queryPage',
+        })
+      },
+
+      // 上传营运证年审有效扫描件
+      synthesizeFileChange({ fileList }) {
+        dispatch({
+          type: 'annualVerificationStore/synthesizeFileChange',
+          synthesizeFileList: fileList,
+        })
+      },
+      // 上传行驶证有效扫描件
+      drivingLicenseFileChange({ fileList }) {
+        dispatch({
+          type: 'annualVerificationStore/drivingLicenseFileChange',
+          drivingLicenseFileList: fileList,
+        })
+      },
+      // 上传计价器年审有效期截止时间扫描件
+      taximeterFileChange({ fileList }) {
+        dispatch({
+          type: 'annualVerificationStore/taximeterFileChange',
+          taximeterFileList: fileList,
+        })
+      },
+      // 预览图片
+      handlePreview(file) {
+        dispatch({
+          type: 'annualVerificationStore/lookPreview',
+          previewImage: file.url || file.thumbUrl,
+          previewVisible: true,
+        })
+      },
+      // 删除图片
+      handleCancel() {
+        dispatch({
+          type: 'annualVerificationStore/unlookPreview',
+        })
+      },
+    },
+
+  }
+}
+
+const fields = [
+  {
+    key: 'carNo',
+    name: '自编号',
+  }, {
+    key: 'plateNumber',
+    name: '车牌号',
+  }, {
+    key: 'plateImage',
+    name: '车辆照片',
+  }, {
+    key: 'synthesizeDate',
+    name: '营运证年审有效期截止时间',
+  }, {
+    key: 'synthesizeFile',
+    name: '营运证年审有效扫描件',
+  }, {
+    key: 'drivingLicenseDate',
+    name: '行驶证有效期截止时间',
+  }, {
+    key: 'drivingLicenseFile',
+    name: '行驶证有效扫描件',
+  }, {
+    key: 'taximeterDate',
+    name: '计价器年审有效期截止时间',
+  }, {
+    key: 'taximeterFile',
+    name: '计价器年审有效期截止时间扫描件',
+  },
+]
+
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(Add))

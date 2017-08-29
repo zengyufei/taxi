@@ -48,7 +48,7 @@ const index = options => {
     showReset: true,
     btns,
     searchCacheKey: 'complain_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'complainType', 'inFault', 'punish']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'complainType', 'inFault', 'punish', 'creditTime']).values(),
     fields: getFields(fields, local.get('complain_condin') || ['carNo', 'plateNumber', 'userName', 'qualificationNo', 'complainType', 'inFault', 'punish']).values(),
     item: {
     },
@@ -131,6 +131,13 @@ const mapDispatchToProps = (dispatch, { form }) => {
     methods: {
 
       onSearch(values) {
+        if (values) {
+          if (values.creditTime) {
+            values.startTime = moment(new Date(values.creditTime)).format('YYYY-MM-DD')
+            values.endTime = moment(new Date(values.creditTime)).format('YYYY-MM-DD')
+            delete values.creditTime
+          }
+        }
         dispatch({
           type: 'complainStore/queryPage',
           ...values,
@@ -273,6 +280,7 @@ const fields = [{
 }, {
   name: '事情发生时间',
   key: 'creditTime',
+  type: 'date',
 }, {
   name: '回复乘客时间',
   key: 'replyTime',
