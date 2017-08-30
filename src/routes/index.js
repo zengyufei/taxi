@@ -12,7 +12,6 @@ const registerModel = (app, model) => {
 
 const Routers = function({ history, app }) {
   const routes = [
-    require('./login')(app),
     {
       path: '/',
       component: App,
@@ -36,6 +35,8 @@ const Routers = function({ history, app }) {
         ...require('./finance')(app, authenticated),
       ],
     },
+    require('./login')(app),
+    require('./403'),
     require('./404'),
   ]
 

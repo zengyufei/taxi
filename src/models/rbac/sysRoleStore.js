@@ -24,7 +24,7 @@ export default extend({
 
     * init({}, { tableBindType, sessionCache }) {
       yield tableBindType({
-        sysMemberId: id => {
+        sysmemberId: id => {
           const cache = sessionCache.getIds('sysMemberIds', id)
           return cache && cache.account
         },
@@ -32,10 +32,9 @@ export default extend({
     },
 
     * queryPage(payload, { get, getMessage, update, _, sessionCache }) {
-      const { result } = yield getMessage(queryPageUrl, payload, `${moduleName}列表`)
-
+      const { result } = yield getMessage(queryPageUrl, payload)
       if (result) {
-        const sysMemberIds = yield _.map(result.dataList, 'sysMemberId')
+        const sysMemberIds = _.uniq(_.filter(_.map(result.dataList, 'sysmemberId'), e => e > 0))
         const existsIds = sessionCache.existsIds('sysMemberIds', sysMemberIds)
         if (!existsIds) {
           const sysMemberList = yield get('/sysMember/queryByIds.htm', { ids: sysMemberIds.join(',') })
@@ -54,7 +53,7 @@ export default extend({
       yield update({ page: result })
     },
 
-    * add(payload, { postConfirmLoading, put, select }) {
+    * add(payload, { postConfirmLoading, put, select, localCache }) {
       const { page: { pageNo, pageSize }, sysRole } = yield select(({ sysRoleStore }) => sysRoleStore)
       const { code, msg } = yield postConfirmLoading(addUrl, { ...payload, resourceList: sysRole.resourceList })
       if (code === 200) {
@@ -63,20 +62,24 @@ export default extend({
           put('reload', { pageNo, pageSize }), // 刷新列表
           put('hideVisible', { key: 'add' }), // 控制弹窗
         ]
+        const roleKey = 'roles'
+        localCache.remove(roleKey)
       }
     },
 
-    * update(payload, { postConfirmLoading, put, diff, select }) {
+    * update(payload, { postConfirmLoading, put, diff, select, localCache }) {
       const { sysRole, page: { pageNo, pageSize } } = yield select(({ sysRoleStore }) => sysRoleStore)
-      const newSysMember = { ...sysRole, ...payload }
-      if (diff(sysRole, newSysMember)) {
-        const { code, msg } = yield postConfirmLoading(updateUrl, newSysMember)
+      const newSysRole = { ...sysRole, ...payload }
+      if (diff(sysRole, newSysRole)) {
+        const { code, msg } = yield postConfirmLoading(updateUrl, newSysRole)
         if (code === 200) {
           ZMsg.success(msg)
           yield [
             put('reload', { pageNo, pageSize }), // 刷新列表
             put('hideVisible', { key: 'update' }), // 控制弹窗
           ]
+          const roleKey = 'roles'
+          localCache.remove(roleKey)
         }
       }
     },
@@ -96,6 +99,13 @@ export default extend({
     },
   },
   subscriptions: {
+    setup({ dispatch, listen }) {
+      listen(`/${prefix}`, () => {
+        dispatch({
+          type: 'queryPage',
+        })
+      })
+    },
   },
 })
 

@@ -20,7 +20,7 @@ export default extend({
 
     // 分页查询结果, 是一个分页对象 Page
     page: {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -48,7 +48,7 @@ export default extend({
     },
     // 分页查询
     queryPageSuccess(state, { page = {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -107,7 +107,15 @@ export default extend({
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       }
     },
-
+    // 当月、上月新增数据
+    *generate({currentMonth}, { get, put, select }) {
+      const response = yield get(`${prefix}/generate`, {currentMonth: currentMonth})
+      if (+response.code === 200) {
+        ZMsg.success(response.msg)
+        const page = yield select(state => state.monthQuotaStore.page)
+        yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
+      }
+    },
     // 删除月缴定额
     * deleteById({ id }, { get, put, select }) {
       const response = yield get(`${prefix}/deleteById`, id)

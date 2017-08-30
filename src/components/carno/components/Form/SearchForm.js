@@ -56,14 +56,16 @@ const HSearchForm = option => {
         }
         )}
         <Col {...assginFormItemLayout.btnCol} key={'itemKeySubmit'}>
-          <FormItem style={{ marginBottom: 15, marginLeft: 30 }}>
-            <Button type="primary" htmlType="submit" onClick={handleSubmit}>查询</Button>
-          </FormItem>
-          {showReset &&
+          <div style={{ width: 300 }}>
+            <FormItem style={{ marginBottom: 15, marginLeft: 30 }}>
+              <Button type="primary" htmlType="submit" onClick={handleSubmit}>查询</Button>
+            </FormItem>
+            {showReset &&
             <FormItem>
               <Button type="primary" onClick={handleReset} >重置</Button>
             </FormItem>
-          }
+            }
+          </div>
         </Col>
       </Row>
     </Form>

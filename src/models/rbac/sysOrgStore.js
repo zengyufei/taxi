@@ -42,7 +42,7 @@ export default extend({
     },
 
     * queryPage(payload, { getMessage, update }) {
-      const { result } = yield getMessage(queryPageUrl, payload, `${moduleName}列表`)
+      const { result } = yield getMessage(queryPageUrl, payload)
       yield update({ page: result })
     },
 
@@ -68,9 +68,9 @@ export default extend({
 
     * update(payload, { postConfirmLoading, put, diff, select }) {
       const { sysOrg = {}, page: { pageNo, pageSize } } = yield select(({ sysOrgStore }) => sysOrgStore)
-      const newSysMember = { ...sysOrg, ...payload }
-      if (diff(sysOrg, newSysMember)) {
-        const { code, msg } = yield postConfirmLoading(updateUrl, newSysMember)
+      const newSysOrg = { ...sysOrg, ...payload }
+      if (diff(sysOrg, newSysOrg)) {
+        const { code, msg } = yield postConfirmLoading(updateUrl, newSysOrg)
         if (code === 200) {
           ZMsg.success(msg)
           yield [

@@ -46,7 +46,7 @@ const Info = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'annualVerificationStore/queryPage',
+      type: 'annualVerificationStore/reload',
     })
   }
 

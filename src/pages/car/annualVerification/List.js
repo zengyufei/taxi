@@ -2,7 +2,7 @@
  * @Author: zengyufei
  * @Date: 2017-08-22 17:50:34
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-25 13:46:48
+ * @Last Modified time: 2017-08-30 15:27:19
  */
 import { connect } from 'dva'
 import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
@@ -132,6 +132,7 @@ const List = options => {
             loading={loading}
             bordered
             pagination={{ // 分页
+              current: (page && +page.pageNo),
               total: (page && +page.totalCount) || 0, // 总数量
               pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
@@ -266,20 +267,42 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+        let values = form.getFieldsValue()
+        if (values) {
+          if (values.ownershipDate) {
+            values.ownershipBeginDate = values.ownershipDate[0].format('YYYY-MM-DD')
+            values.ownershipEndDate = values.ownershipDate[1].format('YYYY-MM-DD')
+            delete values.ownershipDate
+          }
+          if (values.drivingLicenseDate) {
+            values.drivingLicenseDate = moment(new Date(parseInt(values.drivingLicenseDate, 10))).format('YYYY-MM-DD')
+          }
+        }
         dispatch({
           type: 'annualVerificationStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+        let values = form.getFieldsValue()
+        if (values) {
+          if (values.ownershipDate) {
+            values.ownershipBeginDate = values.ownershipDate[0].format('YYYY-MM-DD')
+            values.ownershipEndDate = values.ownershipDate[1].format('YYYY-MM-DD')
+            delete values.ownershipDate
+          }
+          if (values.drivingLicenseDate) {
+            values.drivingLicenseDate = moment(new Date(parseInt(values.drivingLicenseDate, 10))).format('YYYY-MM-DD')
+          }
+        }
         dispatch({
           type: 'annualVerificationStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 

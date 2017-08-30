@@ -87,7 +87,7 @@ module.exports = (webpackConfig, env) => {
           if (uploadUrl) {
             if (/\/$/.test(uploadUrl)) { pluginsDefinitions.UPLOAD_URL = JSON.stringify(uploadUrl) } else { pluginsDefinitions.UPLOAD_URL = JSON.stringify(`${uploadUrl}/`) }
           }
-        } else if (env === 'production') {
+        } else {
           pluginsDefinitions.BASE_URL = JSON.stringify('')
           pluginsDefinitions.UPLOAD_URL = JSON.stringify('/upload/')
         }

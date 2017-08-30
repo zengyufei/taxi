@@ -66,17 +66,17 @@ let index = option => {
     name: '操作',
     // 扩展字段的render支持自定义渲染
     render: (text, record) => {
-      let EDIT = false,
- AUDIT_SAVE = false, 
-AUDIT_EDIT = false, 
-READ_ONLY = false
-      if (record.auditStatus == 'EDIT') {
+      let EDIT = false
+      let AUDIT_SAVE = false
+      let AUDIT_EDIT = false
+      let READ_ONLY = false
+      if (record.auditStatus === 'EDIT') {
         EDIT = true
-      } else if (record.auditStatus == 'AUDIT_SAVE') {
+      } else if (record.auditStatus === 'AUDIT_SAVE') {
         AUDIT_SAVE = true
-      } else if (record.auditStatus == 'AUDIT_EDIT') {
+      } else if (record.auditStatus === 'AUDIT_EDIT') {
         AUDIT_EDIT = true
-      } else if (record.auditStatus == 'READ_ONLY') {
+      } else if (record.auditStatus === 'READ_ONLY') {
         READ_ONLY = true
       }
 
@@ -155,6 +155,7 @@ READ_ONLY = false
             loading={loading}
             bordered
             pagination={{ // 分页
+              current: (page && +page.pageNo),
               total: (page && +page.totalCount) || 0, // 总数量
               pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
@@ -281,20 +282,36 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+        let values = form.getFieldsValue()
+        if (values) {
+          if (values.payDate) {
+            values.startDate = moment(new Date(values.payDate)).format('YYYY-MM-DD')
+            values.endDate = moment(new Date(values.payDate)).format('YYYY-MM-DD')
+            delete values.payDate
+          }
+        }
         dispatch({
           type: 'nonBusinessIncomeStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+        let values = form.getFieldsValue()
+        if (values) {
+          if (values.payDate) {
+            values.startDate = moment(new Date(values.payDate)).format('YYYY-MM-DD')
+            values.endDate = moment(new Date(values.payDate)).format('YYYY-MM-DD')
+            delete values.payDate
+          }
+        }
         dispatch({
           type: 'nonBusinessIncomeStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 

@@ -11,7 +11,9 @@ const List = option => {
   const { page: { pageNo = 1, pageSize = 10, dataList = [], totalCount = 0 } } = sysRoleStore
 
   const btns = (
-    <Button type="primary" icon="plus-circle-o" onClick={openAddPage}>新增角色</Button>
+    <ZButton permission="rbac:sysRole:insert">
+      <Button type="primary" icon="plus-circle-o" onClick={openAddPage}>新增角色</Button>
+    </ZButton>
   )
 
   const searchBarProps = {
@@ -31,18 +33,22 @@ const List = option => {
     name: '操作',
     // 扩展字段的render支持自定义渲染
     render: (text, record) => {
+      if (record.id === 1) return ''
       return (
         <span>
-          <Button type="primary" onClick={() => openUpdatePage(record)} style={{ marginRight: '20px' }}>编辑</Button>
-          <Popconfirm title="是否确定要删除?" onConfirm={() => handlerDelete(record.id)}>
-            <Button type="primary">删除</Button>
-          </Popconfirm>
+          <ZButton permission="rbac:sysRole:update">
+            <Button type="primary" onClick={() => openUpdatePage(record)} style={{ marginRight: '20px' }}>编辑</Button>
+          </ZButton>
+          <ZButton permission="rbac:sysRole:delete">
+            <Popconfirm title="是否确定要删除?" onConfirm={() => handlerDelete(record.id)}>
+              <Button type="primary">删除</Button>
+            </Popconfirm>
+          </ZButton>
         </span>
       )
     },
   }]
   const tableColumns = getColumns(fields).enhance(operatorColumn).values()
-
 
   return (
     <div>
@@ -163,11 +169,11 @@ const fields = [
     name: '描述',
     type: 'textarea',
   }, {
-    key: 'sysMemberId',
+    key: 'sysmemberId',
     name: '创建者',
-    type: 'sysMemberId',
+    type: 'sysmemberId',
   }, {
-    key: 'relyRoleId',
+    key: 'relyRoleid',
     name: '创建者角色',
     type: 'roleId',
   }, {

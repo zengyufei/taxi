@@ -10,7 +10,7 @@ export default extend({
   state: {
 
     page: {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -25,7 +25,7 @@ export default extend({
 
   reducers: {
     queryPageSuccess(state, { page = {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -70,7 +70,13 @@ export default extend({
       })
     },
 
-    *queryPage(playload, {get, put}) {  // eslint-disable-line
+    * reload(playload, { get, put, select }) {
+      const page = yield select(state => state[`${prefix}Store`].page)
+      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
+      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
+    },
+
+    * queryPage(playload, { get, put }) {
       const response = yield get(`${prefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
     },
@@ -81,13 +87,6 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.carOperateLogStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
 
@@ -97,13 +96,6 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.carOperateLogStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
     * deleteById({ id }, { get, put, select }) {
@@ -112,8 +104,6 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.carOperateLogStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        ZMsg.success(response.msg)
       }
     },
 

@@ -42,9 +42,9 @@ const Info = options => {
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
-      type: 'insuranceStore/queryPage',
+      type: 'insuranceStore/reload',
     })
   }
 

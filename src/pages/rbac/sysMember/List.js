@@ -11,7 +11,9 @@ const List = option => {
   const { page: { pageNo = 1, pageSize = 10, dataList = [], totalCount = 0 } } = sysMemberStore
 
   const btns = (
-    <Button type="primary" icon="plus-circle-o" onClick={openAddPage}>新增用户</Button>
+    <ZButton permission="rbac:sysMember:insert">
+      <Button type="primary" icon="plus-circle-o" onClick={openAddPage}>新增用户</Button>
+    </ZButton>
   )
   const searchBarProps = {
     form,
@@ -35,10 +37,14 @@ const List = option => {
     render: (text, record) => {
       return (
         <span>
-          <Button type="primary" onClick={() => openUpdatePage(record)} style={{ marginRight: '20px' }}>编辑</Button>
-          <Popconfirm title="是否确定要删除?" onConfirm={() => handlerDelete(record.id)}>
-            <Button type="primary">删除</Button>
-          </Popconfirm>
+          <ZButton permission="rbac:sysMember:update">
+            <Button type="primary" onClick={() => openUpdatePage(record)} style={{ marginRight: '20px' }}>编辑</Button>
+          </ZButton>
+          <ZButton permission="rbac:sysMember:delete">
+            <Popconfirm title="是否确定要删除?" onConfirm={() => handlerDelete(record.id)}>
+              <Button type="primary">删除</Button>
+            </Popconfirm>
+          </ZButton>
         </span>
       )
     },

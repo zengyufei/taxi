@@ -57,7 +57,7 @@ class FilterBox extends React.Component {
 
     return (
       <div>
-        <div className={btnsCls}>
+        <div className={btnsCls} style={{ width: 1400 }}>
           {
             newFields && <Button className={filterBtnCls} onClick={() => this.handleFilterClick(visible)} style={{ float: 'left' }}>过滤<Icon type="down" /></Button>
           }

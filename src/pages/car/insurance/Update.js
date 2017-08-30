@@ -19,7 +19,7 @@ let Update = options => {
   const { dispatch, form, insurance } = options
   const { getFieldDecorator } = form
   const { plateList, previewVisible, previewImage, insuranceFile, insuranceList } = options
-  const { oneInsurance, twoInsurance, threeInsurance, fourInsurance, fiveInsurance } = options;
+  const { oneInsurance, twoInsurance, threeInsurance, fourInsurance, fiveInsurance } = options
 
   const formItemLayout = {
     labelCol: {
@@ -51,25 +51,25 @@ let Update = options => {
       if (!err) {
         const insuranceBuyDate = form.getFieldValue('insuranceBuyDate') ? form.getFieldValue('insuranceBuyDate').format('YYYY-MM-DD') : null
         const insuranceExpireDate = form.getFieldValue('insuranceExpireDate') ? form.getFieldValue('insuranceExpireDate').format('YYYY-MM-DD') : null
-        let bizInsuranceStr='';
-        if(insurance.insuranceType === 'BUSINESS') {
-          if(form.getFieldValue('insurance').includes('车损险赔偿金额')){
-            bizInsuranceStr += '车损险赔偿金额_'+form.getFieldValue('oneNumber')+',';
+        let bizInsuranceStr = ''
+        if (insurance.insuranceType === 'BUSINESS') {
+          if (form.getFieldValue('insurance').includes('车损险赔偿金额')) {
+            bizInsuranceStr += `车损险赔偿金额_${form.getFieldValue('oneNumber')},`;
           }
-          if(form.getFieldValue('insurance').includes('第三者责任险最高赔偿金额')){
-            bizInsuranceStr += '第三者责任险最高赔偿金额_'+form.getFieldValue('twoNumber')+',';
+          if (form.getFieldValue('insurance').includes('第三者责任险最高赔偿金额')) {
+            bizInsuranceStr += `第三者责任险最高赔偿金额_${form.getFieldValue('twoNumber')},`;
           }
-          if(form.getFieldValue('insurance').includes('不计免赔险最高赔偿金额')){
-            bizInsuranceStr += '不计免赔险最高赔偿金额_'+form.getFieldValue('threeNumber')+',';
+          if (form.getFieldValue('insurance').includes('不计免赔险最高赔偿金额')) {
+            bizInsuranceStr += `不计免赔险最高赔偿金额_${form.getFieldValue('threeNumber')},`;
           }
-          if(form.getFieldValue('insurance').includes('自燃险赔偿金额')){
-            bizInsuranceStr += '自燃险赔偿金额_'+form.getFieldValue('fourNumber')+',';
+          if (form.getFieldValue('insurance').includes('自燃险赔偿金额')) {
+            bizInsuranceStr += `自燃险赔偿金额_${form.getFieldValue('fourNumber')},`;
           }
-          if(form.getFieldValue('insurance').includes('承运人责任险最高赔偿金额（每座）')){
-            bizInsuranceStr += '承运人责任险最高赔偿金额（每座）_'+form.getFieldValue('fiveNumber')+',';
+          if (form.getFieldValue('insurance').includes('承运人责任险最高赔偿金额（每座）')) {
+            bizInsuranceStr += `承运人责任险最高赔偿金额（每座）_${form.getFieldValue('fiveNumber')},`;
           }
-          if(bizInsuranceStr.length > 0) {
-            bizInsuranceStr = bizInsuranceStr.substring(0, bizInsuranceStr.length-1);
+          if (bizInsuranceStr.length > 0) {
+            bizInsuranceStr = bizInsuranceStr.substring(0, bizInsuranceStr.length - 1)
           }
         }
         dispatch({
@@ -85,9 +85,9 @@ let Update = options => {
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
-      type: 'insuranceStore/queryPage',
+      type: 'insuranceStore/reload',
     })
   }
 
@@ -120,50 +120,54 @@ let Update = options => {
     </div>
   )
 
-  //根据选择保险种类  可填写数字更改
-  const inInsurance = (e) => {
+  // 根据选择保险种类  可填写数字更改
+  const inInsurance = e => {
     dispatch({
       type: 'insuranceStore/inInsurance',
-      oneInsurance : e.includes('车损险赔偿金额'),
-      twoInsurance : e.includes('第三者责任险最高赔偿金额'),
-      threeInsurance : e.includes('不计免赔险最高赔偿金额'),
-      fourInsurance : e.includes('自燃险赔偿金额'),
-      fiveInsurance : e.includes('承运人责任险最高赔偿金额（每座）'),
-    });
+      oneInsurance: e.includes('车损险赔偿金额'),
+      twoInsurance: e.includes('第三者责任险最高赔偿金额'),
+      threeInsurance: e.includes('不计免赔险最高赔偿金额'),
+      fourInsurance: e.includes('自燃险赔偿金额'),
+      fiveInsurance: e.includes('承运人责任险最高赔偿金额（每座）'),
+    })
   }
 
-  let oneNumber,twoNumber,threeNumber,fourNumber,fiveNumber;
-  let insuranceInitialValue=[];
-  if(insurance.bizInsuranceStr !== undefined && insurance.bizInsuranceStr !== null){
-    insurance.bizInsuranceStr.split(',').forEach((value)=>{
-      if(value.split('_').includes('车损险赔偿金额')) {
-        insuranceInitialValue.push('车损险赔偿金额');
-        if(value.split('_').length > 1){
-          oneNumber = value.split('_')[1];
+  let oneNumber, 
+twoNumber, 
+threeNumber, 
+fourNumber, 
+fiveNumber
+  let insuranceInitialValue = []
+  if (insurance.bizInsuranceStr !== undefined && insurance.bizInsuranceStr !== null) {
+    insurance.bizInsuranceStr.split(',').forEach(value => {
+      if (value.split('_').includes('车损险赔偿金额')) {
+        insuranceInitialValue.push('车损险赔偿金额')
+        if (value.split('_').length > 1) {
+          oneNumber = value.split('_')[1]
         }
       }
-      if(value.split('_').includes('第三者责任险最高赔偿金额')) {
-        insuranceInitialValue.push('第三者责任险最高赔偿金额');
-        if(value.split('_').length > 1){
-          twoNumber = value.split('_')[1];
+      if (value.split('_').includes('第三者责任险最高赔偿金额')) {
+        insuranceInitialValue.push('第三者责任险最高赔偿金额')
+        if (value.split('_').length > 1) {
+          twoNumber = value.split('_')[1]
         }
       }
-      if(value.split('_').includes('不计免赔险最高赔偿金额')) {
-        insuranceInitialValue.push('不计免赔险最高赔偿金额');
-        if(value.split('_').length > 1) {
-          threeNumber = value.split('_')[1];
+      if (value.split('_').includes('不计免赔险最高赔偿金额')) {
+        insuranceInitialValue.push('不计免赔险最高赔偿金额')
+        if (value.split('_').length > 1) {
+          threeNumber = value.split('_')[1]
         }
       }
-      if(value.split('_').includes('自燃险赔偿金额')) {
-        insuranceInitialValue.push('自燃险赔偿金额');
-        if(value.split('_').length > 1) {
-          fourNumber = value.split('_')[1];
+      if (value.split('_').includes('自燃险赔偿金额')) {
+        insuranceInitialValue.push('自燃险赔偿金额')
+        if (value.split('_').length > 1) {
+          fourNumber = value.split('_')[1]
         }
       }
-      if(value.split('_').includes('承运人责任险最高赔偿金额（每座）')) {
-        insuranceInitialValue.push('承运人责任险最高赔偿金额（每座）');
-        if(value.split('_').length > 1) {
-          fiveNumber = value.split('_')[1];
+      if (value.split('_').includes('承运人责任险最高赔偿金额（每座）')) {
+        insuranceInitialValue.push('承运人责任险最高赔偿金额（每座）')
+        if (value.split('_').length > 1) {
+          fiveNumber = value.split('_')[1]
         }
       }
     })
@@ -276,20 +280,20 @@ let Update = options => {
                     <FormItem
                       {...formItemLayout}
                       label={(
-                      <span>
+                        <span>
                           保险种类&nbsp;
                         </span>
                       )}
                     >
                       {
                         <div>
-                          {getFieldDecorator('insurance',{initialValue:insuranceInitialValue})(
+                          {getFieldDecorator('insurance', { initialValue: insuranceInitialValue })(
                             <Checkbox.Group onChange={inInsurance}>
                               <Row>
                                 <Col span={20}><Checkbox value="车损险赔偿金额">车损险赔偿金额</Checkbox></Col>
                                 {
                                   oneInsurance ? <Col span={2}>
-                                    {getFieldDecorator('oneNumber', {initialValue:oneNumber})(
+                                    {getFieldDecorator('oneNumber', { initialValue: oneNumber })(
                                       <InputNumber min={0} />
                                     )}
                                   </Col> : <Col span={2}><InputNumber min={0} defaultValue={oneNumber} disabled /></Col>
@@ -297,7 +301,7 @@ let Update = options => {
                                 <Col span={20}><Checkbox value="第三者责任险最高赔偿金额">第三者责任险最高赔偿金额</Checkbox></Col>
                                 {
                                   twoInsurance ? <Col span={2}>
-                                    {getFieldDecorator('twoNumber', {initialValue:twoNumber} )(
+                                    {getFieldDecorator('twoNumber', { initialValue: twoNumber })(
                                       <InputNumber min={0} />
                                     )}
                                   </Col> : <Col span={2}><InputNumber min={0} defaultValue={twoNumber} disabled /></Col>
@@ -305,7 +309,7 @@ let Update = options => {
                                 <Col span={20}><Checkbox value="不计免赔险最高赔偿金额">不计免赔险最高赔偿金额</Checkbox></Col>
                                 {
                                   threeInsurance ? <Col span={2}>
-                                    {getFieldDecorator('threeNumber', {initialValue:threeNumber})(
+                                    {getFieldDecorator('threeNumber', { initialValue: threeNumber })(
                                       <InputNumber min={0} />
                                     )}
                                   </Col> : <Col span={2}><InputNumber min={0} defaultValue={threeNumber} disabled /></Col>
@@ -313,7 +317,7 @@ let Update = options => {
                                 <Col span={20}><Checkbox value="自燃险赔偿金额">自燃险赔偿金额</Checkbox></Col>
                                 {
                                   fourInsurance ? <Col span={2}>
-                                    {getFieldDecorator('fourNumber', {initialValue:fourNumber})(
+                                    {getFieldDecorator('fourNumber', { initialValue: fourNumber })(
                                       <InputNumber min={0} />
                                     )}
                                   </Col> : <Col span={2}><InputNumber min={0} defaultValue={fourNumber} disabled /></Col>
@@ -321,7 +325,7 @@ let Update = options => {
                                 <Col span={20}><Checkbox value="承运人责任险最高赔偿金额（每座）">承运人责任险最高赔偿金额（每座）</Checkbox></Col>
                                 {
                                   fiveInsurance ? <Col span={2}>
-                                    {getFieldDecorator('fiveNumber', {initialValue:fiveNumber})(
+                                    {getFieldDecorator('fiveNumber', { initialValue: fiveNumber })(
                                       <InputNumber min={0} />
                                     )}
                                   </Col> : <Col span={2}><InputNumber min={0} defaultValue={fiveNumber} disabled /></Col>
@@ -335,7 +339,7 @@ let Update = options => {
                     : ''
                 }
                 <FormItem
-                {...formItemLayout}
+                  {...formItemLayout}
                   label={(
                     <span>
                         保险金额 &nbsp;

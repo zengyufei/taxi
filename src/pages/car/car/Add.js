@@ -110,7 +110,7 @@ const Add = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'carStore/queryPage',
+      type: 'carStore/reload',
     })
   }
 

@@ -9,7 +9,7 @@ const { roles, orgContant: { firstOrgs, secondOrgs, threeOrgs } } = require('../
 const orgNos = _.assign(R.values(firstOrgs), R.values(secondOrgs), R.values(threeOrgs))
 
 const prefix = 'sysRole'
-const queryPageOption = ['orgNo', 'roleName', 'sysMemberId', 'relyRoleId', 'createTime']
+const queryPageOption = ['orgNo', 'roleName', 'sysmemberId', 'relyRoleId', 'createTime']
 const timeOut = 1000
 
 const queryAllUrl = `GET /${prefix}/queryAll.htm`
@@ -68,7 +68,7 @@ const mockOption = {
     },
     'orgNo|1': orgNos,
     description: '@word(6,25)',
-    'sysMemberId|1-100': 1,
+    'sysmemberId|1-100': 1,
     'relyRoleId|+1': 1,
     createTime: '@datetime',
     updateTime: '@datetime',
@@ -143,7 +143,7 @@ module.exports = {
   [insertUrl]: (req, res) => {
     let body = qs.parse(req.body)
     const list = queryList(prefix)
-    body.sysMemberId = 1
+    body.sysmemberId = 1
     body.relyRoleId = 1
     body.createTime = '2017-08-16 08:00:01'
     body.updateTime = '2017-08-16 08:00:01'

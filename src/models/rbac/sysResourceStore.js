@@ -41,9 +41,9 @@ export default extend({
 
     * update(payload, { postConfirmLoading, put, diff, select }) {
       const sysResource = yield select(({ sysResourceStore }) => sysResourceStore[prefix])
-      const newSysMember = { ...sysResource, ...payload }
-      if (diff(sysResource, newSysMember)) {
-        const { code, msg } = yield postConfirmLoading(updateUrl, newSysMember)
+      const newSysResource = { ...sysResource, ...payload }
+      if (diff(sysResource, newSysResource)) {
+        const { code, msg } = yield postConfirmLoading(updateUrl, newSysResource)
         if (code === 200) {
           ZMsg.success(msg)
           yield [

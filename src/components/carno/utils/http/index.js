@@ -8,7 +8,7 @@ const domains = require('configs/domains')
 const baseUrl = domains[process.env.NODE_ENV] && domains[process.env.NODE_ENV].baseUrl
 
 
-const { tokenSessionKey, redirectLoginUrl } = constant
+const { tokenSessionKey, redirectLoginUrl, redirectNotPermissionUrl } = constant
 
 function setHeader(header) {
   // 每次发送请求之前检测都vuex存有token,那么都要放在请求头发送给服务器
@@ -26,6 +26,12 @@ axios.interceptors.request.use(config => {
   // 添加请求后缀
   if (!/.htm$/.test(config.url)) {
     config.url += '.htm'
+  }
+  if (/update/.test(config.url)) {
+    let temp = qs.parse(config.data)
+    delete temp.createTime
+    delete temp.updateTime
+    config.data = qs.stringify(temp)
   }
 
   setHeader(config.headers)
@@ -83,7 +89,7 @@ axios.interceptors.response.use(response => {
         window.location.href = redirectLoginUrl
         break
       case 403:
-        console.error('无权限')
+        window.location.href = redirectNotPermissionUrl
         break
       case 404:
         console.error('系统没有该链接，请添加')
@@ -101,8 +107,8 @@ axios.interceptors.response.use(response => {
         break
     }
   }
-  // Do something with response error
-  return Promise.reject(error)
+  // return Promise.reject(error)
+  return { code: 0, result: {} }
 })
 
 export default {

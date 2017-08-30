@@ -82,7 +82,7 @@ let Add = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'carOperateLogStore/queryPage',
+      type: 'carOperateLogStore/reload',
     })
   }
 

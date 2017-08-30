@@ -21,7 +21,7 @@ export default extend({
 
     // 分页查询结果, 是一个分页对象 Page
     page: {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -50,7 +50,7 @@ export default extend({
     },
     // 分页查询
     queryPageSuccess(state, { page = {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],

@@ -9,7 +9,7 @@ export default extend({
 
   state: {
     page: {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -27,7 +27,7 @@ export default extend({
 
   reducers: {
     queryPageSuccess(state, { page = {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -132,7 +132,12 @@ export default extend({
       yield formBindType({
       })
     },
-    *queryPage(playload, {get, put}) {  // eslint-disable-line
+    * reload(playload, {get, put, select}) {  // eslint-disable-line
+      const page = yield select(state => state[`${prefix}Store`].page)
+      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
+      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
+    },
+    * queryPage(playload, {get, put}) {  // eslint-disable-line
       const response = yield get(`${prefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
     },
@@ -143,7 +148,7 @@ export default extend({
     },
     * insert(playload, { post, put, select }) {
       const response = yield post(`${prefix}/insert`, playload)
-      if (response.code === '200') {
+      if (response.code === 200) {
         ZMsg.info(response.msg)
         const page = yield select(state => state.annualVerificationStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
@@ -158,7 +163,7 @@ export default extend({
     },
     * updateNotNull(playload, { post, put, select }) {
       const response = yield post(`${prefix}/update`, playload)
-      if (response.code === '200') {
+      if (response.code === 200) {
         ZMsg.info(response.msg)
         const page = yield select(state => state.annualVerificationStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
@@ -175,7 +180,7 @@ export default extend({
     * deleteById({ id }, { get, put, select }) {
       const response = yield get(`${prefix}/deleteById`, { id })
       ZMsg.info(response.msg)
-      if (response.code === '200') {
+      if (response.code === 200) {
         const page = yield select(state => state.annualVerificationStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       }

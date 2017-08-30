@@ -21,7 +21,7 @@ export default extend({
 
     // 分页查询结果, 是一个分页对象 Page
     page: {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -71,7 +71,7 @@ export default extend({
     },
     // 分页查询
     queryPageSuccess(state, { page = {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -97,31 +97,31 @@ export default extend({
     // 修改页面
     toEdit(state, action) {
       let registerFileList = []
-      if (action.driver.registerRecord !== null) {
+      if (action.driver.registerRecord) {
         registerFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.registerRecord, status: 'done' }]
       }
       let checkFileList = []
-      if (action.driver.checkReport !== null) {
+      if (action.driver.checkReport) {
         checkFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.checkReport, status: 'done' }]
       }
       let noCriminalFileList = []
-      if (action.driver.noCriminalRecord !== null) {
+      if (action.driver.noCriminalRecord) {
         noCriminalFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.noCriminalRecord, status: 'done' }]
       }
       let serviceFileList = []
-      if (action.driver.serviceCommitment !== null) {
+      if (action.driver.serviceCommitment) {
         serviceFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.serviceCommitment, status: 'done' }]
       }
       let insuranceFileList = []
-      if (action.driver.insuranceCommitment !== null) {
+      if (action.driver.insuranceCommitment) {
         insuranceFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.insuranceCommitment, status: 'done' }]
       }
       let IDCardImgFileList = []
-      if (action.driver.iDCardImg !== null) {
+      if (action.driver.iDCardImg) {
         IDCardImgFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.iDCardImg, status: 'done' }]
       }
       let safetyResponsibilityFileList = []
-      if (action.driver.safetyResponsibility !== null) {
+      if (action.driver.safetyResponsibility) {
         safetyResponsibilityFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.safetyResponsibility, status: 'done' }]
       }
 
@@ -237,6 +237,14 @@ export default extend({
     },
     // 新增驾驶员
     * insert(playload, { post, put, select }) {
+      if(playload.driverStatus === 'DIMISSION' && !playload.leaveDate) {
+        ZMsg.error('离职状态请填写离职时间');
+        return;
+      }
+      if(playload.driverStatus === 'WORKING' && playload.leaveDate) {
+        ZMsg.error('在职状态不能填写离职时间');
+        return;
+      }
       const response = yield post(`${urlPrefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
@@ -249,11 +257,18 @@ export default extend({
     * update(playload, { post, put, select }) {
       if (!playload.insurance) {
         playload.insuranceCompany = ''
-        playload.qualificationNo = ''
+        playload.policyNo = ''
         playload.accidentInsuranceBeginDate = ''
         playload.accidentInsuranceEndDate = ''
       }
-
+      if(playload.driverStatus === 'DIMISSION' && !playload.leaveDate) {
+        ZMsg.error('离职状态请填写离职时间');
+        return;
+      }
+      if(playload.driverStatus === 'WORKING' && playload.leaveDate) {
+        ZMsg.error('在职状态不能填写离职时间');
+        return;
+      }
       const response = yield post(`${urlPrefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)

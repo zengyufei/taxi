@@ -10,7 +10,7 @@ export default extend({
   state: {
 
     page: {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -27,7 +27,7 @@ export default extend({
 
   reducers: {
     queryPageSuccess(state, { page = {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -41,7 +41,7 @@ export default extend({
     },
     toInfo(state, action) {
       let maintainList = []
-      if (action.maintain.maintainImage !== null) {
+      if (action.maintain.maintainImage) {
         maintainList = [{ uid: 0, url: UPLOAD_URL + action.maintain.maintainImage, status: 'done' }]
       }
       let plateList = []
@@ -52,7 +52,7 @@ export default extend({
     },
     toUpdate(state, action) {
       let maintainList = []
-      if (action.maintain.maintainImage !== null) {
+      if (action.maintain.maintainImage) {
         maintainList = [{ uid: 0, url: UPLOAD_URL + action.maintain.maintainImage, status: 'done' }]
       }
       let plateList = []
@@ -88,6 +88,12 @@ export default extend({
       })
     },
 
+    * reload(playload, { get, put, select }) {
+      const page = yield select(state => state[`${prefix}Store`].page)
+      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
+      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
+    },
+
     /**
      * 获取用户列表分页
      * @param playload 包含 pageNo pageSize account mobile roleId
@@ -109,13 +115,6 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.maintainStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
     // 修改
@@ -125,13 +124,6 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.maintainStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
     // 删除
@@ -141,7 +133,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.maintainStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
 
   },

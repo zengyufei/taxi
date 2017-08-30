@@ -29,7 +29,7 @@ export default extend({
     },
 
     * queryPage(payload, { getMessage, update }) {
-      const { result } = yield getMessage(queryPageUrl, payload, `${moduleName}列表`)
+      const { result } = yield getMessage(queryPageUrl, payload)
       yield update({ page: result })
     },
 
@@ -55,8 +55,10 @@ export default extend({
 
     * update(payload, { postConfirmLoading, put, diff, select }) {
       const { sysMember, page: { pageNo, pageSize } } = yield select(({ sysMemberStore }) => sysMemberStore)
-      const newSysMember = { ...sysMember, ...payload }
+      let newSysMember = { ...sysMember, ...payload }
       if (diff(sysMember, newSysMember)) {
+        delete newSysMember.password
+        delete newSysMember.lastLoginTime
         const { code, msg } = yield postConfirmLoading(updateUrl, newSysMember)
         if (code === 200) {
           ZMsg.success(msg)

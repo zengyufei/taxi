@@ -119,6 +119,7 @@ let List = option => {
             loading={loading}
             bordered
             pagination={{ // 分页
+              current: (page && +page.pageNo),
               total: (page && +page.totalCount) || 0, // 总数量
               pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页

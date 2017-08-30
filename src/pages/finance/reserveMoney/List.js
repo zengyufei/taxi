@@ -149,6 +149,7 @@ let index = option => {
             loading={loading}
             bordered
             pagination={{ // 分页
+              current: (page && +page.pageNo),
               total: (page && +page.totalCount) || 0, // 总数量
               pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
@@ -266,20 +267,36 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+        let values = form.getFieldsValue()
+        if (values) {
+          if (values.createTime) {
+            values.submitDateStart = moment(new Date(values.createTime)).format('YYYY-MM-DD')
+            values.submitDateEnd = moment(new Date(values.createTime)).format('YYYY-MM-DD')
+            delete values.createTime
+          }
+        }
         dispatch({
           type: 'reserveMoneyStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+        let values = form.getFieldsValue()
+        if (values) {
+          if (values.createTime) {
+            values.submitDateStart = moment(new Date(values.createTime)).format('YYYY-MM-DD')
+            values.submitDateEnd = moment(new Date(values.createTime)).format('YYYY-MM-DD')
+            delete values.createTime
+          }
+        }
         dispatch({
           type: 'reserveMoneyStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 

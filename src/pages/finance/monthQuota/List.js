@@ -14,7 +14,7 @@ const { tokenSessionKey } = constant
 
 let index = option => {
   const { loading, page, methods, form, res, register } = option
-  const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload } = methods
+  const { onSearch, toDetail, toAdd, toEdit, toExport, onShowSizeChange, onChange, handlerUpload, generate } = methods
 
   /**
    * 上传文件
@@ -29,6 +29,12 @@ let index = option => {
     <div>
       <ZButton permission="finance:monthQuota:insert">
         <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
+      </ZButton>
+      <ZButton permission="finance:monthQuota:insert">
+        <Button type="primary" icon="plus-circle-o" onClick={() => generate(false)}>上月新增</Button>&nbsp;
+      </ZButton>
+      <ZButton permission="finance:monthQuota:insert">
+        <Button type="primary" icon="plus-circle-o" onClick={() => generate(true)}>当月新增</Button>&nbsp;
       </ZButton>
       <ZButton permission="finance:monthQuota:export">
         <Popconfirm title="是否确定要导出" onConfirm={toExport} >
@@ -100,6 +106,7 @@ let index = option => {
             loading={loading}
             bordered
             pagination={{ // 分页
+              current: (page && +page.pageNo),
               total: (page && +page.totalCount) || 0, // 总数量
               pageSize: (page && +page.pageSize) || 10, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
@@ -159,6 +166,15 @@ const mapDispatchToProps = (dispatch, { form }) => {
           res: 'add',
         })
       },
+      /* 当月、上月 新增
+       currentMonth 区分上月、当月
+        */
+      generate(currentMonth) {
+        dispatch({
+          type: 'monthQuotaStore/generate',
+          currentMonth,
+        })
+      },
       /* 编辑 */
       toEdit(monthQuota) {
         dispatch({
@@ -184,20 +200,32 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+        let values = form.getFieldsValue()
+        if (values) {
+          if (values.yearMonth) {
+            values.yearMonth = moment(new Date(values.yearMonth)).format('YYYYMM')
+          }
+        }
         dispatch({
           type: 'monthQuotaStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+        let values = form.getFieldsValue()
+        if (values) {
+          if (values.yearMonth) {
+            values.yearMonth = moment(new Date(values.yearMonth)).format('YYYYMM')
+          }
+        }
         dispatch({
           type: 'monthQuotaStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 

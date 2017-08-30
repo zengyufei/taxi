@@ -1,6 +1,6 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 14:59:12 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 14:59:12
  * @Last Modified by: zengyufei
  * @Last Modified time: 2017-08-29 10:28:22
  */
@@ -128,19 +128,19 @@ let Add = options => {
         dispatch({
           type: 'driverStore/insert',
           ...values,
-          accidentInsuranceBeginDate: form.getFieldValue('insuranceRange') !== undefined ? form.getFieldValue('insuranceRange')[0].format('YYYY-MM-DD') : undefined,
-          accidentInsuranceEndDate: form.getFieldValue('insuranceRange') !== undefined ? form.getFieldValue('insuranceRange')[1].format('YYYY-MM-DD') : undefined,
-          licenseDate: form.getFieldValue('licenseDate') !== undefined ? form.getFieldValue('licenseDate').format('YYYY-MM-DD') : undefined,
-          licenseStartDate: form.getFieldValue('licenseRange') !== undefined ? form.getFieldValue('licenseRange')[0].format('YYYY-MM-DD') : undefined,
-          licenseEndDate: form.getFieldValue('licenseRange') !== undefined ? form.getFieldValue('licenseRange')[1].format('YYYY-MM-DD') : undefined,
-          entryDate: form.getFieldValue('entryDate') !== undefined ? form.getFieldValue('entryDate').format('YYYY-MM-DD') : undefined,
-          leaveDate: form.getFieldValue('leaveDate') !== undefined ? form.getFieldValue('leaveDate').format('YYYY-MM-DD') : undefined,
-          labourContractBeginDate: form.getFieldValue('labourRange') !== undefined ? form.getFieldValue('labourRange')[0].format('YYYY-MM-DD') : undefined,
-          labourContractEndDate: form.getFieldValue('labourRange') !== undefined ? form.getFieldValue('labourRange')[1].format('YYYY-MM-DD') : undefined,
-          manageContractBeginDate: form.getFieldValue('manageRange') !== undefined ? form.getFieldValue('manageRange')[0].format('YYYY-MM-DD') : undefined,
-          manageContractEndDate: form.getFieldValue('manageRange') !== undefined ? form.getFieldValue('manageRange')[1].format('YYYY-MM-DD') : undefined,
-          censusAreaCode: form.getFieldValue('censusAreaCode') !== undefined ? form.getFieldValue('censusAreaCode')[2] : undefined,
-          nativeAreaCode: form.getFieldValue('nativeAreaCode') !== undefined ? form.getFieldValue('nativeAreaCode')[2] : undefined,
+          accidentInsuranceBeginDate: form.getFieldValue('insuranceRange') ? form.getFieldValue('insuranceRange')[0].format('YYYY-MM-DD') : undefined,
+          accidentInsuranceEndDate: form.getFieldValue('insuranceRange') ? form.getFieldValue('insuranceRange')[1].format('YYYY-MM-DD') : undefined,
+          licenseDate: form.getFieldValue('licenseDate') ? form.getFieldValue('licenseDate').format('YYYY-MM-DD') : undefined,
+          licenseStartDate: form.getFieldValue('licenseRange') ? form.getFieldValue('licenseRange')[0].format('YYYY-MM-DD') : undefined,
+          licenseEndDate: form.getFieldValue('licenseRange') ? form.getFieldValue('licenseRange')[1].format('YYYY-MM-DD') : undefined,
+          entryDate: form.getFieldValue('entryDate') ? form.getFieldValue('entryDate').format('YYYY-MM-DD') : undefined,
+          leaveDate: form.getFieldValue('leaveDate') ? form.getFieldValue('leaveDate').format('YYYY-MM-DD') : undefined,
+          labourContractBeginDate: form.getFieldValue('labourRange') ? form.getFieldValue('labourRange')[0].format('YYYY-MM-DD') : undefined,
+          labourContractEndDate: form.getFieldValue('labourRange') ? form.getFieldValue('labourRange')[1].format('YYYY-MM-DD') : undefined,
+          manageContractBeginDate: form.getFieldValue('manageRange') ? form.getFieldValue('manageRange')[0].format('YYYY-MM-DD') : undefined,
+          manageContractEndDate: form.getFieldValue('manageRange') ? form.getFieldValue('manageRange')[1].format('YYYY-MM-DD') : undefined,
+          censusAreaCode: form.getFieldValue('censusAreaCode')[2],
+          nativeAreaCode: form.getFieldValue('nativeAreaCode')[2],
           insuranceRange: '',
           labourRange: '',
           manageRange: '',

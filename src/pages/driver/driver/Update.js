@@ -130,17 +130,17 @@ let Update = options => {
         dispatch({
           type: 'driverStore/update',
           ...values,
-          accidentInsuranceBeginDate: form.getFieldValue('insuranceRange') !== undefined ? form.getFieldValue('insuranceRange')[0].format('YYYY-MM-DD') : undefined,
-          accidentInsuranceEndDate: form.getFieldValue('insuranceRange') !== undefined ? form.getFieldValue('insuranceRange')[1].format('YYYY-MM-DD') : undefined,
-          licenseDate: form.getFieldValue('licenseDate') !== undefined ? form.getFieldValue('licenseDate').format('YYYY-MM-DD') : undefined,
-          licenseStartDate: form.getFieldValue('licenseRange') !== undefined ? form.getFieldValue('licenseRange')[0].format('YYYY-MM-DD') : undefined,
-          licenseEndDate: form.getFieldValue('licenseRange') !== undefined ? form.getFieldValue('licenseRange')[1].format('YYYY-MM-DD') : undefined,
-          entryDate: form.getFieldValue('entryDate') !== undefined ? form.getFieldValue('entryDate').format('YYYY-MM-DD') : undefined,
-          leaveDate: form.getFieldValue('leaveDate') !== undefined ? form.getFieldValue('leaveDate').format('YYYY-MM-DD') : undefined,
-          labourContractBeginDate: form.getFieldValue('labourRange') !== undefined ? form.getFieldValue('labourRange')[0].format('YYYY-MM-DD') : undefined,
-          labourContractEndDate: form.getFieldValue('labourRange') !== undefined ? form.getFieldValue('labourRange')[1].format('YYYY-MM-DD') : undefined,
-          manageContractBeginDate: form.getFieldValue('manageRange') !== undefined ? form.getFieldValue('manageRange')[0].format('YYYY-MM-DD') : undefined,
-          manageContractEndDate: form.getFieldValue('manageRange') !== undefined ? form.getFieldValue('manageRange')[1].format('YYYY-MM-DD') : undefined,
+          accidentInsuranceBeginDate: form.getFieldValue('insuranceRange') ? form.getFieldValue('insuranceRange')[0].format('YYYY-MM-DD') : undefined,
+          accidentInsuranceEndDate: form.getFieldValue('insuranceRange') ? form.getFieldValue('insuranceRange')[1].format('YYYY-MM-DD') : undefined,
+          licenseDate: form.getFieldValue('licenseDate') ? form.getFieldValue('licenseDate').format('YYYY-MM-DD') : undefined,
+          licenseStartDate: form.getFieldValue('licenseRange') ? form.getFieldValue('licenseRange')[0].format('YYYY-MM-DD') : undefined,
+          licenseEndDate: form.getFieldValue('licenseRange') ? form.getFieldValue('licenseRange')[1].format('YYYY-MM-DD') : undefined,
+          entryDate: form.getFieldValue('entryDate') ? form.getFieldValue('entryDate').format('YYYY-MM-DD') : undefined,
+          leaveDate: form.getFieldValue('leaveDate') ? form.getFieldValue('leaveDate').format('YYYY-MM-DD') : undefined,
+          labourContractBeginDate: form.getFieldValue('labourRange') ? form.getFieldValue('labourRange')[0].format('YYYY-MM-DD') : undefined,
+          labourContractEndDate: form.getFieldValue('labourRange') ? form.getFieldValue('labourRange')[1].format('YYYY-MM-DD') : undefined,
+          manageContractBeginDate: form.getFieldValue('manageRange') ? form.getFieldValue('manageRange')[0].format('YYYY-MM-DD') : undefined,
+          manageContractEndDate: form.getFieldValue('manageRange') ? form.getFieldValue('manageRange')[1].format('YYYY-MM-DD') : undefined,
           censusAreaCode: form.getFieldValue('censusAreaCode')[2],
           nativeAreaCode: form.getFieldValue('nativeAreaCode')[2],
           insuranceRange: '',
@@ -161,6 +161,10 @@ let Update = options => {
     dispatch({
       type: 'driverStore/toPage',
     })
+  }
+  let leaveDateStatus = false;
+  if(driver.leaveDate){
+    leaveDateStatus = true;
   }
 
   /** 是否购买意外保险 */
@@ -586,9 +590,11 @@ let Update = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('leaveDate', {
-                    initialValue: moment(driver.leaveDate),
-                  })(<DatePicker />)}
+                  {leaveDateStatus ?
+                    getFieldDecorator('leaveDate', { initialValue: moment(driver.leaveDate)})(<DatePicker />)
+                    :
+                    getFieldDecorator('leaveDate')(<DatePicker />)
+                  }
                 </FormItem>
                 <FormItem
                   {...formItemLayout}

@@ -30,7 +30,7 @@ export default extend({
 
   reducers: {
     queryPageSuccess(state, { page = {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -67,15 +67,15 @@ export default extend({
         plateList = [{ uid: 0, url: UPLOAD_URL + action.car.plateImage, status: 'done' }]
       }
       let ownershipList = []
-      if (action.car.ownershipImage !== null) {
+      if (action.car.ownershipImage) {
         ownershipList = [{ uid: 0, url: UPLOAD_URL + action.car.ownershipImage, status: 'done' }]
       }
       let roadTransportList = []
-      if (action.car.roadTransportImage !== null) {
+      if (action.car.roadTransportImage) {
         roadTransportList = [{ uid: 0, url: UPLOAD_URL + action.car.roadTransportImage, status: 'done' }]
       }
       let certificateList = []
-      if (action.car.certificateImage !== null) {
+      if (action.car.certificateImage) {
         certificateList = [{ uid: 0, url: UPLOAD_URL + action.car.certificateImage, status: 'done' }]
       }
 
@@ -98,15 +98,15 @@ export default extend({
         plateList = [{ uid: 0, url: UPLOAD_URL + action.car.plateImage, status: 'done' }]
       }
       let ownershipList = []
-      if (action.car.ownershipImage !== null) {
+      if (action.car.ownershipImage) {
         ownershipList = [{ uid: 0, url: UPLOAD_URL + action.car.ownershipImage, status: 'done' }]
       }
       let roadTransportList = []
-      if (action.car.roadTransportImage !== null) {
+      if (action.car.roadTransportImage) {
         roadTransportList = [{ uid: 0, url: UPLOAD_URL + action.car.roadTransportImage, status: 'done' }]
       }
       let certificateList = []
-      if (action.car.certificateImage !== null) {
+      if (action.car.certificateImage) {
         certificateList = [{ uid: 0, url: UPLOAD_URL + action.car.certificateImage, status: 'done' }]
       }
       return { ...state,
@@ -158,6 +158,12 @@ export default extend({
       })
     },
 
+    * reload(playload, { get, put, select }) {
+      const page = yield select(state => state[`${prefix}Store`].page)
+      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
+      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
+    },
+
     /**
      * 获取用户列表分页
      * @param playload 包含 pn ps account mobile roleId
@@ -188,13 +194,6 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.carStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
     // 修改
@@ -204,7 +203,7 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.carStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 删除
     * deleteById({ id }, { get, put, select }) {
@@ -213,13 +212,6 @@ export default extend({
         ZMsg.success(response.msg)
         const page = yield select(state => state.carStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
 

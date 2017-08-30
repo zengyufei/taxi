@@ -28,21 +28,21 @@ class PermissionComponet extends React.Component {
   onChangePower(checkedValues, item) {
     const { updateState } = this.props
     let { resources, roleResIdList, resourceMapByParentResNo } = this.state
-    const selectedIds = _.map(_.map(_.filter(resources, e => _.includes(checkedValues, e.resNo)), 'id'), e => `${e}`)
-    if (+item.hierarchy === 1) {
+    const selectedIds = _.map(_.map(_.filter(resources, e => _.includes(checkedValues, e.resNo)), 'id'), e => +e)
+    if (+item.hierarchy === 'one') {
       if (selectedIds.length) {
         roleResIdList = _.concat(roleResIdList, selectedIds)
       } else {
-        _.remove(roleResIdList, e => e === `${item.id}`)
+        _.remove(roleResIdList, e => e === +item.id)
       }
     } else {
-      const deleteArray = _.map(_.map(resourceMapByParentResNo[item.resNo], 'id'), e => `${e}`)
+      const deleteArray = _.map(_.map(resourceMapByParentResNo[item.resNo], 'id'), e => +e)
       _.remove(roleResIdList, e => _.includes(deleteArray, e))
       roleResIdList = _.concat(roleResIdList, selectedIds)
       if (selectedIds.length === item.childrenResNo.length) {
-        roleResIdList = _.concat(roleResIdList, `${item.id}`)
+        roleResIdList = _.concat(roleResIdList, +item.id)
       } else if (selectedIds.length === 0) {
-        _.remove(roleResIdList, e => e === `${item.id}`)
+        _.remove(roleResIdList, e => e === +item.id)
       }
     }
     this.setState({ roleResIdList, key: `${item.id}${roleResIdList.length}` })
@@ -61,13 +61,13 @@ class PermissionComponet extends React.Component {
       render: (text, record) => {
         let options
         let values = []
-        if (record.hierarchy === 1) {
+        if (record.hierarchy === 'one') {
           options = [{ label: '查看', value: record.resNo }]
           record.childrenResNo = [record.resNo]
-          if (_.includes(roleResIdList, `${record.id}`)) {
+          if (_.includes(roleResIdList, record.id)) {
             values = record.childrenResNo
           }
-        } else if (record.hierarchy === 2) {
+        } else if (record.hierarchy === 'two') {
           options = _.transform(resourceMapByParentResNo[record.resNo], (result, resource) => {
             result.push({
               label: resource.resName,
@@ -77,18 +77,18 @@ class PermissionComponet extends React.Component {
           record.childrenResNo = _.transform(resourceMapByParentResNo[record.resNo], (result, resource) => {
             result.push(resource.resNo)
           }, [])
-          const idsArray = _.map(_.map(resourceMapByParentResNo[record.resNo], 'id'), e => `${e}`)
+          const idsArray = _.map(_.map(resourceMapByParentResNo[record.resNo], 'id'), e => +e)
           if (_.intersection(roleResIdList, idsArray).length === idsArray.length) {
             values = record.childrenResNo
             values.push(record.resNo)
           } else {
             values = _.transform(resourceMapByParentResNo[record.resNo], (result, resource) => {
-              if (_.includes(roleResIdList, `${resource.id}`)) {
+              if (_.includes(roleResIdList, +resource.id)) {
                 result.push(resource.resNo)
               }
             }, [])
             if (!values.length) {
-              _.remove(roleResIdList, e => e === `${record.id}`)
+              _.remove(roleResIdList, e => e === +record.id)
             }
           }
         }
@@ -102,23 +102,23 @@ class PermissionComponet extends React.Component {
     const rowSelection = {
       onSelect: (record, selected) => {
         if (selected) {
-          if (record.hierarchy === 1) {
-            _.remove(roleResIdList, e => e === `${record.id}`)
-            roleResIdList = _.concat(roleResIdList, `${record.id}`)
-          } else if (record.hierarchy === 2) {
+          if (record.hierarchy === 'one') {
+            _.remove(roleResIdList, e => e === +record.id)
+            roleResIdList = _.concat(roleResIdList, +record.id)
+          } else if (record.hierarchy === 'two') {
             const deleteArray = _.transform(resourceMapByParentResNo[record.resNo], (result, resource) => {
-              result.push(`${resource.id}`)
+              result.push(+resource.id)
             }, [])
             _.remove(roleResIdList, e => _.includes(deleteArray, e))
-            roleResIdList = _.concat(roleResIdList, `${record.id}`, _.transform(resourceMapByParentResNo[record.resNo], (result, resource) => {
-              result.push(`${resource.id}`)
+            roleResIdList = _.concat(roleResIdList, +record.id, _.transform(resourceMapByParentResNo[record.resNo], (result, resource) => {
+              result.push(+resource.id)
             }, []))
           }
-        } else if (record.hierarchy === 1) {
-          _.remove(roleResIdList, e => e === `${record.id}`)
-        } else if (record.hierarchy === 2) {
+        } else if (record.hierarchy === 'one') {
+          _.remove(roleResIdList, e => e === +record.id)
+        } else if (record.hierarchy === 'two') {
           const deleteArray = _.transform(resourceMapByParentResNo[record.resNo], (result, resource) => {
-            result.push(`${resource.id}`)
+            result.push(+resource.id)
           }, [])
           _.remove(roleResIdList, e => _.includes(deleteArray, e))
         }
@@ -127,7 +127,7 @@ class PermissionComponet extends React.Component {
       },
       onSelectAll: selected => {
         if (selected) {
-          const allIds = _.map(_.map(resources, 'id'), e => `${e}`)
+          const allIds = _.map(_.map(resources, 'id'), e => +e)
           this.setState({ roleResIdList: allIds })
           updateState(allIds)
         } else {
@@ -136,7 +136,7 @@ class PermissionComponet extends React.Component {
         }
       },
       getCheckboxProps: record => ({
-        defaultChecked: _.includes(roleResIdList, `${record.id}`),
+        defaultChecked: _.includes(roleResIdList, +record.id) || _.includes(roleResIdList, `${record.id}`),
       }),
     }
 
@@ -171,10 +171,6 @@ function mapStateToProps({ loading, rbacStore }) {
 }
 
 
-/**
- * @param dispatch 从 connect 获得
- * @param form 从上层建筑获得
- */
 function mapDispatchToProps(dispatch) {
   return {
 

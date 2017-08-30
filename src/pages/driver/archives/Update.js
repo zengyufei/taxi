@@ -61,7 +61,7 @@ let Update = options => {
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
       type: 'driverStore/toPage',
     })

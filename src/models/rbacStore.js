@@ -118,8 +118,9 @@ export default extend({
 
       yield tableBindType({
         roleId: value => {
+          if (value === 1) return '管理员'
           if (value) { return roleMap[value] && roleMap[value].roleName }
-          return '无角色'
+          return ''
         },
       })
 

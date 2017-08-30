@@ -10,7 +10,7 @@ export default extend({
   state: {
 
     page: {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -33,7 +33,7 @@ export default extend({
 
   reducers: {
     queryPageSuccess(state, { page = {
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       totalCount: 0,
       dataList: [],
@@ -61,19 +61,19 @@ export default extend({
     },
     toEdit(state, action) {
       let insuranceList = []
-      if (action.insurance.insuranceFile !== null) {
+      if (action.insurance.insuranceFile) {
         insuranceList = [{ uid: 0, url: UPLOAD_URL + action.insurance.insuranceFile, status: 'done' }]
       }
       let plateList = []
       if (action.insurance.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.insurance.plateImage, status: 'done' }]
       }
-      let oneInsurance = false, 
-twoInsurance = false, 
-threeInsurance = false, 
-fourInsurance = false, 
-fiveInsurance = false
-      if (action.insurance.bizInsuranceStr !== undefined && action.insurance.bizInsuranceStr !== null) {
+      let oneInsurance = false,
+        twoInsurance = false,
+        threeInsurance = false,
+        fourInsurance = false,
+        fiveInsurance = false
+      if (action.insurance.bizInsuranceStr) {
         action.insurance.bizInsuranceStr.split(',').forEach(value => {
           if (value.split('_').includes('车损险赔偿金额')) {
             oneInsurance = true
@@ -108,7 +108,7 @@ fiveInsurance = false
     },
     toInfo(state, action) {
       let insuranceList = []
-      if (action.insurance.insuranceFile !== null) {
+      if (action.insurance.insuranceFile) {
         insuranceList = [{ uid: 0, url: UPLOAD_URL + action.insurance.insuranceFile, status: 'done' }]
       }
       let plateList = []
@@ -165,6 +165,12 @@ fiveInsurance = false
       yield formBindType({
       })
     },
+    * reload(playload, { get, put, select }) {
+      const page = yield select(state => state[`${prefix}Store`].page)
+      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
+      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
+    },
+
 
     *queryPage(playload, {get, put}) {  // eslint-disable-line
       const response = yield get(`${prefix}/queryPage`, playload)
@@ -243,18 +249,11 @@ fiveInsurance = false
     },
     // 修改
     * updateNotNull(playload, { post, put, select }) {
-      const response = yield post(`${prefix}/updateNotNull`, playload)
+      const response = yield post(`${prefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
         const page = yield select(state => state.insuranceStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
     // 删除
@@ -264,7 +263,7 @@ fiveInsurance = false
         ZMsg.success(response.msg)
         const page = yield select(state => state.insuranceStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else { ZMsg.error(response.msg) }
+      }
     },
     // 保险种类
     * inInsurance({ oneInsurance, twoInsurance, threeInsurance, fourInsurance, fiveInsurance }, { put }) {
