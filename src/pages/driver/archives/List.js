@@ -155,52 +155,62 @@ const mapDispatchToProps = (dispatch, { form }) => {
       /** 即将到期和已到期 */
       accidentring () {
         dispatch({
-          type: 'driverStore/queryPage',
-          insurance: '1',
-          accidentInsuranceEndDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+          type: 'driverStore/warnList',
+          warningEnum: 'accidentInsuranceEndDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
         })
       },
-      accident() {
+      accident () {
         dispatch({
-          type: 'driverStore/queryPage',
-          insurance: '1',
-          accidentInsuranceEndDate: moment().format('YYYY-MM-DD'),
+          type: 'driverStore/warnList',
+          warningEnum: 'accidentInsuranceEndDate',
+          endDate: moment().format('YYYY-MM-DD'),
         })
       },
-      licensering() {
+      licensering () {
         dispatch({
-          type: 'driverStore/queryPage',
-          licenseEndDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+          type: 'driverStore/warnList',
+          warningEnum: 'licenseEndDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
         })
       },
-      license() {
+      license () {
         dispatch({
-          type: 'driverStore/queryPage',
-          licenseEndDate: moment().format('YYYY-MM-DD'),
+          type: 'driverStore/warnList',
+          warningEnum: 'licenseEndDate',
+          endDate: moment().format('YYYY-MM-DD'),
         })
       },
-      labourring() {
+      labourring () {
         dispatch({
-          type: 'driverStore/queryPage',
-          labourContractEndDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+          type: 'driverStore/warnList',
+          warningEnum: 'labourContractEndDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
         })
       },
-      labour() {
+      labour () {
         dispatch({
-          type: 'driverStore/queryPage',
-          labourContractEndDate: moment().format('YYYY-MM-DD'),
+          type: 'driverStore/warnList',
+          warningEnum: 'labourContractEndDate',
+          endDate: moment().format('YYYY-MM-DD'),
         })
       },
       managering () {
         dispatch({
-          type: 'driverStore/queryPage',
-          manageContractEndDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+          type: 'driverStore/warnList',
+          warningEnum: 'manageContractEndDate',
+          startDate: moment().format('YYYY-MM-DD'),
+          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
         })
       },
       manage () {
         dispatch({
-          type: 'driverStore/queryPage',
-          manageContractEndDate: moment().format('YYYY-MM-DD'),
+          type: 'driverStore/warnList',
+          warningEnum: 'manageContractEndDate',
+          endDate: moment().format('YYYY-MM-DD'),
         })
       },
 

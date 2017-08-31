@@ -65,7 +65,7 @@ let Update = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'maintainStore/reload',
+      type: 'maintainStore/toPage',
     })
   }
 

@@ -1,3 +1,4 @@
+import qs from 'qs'
 import FilterBox from '../FilterBox'
 /**
  * 搜索栏组件
@@ -13,7 +14,7 @@ function SearchBar(props) {
     btns, searchCacheKey, fields, searchFields,
   }
   return (
-    <FilterBox {...filterBoxProps} formProps={formProps} />
+    <FilterBox key={qs.stringify(formProps.item || {})} {...filterBoxProps} formProps={formProps} />
   )
 }
 

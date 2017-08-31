@@ -50,6 +50,9 @@ export default extend({
       }
       return { ...state, pageState: true, res: action.res, carOperateLog: action.carOperateLog, plateList }
     },
+    toPage(state) {
+      return { ...state, pageState: false }
+    },
 
     lookPreview(state, { previewImage, previewVisible }) {
       return { ...state, previewImage, previewVisible }
@@ -68,12 +71,6 @@ export default extend({
 
       yield formBindType({
       })
-    },
-
-    * reload(playload, { get, put, select }) {
-      const page = yield select(state => state[`${prefix}Store`].page)
-      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
-      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
     },
 
     * queryPage(playload, { get, put }) {

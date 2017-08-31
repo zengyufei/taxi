@@ -1,8 +1,8 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 14:07:02 
- * @Last Modified by: zengyufei 
- * @Last Modified time: 2017-08-25 14:07:02 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 14:07:02
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 14:07:02
  */
 import TweenOne from 'rc-tween-one'
 
@@ -80,8 +80,10 @@ let Add = options => {
     })
   }
 
+  let carno = form.getFieldValue('carNo');
   /** 模糊查询 车辆自编号 */
   const handleSearch = value => {
+    carno = value;
     dispatch({
       type: 'driverCommonStore/queryLikeCarNo',
       str: value,
@@ -97,7 +99,7 @@ let Add = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'maintainStore/reload',
+      type: 'maintainStore/toPage',
     })
   }
 
@@ -177,7 +179,7 @@ let Add = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('plateNumber', { initialValue: car ? car.plateNumber : '',
+                  {getFieldDecorator('plateNumber', { initialValue: car && car.carNo === carno ? car.plateNumber : '',
                   })(
                     <Input disabled />
                   )}

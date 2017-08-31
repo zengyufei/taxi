@@ -83,6 +83,8 @@ const fields = [
     key: 'birthday',
     name: '生日',
     type: 'date'
+    // format: false, // 如果需要 moment 对象，可以设置为 false
+    // format: 'YYYYMMDD' //自定义时间类型格式化，但type: date 只能操作 年月日， datetime 可以操作 年月日 时分秒
   }, {
     key: 'desc',
     name: '自我介绍',

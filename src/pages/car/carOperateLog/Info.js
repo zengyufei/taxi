@@ -44,7 +44,7 @@ let Info = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'carOperateLogStore/reload',
+      type: 'carOperateLogStore/toPage',
     })
   }
 

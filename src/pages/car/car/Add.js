@@ -1,16 +1,19 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-08-31 17:27:18 
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-31 17:40:46
  */
 import TweenOne from 'rc-tween-one'
 
 import { connect } from 'dva'
 import { Form, Input, Icon, Select, Row, Col,
   Button, Card, DatePicker, Upload, Modal } from 'antd'
+
+import { prefix, storeName,
+  searchCacheKey, defaultSearchFields, allSearchFields, uploadAction, exportFileParam, // 搜索条
+  defaultTableFields, // 表格
+} from './constant'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
@@ -19,7 +22,8 @@ const Option = Select.Option
 const Add = options => {
   const { dispatch, form } = options
   const { getFieldDecorator } = form
-  const { previewVisible, previewImage, plateList, ownershipList, roadTransportList, certificateList, plateImage, ownershipImage, roadTransportImage, certificateImage } = options
+  const { plateList, ownershipList, roadTransportList, certificateList, previewVisible, previewImage, plateImage, ownershipImage, roadTransportImage, certificateImage } = options[storeName]
+
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -91,7 +95,7 @@ const Add = options => {
         const roadTransportEndDate = form.getFieldValue('roadTransportEndDate') ? form.getFieldValue('roadTransportEndDate').format('YYYY-MM-DD') : null
 
         dispatch({
-          type: 'carStore/insert',
+          type: `${storeName}/insert`,
           ...values,
           ownershipBeginDate,
           ownershipEndDate,
@@ -110,35 +114,35 @@ const Add = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'carStore/reload',
+      type: `${storeName}/toPage`,
     })
   }
 
   // 上传车辆车牌图片
   const plateChange = ({ fileList }) => {
     dispatch({
-      type: 'carStore/plateChange',
+      type: `${storeName}/plateChange`,
       plateList: fileList,
     })
   }
   // 上传车辆产权证图片
   const ownershipChange = ({ fileList }) => {
     dispatch({
-      type: 'carStore/ownershipChange',
+      type: `${storeName}/ownershipChange`,
       ownershipList: fileList,
     })
   }
   // 上传车辆道路运输证 图片
   const roadTransportChange = ({ fileList }) => {
     dispatch({
-      type: 'carStore/roadTransportChange',
+      type: `${storeName}/roadTransportChange`,
       roadTransportList: fileList,
     })
   }
   // 上传车辆机动车登记证书图片
   const certificateChange = ({ fileList }) => {
     dispatch({
-      type: 'carStore/certificateChange',
+      type: `${storeName}/certificateChange`,
       certificateList: fileList,
     })
   }
@@ -147,7 +151,7 @@ const Add = options => {
   // 预览图片
   const handlePreview = file => {
     dispatch({
-      type: 'carStore/lookPreview',
+      type: `${storeName}/lookPreview`,
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     })
@@ -155,7 +159,7 @@ const Add = options => {
   // 删除图片
   const handleCancel = () => {
     dispatch({
-      type: 'carStore/unlookPreview',
+      type: `${storeName}/unlookPreview`,
     })
   }
   // 添加图片样式
@@ -495,19 +499,9 @@ const Add = options => {
   )
 }
 
-function mapStateToProps({ carStore }) {
+function mapStateToProps(state) {
   return {
-    plateList: carStore.plateList,
-    ownershipList: carStore.ownershipList,
-    roadTransportList: carStore.roadTransportList,
-    certificateList: carStore.certificateList,
-    previewVisible: carStore.previewVisible,
-    previewImage: carStore.previewImage,
-    plateImage: carStore.plateImage,
-    ownershipImage: carStore.ownershipImage,
-    roadTransportImage: carStore.roadTransportImage,
-    certificateImage: carStore.certificateImage,
-
+    [storeName]: state[storeName],
   }
 }
 

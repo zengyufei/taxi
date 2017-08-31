@@ -28,6 +28,9 @@ const Routers = function({ history, app }) {
           registerModel(app, require('models/commonStore'))
         }, 'root')
       }, */
+      /* childRoutes: (r => {
+        return r.keys().map(key => r(key));
+    })(require.context('./', true, /^\.\/modules\/((?!\/)[\s\S])+\/route\.js$/)) */
       childRoutes: [
         ...require('./rbac')(app, authenticated),
         ...require('./car')(app, authenticated),

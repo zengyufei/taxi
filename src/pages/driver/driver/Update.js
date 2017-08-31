@@ -141,8 +141,8 @@ let Update = options => {
           labourContractEndDate: form.getFieldValue('labourRange') ? form.getFieldValue('labourRange')[1].format('YYYY-MM-DD') : undefined,
           manageContractBeginDate: form.getFieldValue('manageRange') ? form.getFieldValue('manageRange')[0].format('YYYY-MM-DD') : undefined,
           manageContractEndDate: form.getFieldValue('manageRange') ? form.getFieldValue('manageRange')[1].format('YYYY-MM-DD') : undefined,
-          censusAreaCode: form.getFieldValue('censusAreaCode')[2],
-          nativeAreaCode: form.getFieldValue('nativeAreaCode')[2],
+          censusAreaCode: form.getFieldValue('censusAreaCode') ? form.getFieldValue('censusAreaCode')[2] : undefined,
+          nativeAreaCode: form.getFieldValue('nativeAreaCode') ? form.getFieldValue('nativeAreaCode')[2] : undefined,
           insuranceRange: '',
           labourRange: '',
           manageRange: '',
@@ -268,11 +268,12 @@ let Update = options => {
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
-                  label={(
-                    <span>
-                        从业资格证号&nbsp;
-                    </span>
-                  )}
+                    label={(
+                      <span>
+                          从业资格证号&nbsp;
+                      </span>
+                    )}
+                  help="从业资格证号 为 身份证号码"
                   hasFeedback
                 >
                   {getFieldDecorator('qualificationNo', {
@@ -632,6 +633,7 @@ let Update = options => {
                   )}
                 >
                   {getFieldDecorator('emergencyContact', {
+                    rules: [{ required: true, message: '请输入紧急联系人!' }],
                     initialValue: driver.emergencyContact,
                   })(<Input />)}
                 </FormItem>
@@ -644,7 +646,7 @@ let Update = options => {
                   )}
                 >
                   {getFieldDecorator('emergencyMobile', {
-                    rules: [{ pattern: /^1[34578]\d{9}$/, message: '手机格式错误!' }],
+                    rules: [{ required: true, message: '请输入紧急联系人号码!' }, { pattern: /^1[34578]\d{9}$/, message: '手机格式错误!' }],
                     initialValue: driver.emergencyMobile,
                   })(<Input />)}
                 </FormItem>

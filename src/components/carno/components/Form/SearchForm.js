@@ -1,3 +1,4 @@
+import qs from 'qs'
 import Utils from 'carno/utils'
 import { Form, Button, Row, Col } from 'antd'
 import styles from './index.less'
@@ -19,7 +20,8 @@ const FormItem = Form.Item
  *
  */
 const HSearchForm = option => {
-  const { fields, search = {}, form, showLabel, showReset, onSearch, onReset, formItemLayout = {} } = option
+  const { fields, item = {}, form, showLabel = true, showReset, onSearch, onReset, formItemLayout = {} } = option
+
   const assginFormItemLayout = {
     btnCol: {
       span: 6,
@@ -41,7 +43,7 @@ const HSearchForm = option => {
   }
 
   return (
-    <Form layout="inline" >
+    <Form layout="inline">
       <Row>
         {fields.map((field, index) => {
           const finalFormItemLayout = { assginFormItemLayout, ...field.formItemLayout }
@@ -50,7 +52,7 @@ const HSearchForm = option => {
           const wrapperCol = finalFormItemLayout.wrapperCol || { span: showLabel ? 16 : 24 }
           return (<Col {...itemCol} key={`itemKey${index}`}>
             <FormItem className={styles.formItem} label={getLabelName(field)} help={field.help} key={field.key} labelCol={labelCol} wrapperCol={wrapperCol} >
-              {FormUtil.createFieldDecorator(field, search, form.getFieldDecorator)}
+              {FormUtil.createFieldDecorator(field, item, form.getFieldDecorator)}
             </FormItem>
           </Col>)
         }

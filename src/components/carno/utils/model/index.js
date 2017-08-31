@@ -47,6 +47,7 @@ const getDefaultModel = () => {
     // 为了兼容旧版本，初始值依旧为false.如果应用中需要多个控制状态，则在model中覆盖初始属性
     state: {
       init: false,
+      initValues: {},
       visible: false,
       spinning: false,
       loading: false,
@@ -125,13 +126,13 @@ const enhanceSubscriptions = (subscriptions = {}) => {
             const _pathReg = key
             const _action = listeners[key]
             const match = pathToRegexp(_pathReg).exec(pathname)
-
             if (match) {
               if (typeof _action === 'object') {
                 dispatch(_action)
               } else if (typeof _action === 'function') {
                 _action({ ...location, params: match.slice(1) })
               }
+              dispatch({ type: 'updateState', initValues: {} })
             }
           })
         })

@@ -1,41 +1,40 @@
-/**
- * 依赖的摆放顺序是：
- * 1. 非按需加载在最上面
- * 2. 按需加载的在下面
- * 3. 按长度从短到长
- * 4. 从对象再获取对象点出来的在按需加载下面
- * 5. 本系统业务对象在最下面，且路径不应该为相对路径，应为别名路径，别名查看 webpack.config.js
- */
 import { connect } from 'dva'
 import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
-import qs from 'qs'
-import moment from 'moment'
 
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
 import { getFields, getSearchFields } from 'FormUtils'
 
-import CarAdd from './Add.js'
-import CarUpdate from './Update.js'
-import CarInfo from './Info.js'
+import Add from './Add'
+import Update from './Update'
+import Info from './Info'
 
-const { tokenSessionKey } = constant
+import { tokenSessionKey, storeName,
+  searchCacheKey, defaultSearchFields, allSearchFields, uploadAction, exportFileParam, // 搜索条
+  defaultTableFields, // 表格
+} from './constant'
+
+const changeComponent = {
+  Add: <Add key="Add" />,
+  Update: <Update key="Update" />,
+  Info: <Info key="Info" />,
+}
 
 const List = options => {
-  const { loading, form, methods, page, res, pageState } = options
-  const { toInfo, toEdit, exportCar, toAdd, onSearch, onShowSizeChange, onChange, upload
-    , roadTransporting, roadTransport, ownershiping, ownership } = methods
+  const { loading, form, methods } = options
+  const { initValues, page: { pageNo = 1, pageSize = 10, dataList = [], totalCount = 0 }, pageState, res } = options[storeName]
+  const { toInfo, toEdit, exportFile, exportExample, toAdd, onSearch, onReset, onShowSizeChange, onChange, handlerUpload, roadTransporting, roadTransport, ownershiping, ownership } = methods
 
   /**
-   * 上传文件
+   * 搜索条
    */
-  const importCar = {
+  const uploadProps = {
     name: 'file',
-    action: `${BASE_URL}/car/import.htm?token=${session.get(tokenSessionKey)}`,
+    action: uploadAction,
     headers: {
-      authorization: 'authorization-text',
+      token: session.get(tokenSessionKey),
     },
-    onChange: upload,
+    onChange: handlerUpload,
   }
   const btns = (
     <div>
@@ -44,32 +43,35 @@ const List = options => {
       <Button type="primary" icon="close-circle-o" onClick={roadTransport}>道路运输证已过期</Button>&nbsp;
       <Button type="primary" icon="clock-circle-o" onClick={ownershiping}>产权证即将过期</Button>&nbsp;
       <Button type="primary" icon="close-circle-o" onClick={ownership}>产权证已过期</Button>&nbsp;
-      <Popconfirm title="是否确定要导出" onConfirm={exportCar} >
+      <Popconfirm title="是否确定要导出" onConfirm={exportFile} >
         <Button type="primary" icon="export">导出</Button>&nbsp;
       </Popconfirm>
-      <Upload {...importCar}>
+      <Upload {...uploadProps}>
         <Button type="primary" icon="download">导入</Button>
       </Upload>
+      <Button type="primary" icon="export" onClick={exportExample}>下载导入模板</Button>&nbsp;
     </div>
   )
   const searchBarProps = {
     form,
-    showLabel: true,
-    showReset: true,
+    showReset: !!Object.keys(initValues).length,
     btns,
-    searchCacheKey: 'car_condin',
-    searchFields: getSearchFields(searchFields).values(),
-    fields: getFields(searchFields, local.get('car_condin') || ['carNo', 'plateNumber', 'carType']).values(),
+    searchCacheKey,
+    searchFields: getSearchFields(fields, allSearchFields).values(),
+    fields: getFields(fields, local.get(searchCacheKey) || defaultSearchFields).values(),
     item: {
+      ...initValues, // 搜索框查询后 回显
     },
     onSearch,
-    onReset: onSearch,
+    onReset,
   }
 
+  /**
+   * 表格
+   */
   const operatorColumn = [{
     key: 'operator',
     name: '操作',
-    // 扩展字段的render支持自定义渲染
     render: (text, record) => {
       return (
         <span>
@@ -81,41 +83,32 @@ const List = options => {
       )
     },
   }]
-  const tableColumns = getColumns(fields).enhance(operatorColumn).values()
+  const tableColumns = getColumns(fields, defaultTableFields).enhance(operatorColumn).values()
 
-
-  let pageSwitch
-  if (res === 'carAdd') {
-    pageSwitch = <CarAdd key="carAdd" />
-  } else if (res === 'carUpdate') {
-    pageSwitch = <CarUpdate key="carUpdate" />
-  } else if (res === 'carInfo') {
-    pageSwitch = <CarInfo key="carInfo" />
-  }
   return (
     <div>
       {
-        pageState ? pageSwitch : <div>
+        pageState ? changeComponent[res] : <div>
           <div style={{ padding: '20px' }}>
             <ZSearch {...searchBarProps} />
           </div>
 
           <Table
             rowKey="id"
-            dataSource={(page && page.dataList) || []}
+            dataSource={dataList}
             columns={tableColumns}
             loading={loading}
             bordered
             pagination={{ // 分页
-              current: (page && +page.pageNo),
-              total: (page && +page.totalCount) || 0, // 总数量
-              pageSize: (page && +page.pageSize) || 10, // 显示几条一页
+              current: pageNo,
+              total: totalCount, // 总数量
+              pageSize, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
               showSizeChanger: true, // 是否显示可以设置几条一页的选项
               onShowSizeChange,
               onChange,
               showTotal() { // 设置显示一共几条数据
-                return `共 ${(page && page.totalCount) || 0} 条数据`
+                return `共 ${totalCount} 条数据`
               },
             }}
           />
@@ -125,54 +118,41 @@ const List = options => {
   )
 }
 
-function mapStateToProps({ loading, carStore }) {
+function mapStateToProps(state) {
   return {
-    loading: loading.models.carStore,
-    page: carStore.page,
-    pageState: carStore.pageState,
-    res: carStore.res,
-    car: carStore.car,
+    loading: state.loading.models[storeName],
+    [storeName]: state[storeName],
   }
 }
-
 
 const mapDispatchToProps = (dispatch, { form }) => {
   return {
     methods: {
-      queryPage() {
+
+      onSearch(values) {
         dispatch({
-          type: 'carStore/queryPage',
-          carNo: form.getFieldValue('carNo'),
-          carType: form.getFieldValue('carType'),
-          plateNumber: form.getFieldValue('plateNumber'),
+          type: `${storeName}/queryPage`,
+          ...values,
+        })
+        dispatch({
+          type: `${storeName}/updateState`,
+          initValues: values,
         })
       },
 
-      onSearch(values) {
-        if (values) {
-          if (values.ownershipDate) {
-            values.ownershipBeginDate = values.ownershipDate[0].format('YYYY-MM-DD')
-            values.ownershipEndDate = values.ownershipDate[1].format('YYYY-MM-DD')
-            delete values.ownershipDate
-          }
-          if (values.roadTransportDate) {
-            values.roadTransportBeginDate = values.roadTransportDate[0].format('YYYY-MM-DD')
-            values.roadTransportEndDate = values.roadTransportDate[1].format('YYYY-MM-DD')
-            delete values.roadTransportDate
-          }
-          if (values.drivingLicenseDate) {
-            values.drivingLicenseDate = moment(new Date(parseInt(values.drivingLicenseDate, 10))).format('YYYY-MM-DD')
-          }
-        }
+      onReset() {
         dispatch({
-          type: 'carStore/queryPage',
-          ...values,
+          type: `${storeName}/queryPage`,
+        })
+        dispatch({
+          type: `${storeName}/updateState`,
+          initValues: {},
         })
       },
       /** 即将到期和已到期 */
       roadTransporting() {
         dispatch({
-          type: 'carStore/warnList',
+          type: `${storeName}/warnList`,
           warningEnum: 'roadTransportEndDate',
           startDate: moment().format('YYYY-MM-DD'),
           endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
@@ -180,14 +160,14 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
       roadTransport() {
         dispatch({
-          type: 'carStore/warnList',
+          type: `${storeName}/warnList`,
           warningEnum: 'roadTransportEndDate',
           endDate: moment().format('YYYY-MM-DD'),
         })
       },
       ownershiping() {
         dispatch({
-          type: 'carStore/warnList',
+          type: `${storeName}/warnList`,
           warningEnum: 'ownershipEndDate',
           startDate: moment().format('YYYY-MM-DD'),
           endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
@@ -195,7 +175,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
       ownership() {
         dispatch({
-          type: 'carStore/warnList',
+          type: `${storeName}/warnList`,
           warningEnum: 'ownershipEndDate',
           endDate: moment().format('YYYY-MM-DD'),
         })
@@ -203,46 +183,45 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
       toAdd() {
         dispatch({
-          type: 'carStore/toAdd',
-          res: 'carAdd',
+          type: `${storeName}/toAdd`,
+          res: 'Add',
         })
       },
 
       toEdit(car) {
         dispatch({
           car,
-          type: 'carStore/toEdit',
-          res: 'carUpdate',
+          type: `${storeName}/toEdit`,
+          res: 'Update',
         })
       },
 
       toInfo(car) {
         dispatch({
           car,
-          type: 'carStore/toInfo',
-          res: 'carInfo',
+          type: `${storeName}/toInfo`,
+          res: 'Info',
         })
       },
 
 
-      exportCar() {
+      exportFile() {
         const token = session.get(tokenSessionKey)
-        const carNo = form.getFieldValue('carNo')
-        const plateNumber = form.getFieldValue('plateNumber')
-        const params = {
-          carNo,
-          plateNumber,
-        }
+        const params = form.getFieldsValue(exportFileParam)
         // 删除空值、undefind
         Object.keys(params).map(v => params[v] || delete params[v])
         const paramsForGet = (params && qs.stringify(params)) || ''
         window.location.href = `${BASE_URL}/car/export.htm?token=${token}&${paramsForGet}`
       },
 
+      exportExample() {
+        window.location.href = `${BASE_URL}/car/export.htm?token=${session.get(tokenSessionKey)}&carNo=-1`
+      },
+
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
         dispatch({
-          type: 'carStore/queryPage',
+          type: `${storeName}/queryPage`,
           pageNo: current,
           pageSize,
           ...form.getFieldsValue(),
@@ -251,7 +230,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
         dispatch({
-          type: 'carStore/queryPage',
+          type: `${storeName}/queryPage`,
           pageNo: current,
           pageSize,
           ...form.getFieldsValue(),
@@ -259,7 +238,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
 
 
-      upload(info) {
+      handlerUpload(info) {
         if (info.file.status !== 'uploading') {
           console.log('uploading')
         }
@@ -272,7 +251,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
             ),
             onOk() {
               dispatch({
-                type: 'carStore/queryPage',
+                type: `${storeName}/queryPage`,
               })
             },
           })
@@ -321,54 +300,6 @@ const fields = [
     key: 'roadTransportEndDate',
   }, {
     name: '车身颜色',
-    key: 'carColorName',
-  }, {
-    name: '车辆营运状态',
-    key: 'carStatusName',
-  }, {
-    name: '机动车登记证号',
-    key: 'certificateNo',
-  }]
-
-
-const searchFields = [
-  {
-    name: '自编号',
-    key: 'carNo',
-  }, {
-    name: '车牌号',
-    key: 'plateNumber',
-  }, {
-    name: '车辆类型',
-    key: 'carType',
-    enums: {
-      BYD_E6: '比亚迪E6',
-      BYD_E5: '比亚迪E5',
-      BM_EU220: '北汽EU220',
-    },
-  }, {
-    name: '车架号',
-    key: 'carFrame',
-  }, {
-    name: '产权证号',
-    key: 'ownershipNo',
-  }, /* {
-    name: '产权证日期',
-    key: 'ownershipDate',
-    type: 'dateRange',
-  },  */{
-    name: '发动机号',
-    key: 'engineNumber',
-  }, /*  {
-    name: '行驶证注册日期',
-    key: 'drivingLicenseDate',
-    type: 'date',
-  }, {
-    name: '道路运输证日期',
-    key: 'roadTransportDate',
-    type: 'dateRange',
-  },  */{
-    name: '车身颜色',
     key: 'carColor',
     enums: {
       BLUE: '蓝色',
@@ -393,6 +324,23 @@ const searchFields = [
   }, {
     name: '机动车登记证号',
     key: 'certificateNo',
+  }, {
+    name: '车辆类型',
+    key: 'carType',
+    enums: {
+      BYD_E6: '比亚迪E6',
+      BYD_E5: '比亚迪E5',
+      BM_EU220: '北汽EU220',
+    },
   }]
 
-export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))
+const formOptions = {
+  onValuesChange({ dispatch }, values) {
+    dispatch({
+      type: `${storeName}/updateState`,
+      initValues: values,
+    })
+  },
+}
+
+export default PageUtils.extend(List, { mapStateToProps, mapDispatchToProps, formOptions })

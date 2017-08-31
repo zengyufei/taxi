@@ -1,5 +1,4 @@
 import { extend } from 'ModelUtils'
-import { Modal, Select } from 'antd'
 
 const prefix = 'car'
 
@@ -122,8 +121,8 @@ export default extend({
         certificateList,
         certificateImage: '' }
     },
-    toPage(state, { dataSource }) {
-      return { ...state, dataSource, pageState: false }
+    toPage(state) {
+      return { ...state, pageState: false }
     },
 
     plateChange(state, { plateList }) {
@@ -154,14 +153,7 @@ export default extend({
       })
 
       yield formBindType({
-
       })
-    },
-
-    * reload(playload, { get, put, select }) {
-      const page = yield select(state => state[`${prefix}Store`].page)
-      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
-      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
     },
 
     /**

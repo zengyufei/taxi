@@ -393,11 +393,16 @@ const fields = [{
 }, {
   name: '保险',
   key: 'insurance',
+  table: {
+    enums: {
+      true: '是',
+      false: '否',
+    },
+  },
   enums: {
-    true: '是',
-    false: '否',
+    1: '是',
+    0: '否',
   },
 }]
-
 
 export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(index))

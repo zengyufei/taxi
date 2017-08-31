@@ -139,8 +139,8 @@ let Add = options => {
           labourContractEndDate: form.getFieldValue('labourRange') ? form.getFieldValue('labourRange')[1].format('YYYY-MM-DD') : undefined,
           manageContractBeginDate: form.getFieldValue('manageRange') ? form.getFieldValue('manageRange')[0].format('YYYY-MM-DD') : undefined,
           manageContractEndDate: form.getFieldValue('manageRange') ? form.getFieldValue('manageRange')[1].format('YYYY-MM-DD') : undefined,
-          censusAreaCode: form.getFieldValue('censusAreaCode')[2],
-          nativeAreaCode: form.getFieldValue('nativeAreaCode')[2],
+          censusAreaCode: form.getFieldValue('censusAreaCode') ? form.getFieldValue('censusAreaCode')[2] : undefined,
+          nativeAreaCode: form.getFieldValue('nativeAreaCode') ? form.getFieldValue('nativeAreaCode')[2] : undefined,
           insuranceRange: '',
           labourRange: '',
           manageRange: '',
@@ -160,6 +160,7 @@ let Add = options => {
       type: 'driverStore/toPage',
     })
   }
+  let carno = form.getFieldValue('carNo');
   /** 自编号查询车信息 */
   const queryByCarNo = () => {
     dispatch({
@@ -169,6 +170,7 @@ let Add = options => {
   }
   /** 模糊查询 车辆自编号 */
   const handleSearch = value => {
+    carno = value;
     dispatch({
       type: 'driverCommonStore/queryLikeCarNo',
       str: value,
@@ -224,7 +226,7 @@ let Add = options => {
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
-                    initialValue: car !== undefined ? car.plateNumber : '',
+                    initialValue: car && car.carNo === carno ? car.plateNumber : '',
                   })(
                     <Input disabled />
                   )}
@@ -285,14 +287,15 @@ let Add = options => {
                 <FormItem
                   {...formItemLayout}
                   label={(
-                    <span>
-                        从业资格证号&nbsp;
-                    </span>
-                  )}
+                      <span>
+                          从业资格证号&nbsp;
+                      </span>
+                    )}
+                  help="从业资格证号 为 身份证号码"
                   hasFeedback
                 >
                   {getFieldDecorator('qualificationNo', {
-                    rules: [{ required: true, whitespace: true, message: '请输入从业资格证号!' }],
+                    rules: [{ required: true, whitespace: true, message: '请输入从业资格证号!' },],
                   })(
                     <Input />
                   )}
@@ -615,7 +618,9 @@ let Add = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('emergencyContact')(<Input />)}
+                  {getFieldDecorator('emergencyContact',{
+                    rules: [{ required: true, message: '请输入紧急联系人!' }],
+                  })(<Input />)}
                 </FormItem>
                 <FormItem
                   {...formItemLayout}
@@ -626,7 +631,7 @@ let Add = options => {
                   )}
                 >
                   {getFieldDecorator('emergencyMobile', {
-                    rules: [{ pattern: /^1[34578]\d{9}$/, message: '手机格式错误!' }],
+                    rules: [{ required: true, message: '请输入紧急联系人号码!' }, { pattern: /^1[34578]\d{9}$/, message: '手机格式错误!' }],
                   })(<Input />)}
                 </FormItem>
                 <FormItem {...tailFormItemLayout}>

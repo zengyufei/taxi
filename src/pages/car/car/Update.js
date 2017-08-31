@@ -11,7 +11,6 @@ import TweenOne from 'rc-tween-one'
 import { connect } from 'dva'
 import { Form, Input, Icon, Select, Row, Col,
   Button, Card, DatePicker, Upload, Modal } from 'antd'
-import moment from 'moment'
 
 const TweenOneGroup = TweenOne.TweenOneGroup
 const FormItem = Form.Item
@@ -76,7 +75,7 @@ const Update = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'carStore/reload',
+      type: 'carStore/toPage',
     })
   }
 

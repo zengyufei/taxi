@@ -31,10 +31,10 @@ let index = option => {
         <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
       </ZButton>
       <ZButton permission="finance:monthQuota:insert">
-        <Button type="primary" icon="plus-circle-o" onClick={() => generate(false)}>上月新增</Button>&nbsp;
+        <Button type="primary" icon="plus-circle-o" onClick={() => generate(false)}>生成上月</Button>&nbsp;
       </ZButton>
       <ZButton permission="finance:monthQuota:insert">
-        <Button type="primary" icon="plus-circle-o" onClick={() => generate(true)}>当月新增</Button>&nbsp;
+        <Button type="primary" icon="plus-circle-o" onClick={() => generate(true)}>生成当月</Button>&nbsp;
       </ZButton>
       <ZButton permission="finance:monthQuota:export">
         <Popconfirm title="是否确定要导出" onConfirm={toExport} >

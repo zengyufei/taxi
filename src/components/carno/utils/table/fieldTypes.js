@@ -1,5 +1,3 @@
-import moment from 'moment'
-
 /*
  * column类型定义
  */
@@ -17,6 +15,9 @@ const fieldTypes = {
     return value
   },
   enum: (value, field) => {
+    if (field.table && field.table.enums) {
+      return field.table.enums[value]
+    }
     return field.enums[value]
   },
   boolean: value => {

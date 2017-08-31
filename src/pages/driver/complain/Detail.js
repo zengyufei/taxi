@@ -287,7 +287,7 @@ let Detail = options => {
                     </span>
                   )}
                 >
-                  {govtPraise.fileURL ? <a type="danger" icon="download" href={BASE_URL+ '/common/download.htm?url='+ complain.fileURL} >下载</a> : '未上传'}
+                  {complain.fileURL ? <a type="danger" icon="download" href={BASE_URL+ '/common/download.htm?url='+ complain.fileURL} >下载</a> : '未上传'}
                 </FormItem>
 
                 <FormItem {...tailFormItemLayout}>

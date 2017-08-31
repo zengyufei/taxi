@@ -35,16 +35,22 @@ const fieldTypes = {
     return <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" {...inputProps} />
   },
   enum: ({ field, placeholder, inputProps }) => {
-    const enumsArray = Object.keys(field.enums).reduce((occ, key) => {
+    let enums
+    if (field.form && field.form.enums) {
+      enums = field.form.enums
+    } else {
+      enums = field.enums
+    }
+    const enumsArray = Object.keys(enums).reduce((occ, key) => {
       occ.push({
         key,
-        value: field.enums[key],
+        value: enums[key],
       })
       return occ
     }, [])
     placeholder = placeholder === false ? '' : (placeholder || `请选择${field.name}`)
     return (
-      <Select placeholder={placeholder} {...inputProps} >
+      <Select allowClear placeholder={placeholder} {...inputProps} >
         {enumsArray.map(item =>
           (<Option key={item.key}>
             {item.value}

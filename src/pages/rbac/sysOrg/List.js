@@ -46,7 +46,6 @@ const List = option => {
       )
     },
   }]
-
   const tableColumns = getColumns(fields).enhance(operatorColumn).values()
 
   return (

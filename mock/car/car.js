@@ -34,9 +34,9 @@ const mockOption = {
     engineNumber: '@word(7)',
     drivingLicenseDate: '@date',
     'carType|+1': [
-      '比亚迪E6',
-      '比亚迪E5',
-      '北汽EU220',
+      'BYD_E6',
+      'BYD_E5',
+      'BM_EU220',
     ],
     roadTransportBeginDate: '@date',
     roadTransportEndDate: '@date',

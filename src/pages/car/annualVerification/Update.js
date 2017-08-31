@@ -69,7 +69,7 @@ const Update = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'annualVerificationStore/reload',
+      type: 'annualVerificationStore/toPage',
     })
   }
 

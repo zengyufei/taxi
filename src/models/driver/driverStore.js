@@ -98,31 +98,31 @@ export default extend({
     toEdit(state, action) {
       let registerFileList = []
       if (action.driver.registerRecord) {
-        registerFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.registerRecord, status: 'done' }]
+        registerFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.registerRecord + '?t=' + (new Date()).valueOf(), status: 'done' }]
       }
       let checkFileList = []
       if (action.driver.checkReport) {
-        checkFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.checkReport, status: 'done' }]
+        checkFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.checkReport + '?t=' + (new Date()).valueOf(), status: 'done' }]
       }
       let noCriminalFileList = []
       if (action.driver.noCriminalRecord) {
-        noCriminalFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.noCriminalRecord, status: 'done' }]
+        noCriminalFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.noCriminalRecord + '?t=' + (new Date()).valueOf(), status: 'done' }]
       }
       let serviceFileList = []
       if (action.driver.serviceCommitment) {
-        serviceFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.serviceCommitment, status: 'done' }]
+        serviceFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.serviceCommitment + '?t=' + (new Date()).valueOf(), status: 'done' }]
       }
       let insuranceFileList = []
       if (action.driver.insuranceCommitment) {
-        insuranceFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.insuranceCommitment, status: 'done' }]
+        insuranceFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.insuranceCommitment + '?t=' + (new Date()).valueOf(), status: 'done' }]
       }
       let IDCardImgFileList = []
       if (action.driver.iDCardImg) {
-        IDCardImgFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.iDCardImg, status: 'done' }]
+        IDCardImgFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.iDCardImg + '?t=' + (new Date()).valueOf(), status: 'done' }]
       }
       let safetyResponsibilityFileList = []
       if (action.driver.safetyResponsibility) {
-        safetyResponsibilityFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.safetyResponsibility, status: 'done' }]
+        safetyResponsibilityFileList = [{ uid: 0, url: UPLOAD_URL + action.driver.safetyResponsibility + '?t=' + (new Date()).valueOf(), status: 'done' }]
       }
 
       return {
@@ -237,6 +237,12 @@ export default extend({
     },
     // 新增驾驶员
     * insert(playload, { post, put, select }) {
+      if (!playload.insurance) {
+        playload.insuranceCompany = ''
+        playload.policyNo = ''
+        playload.accidentInsuranceBeginDate = ''
+        playload.accidentInsuranceEndDate = ''
+      }
       if(playload.driverStatus === 'DIMISSION' && !playload.leaveDate) {
         ZMsg.error('离职状态请填写离职时间');
         return;

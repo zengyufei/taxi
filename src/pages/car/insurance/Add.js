@@ -1,8 +1,8 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 14:03:50 
- * @Last Modified by: zengyufei 
- * @Last Modified time: 2017-08-25 14:03:50 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 14:03:50
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 14:03:50
  */
 import TweenOne from 'rc-tween-one'
 
@@ -47,25 +47,28 @@ let Add = options => {
     if (form.getFieldValue('trafficBoolean') || form.getFieldValue('businessBoolean')) {
       e.preventDefault()
       form.validateFieldsAndScroll((err, values) => {
-        let bizInsuranceStr = ''
-        if (form.getFieldValue('insurance').includes('车损险赔偿金额')) {
-          bizInsuranceStr += `车损险赔偿金额_${form.getFieldValue('oneNumber')},`
+        let bizInsuranceStr = '';
+        if(form.getFieldValue('businessBoolean')){
+          if (form.getFieldValue('insurance').includes('车损险赔偿金额')) {
+            bizInsuranceStr += `车损险赔偿金额_${form.getFieldValue('oneNumber')},`
+          }
+          if (form.getFieldValue('insurance').includes('第三者责任险最高赔偿金额')) {
+            bizInsuranceStr += `第三者责任险最高赔偿金额_${form.getFieldValue('twoNumber')},`
+          }
+          if (form.getFieldValue('insurance').includes('不计免赔险最高赔偿金额')) {
+            bizInsuranceStr += `不计免赔险最高赔偿金额_${form.getFieldValue('threeNumber')},`
+          }
+          if (form.getFieldValue('insurance').includes('自燃险赔偿金额')) {
+            bizInsuranceStr += `自燃险赔偿金额_${form.getFieldValue('fourNumber')},`
+          }
+          if (form.getFieldValue('insurance').includes('承运人责任险最高赔偿金额（每座）')) {
+            bizInsuranceStr += `承运人责任险最高赔偿金额（每座）_${form.getFieldValue('fiveNumber')},`
+          }
+          if (bizInsuranceStr.length > 0) {
+            bizInsuranceStr = bizInsuranceStr.substring(0, bizInsuranceStr.length - 1)
+          }
         }
-        if (form.getFieldValue('insurance').includes('第三者责任险最高赔偿金额')) {
-          bizInsuranceStr += `第三者责任险最高赔偿金额_${form.getFieldValue('twoNumber')},`
-        }
-        if (form.getFieldValue('insurance').includes('不计免赔险最高赔偿金额')) {
-          bizInsuranceStr += `不计免赔险最高赔偿金额_${form.getFieldValue('threeNumber')},`
-        }
-        if (form.getFieldValue('insurance').includes('自燃险赔偿金额')) {
-          bizInsuranceStr += `自燃险赔偿金额_${form.getFieldValue('fourNumber')},`
-        }
-        if (form.getFieldValue('insurance').includes('承运人责任险最高赔偿金额（每座）')) {
-          bizInsuranceStr += `承运人责任险最高赔偿金额（每座）_${form.getFieldValue('fiveNumber')},`
-        }
-        if (bizInsuranceStr.length > 0) {
-          bizInsuranceStr = bizInsuranceStr.substring(0, bizInsuranceStr.length - 1)
-        }
+
         if (!err) {
           if (form.getFieldValue('plateNumber') === '') {
             Modal.info({
@@ -111,12 +114,11 @@ let Add = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'insuranceStore/reload',
+      type: 'insuranceStore/toPage',
     })
   }
 
   function traffic() {
-    console.log(form.getFieldValue('trafficBoolean'))
     dispatch({
       type: 'insuranceStore/traffic',
       trafficState: !form.getFieldValue('trafficBoolean'),
@@ -127,11 +129,12 @@ let Add = options => {
       type: 'insuranceStore/business',
       businessState: !form.getFieldValue('businessBoolean'),
     })
-    console.log(form.getFieldValue('businessBoolean'))
   }
 
+  let carno = form.getFieldValue('carNo');
   /** 模糊查询 车辆自编号 */
   const handleSearch = value => {
+    carno = value;
     dispatch({
       type: 'driverCommonStore/queryLikeCarNo',
       str: value,
@@ -238,7 +241,7 @@ let Add = options => {
                     </span>
                   )}
                 >
-                  {getFieldDecorator('plateNumber', { initialValue: car ? car.plateNumber : '',
+                  {getFieldDecorator('plateNumber', { initialValue: car && car.carNo === carno ? car.plateNumber : '',
                   })(
                     <Input disabled />
                   )}

@@ -61,8 +61,8 @@ export default extend({
       }
       return { ...state, pageState: true, res: action.res, maintain: action.maintain, maintainList, maintainImage: '', plateList }
     },
-    toPage(state, { dataSource }) {
-      return { ...state, dataSource, pageState: false }
+    toPage(state) {
+      return { ...state, pageState: false }
     },
 
     maintainChange(state, { maintainList }) {
@@ -86,12 +86,6 @@ export default extend({
 
       yield formBindType({
       })
-    },
-
-    * reload(playload, { get, put, select }) {
-      const page = yield select(state => state[`${prefix}Store`].page)
-      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
-      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
     },
 
     /**

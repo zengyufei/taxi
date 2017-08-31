@@ -134,6 +134,7 @@ module.exports = (webpackConfig, env) => {
   // 全局暴露React
   webpackConfig.plugins.push(
     new webpack.ProvidePlugin({
+      qs: 'qs',
       React: 'react',
       PropTypes: 'prop-types',
       ZMsg: 'ZMsg',
@@ -141,6 +142,7 @@ module.exports = (webpackConfig, env) => {
       R: 'ramda',
       _: 'lodash',
       moment: 'moment',
+      PageUtils: `${__dirname}/src/components/carno/utils/page`,
       local: `${__dirname}/src/components/carno/utils/storage/localStorage`,
       session: `${__dirname}/src/components/carno/utils/storage/sessionStorage`,
       constant: `${__dirname}/src/configs/constant`, // 常量,
@@ -183,6 +185,7 @@ module.exports = (webpackConfig, env) => {
     ModelUtils: `${__dirname}/src/components/carno/utils/model`, // model 封装
     TableUtils: `${__dirname}/src/components/carno/utils/table`, // 表格封装
     FormUtils: `${__dirname}/src/components/carno/utils/form`, // 表格封装
+    PageUtils: `${__dirname}/src/components/carno/utils/page`, // 表格封装
     ZModal: `${__dirname}/src/components/carno/components/Modal`, // 模态窗口封装
     ZSearch: `${__dirname}/src/components/carno/components/SearchBar`, // 搜索框封装
 

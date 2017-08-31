@@ -52,15 +52,15 @@ export default extend({
         plateList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.plateImage, status: 'done' }]
       }
       let synthesizeList = []
-      if (action.annualVerification.synthesizeFile !== null) {
+      if (action.annualVerification.synthesizeFile) {
         synthesizeList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.synthesizeFile, status: 'done' }]
       }
       let drivingLicenseList = []
-      if (action.annualVerification.drivingLicenseFile !== null) {
+      if (action.annualVerification.drivingLicenseFile) {
         drivingLicenseList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.drivingLicenseFile, status: 'done' }]
       }
       let taximeterList = []
-      if (action.annualVerification.taximeterFile !== null) {
+      if (action.annualVerification.taximeterFile) {
         taximeterList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.taximeterFile, status: 'done' }]
       }
 
@@ -82,15 +82,15 @@ export default extend({
         plateList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.plateImage, status: 'done' }]
       }
       let synthesizeList = []
-      if (action.annualVerification.synthesizeFile !== null) {
+      if (action.annualVerification.synthesizeFile) {
         synthesizeList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.synthesizeFile, status: 'done' }]
       }
       let drivingLicenseList = []
-      if (action.annualVerification.drivingLicenseFile !== null) {
+      if (action.annualVerification.drivingLicenseFile) {
         drivingLicenseList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.drivingLicenseFile, status: 'done' }]
       }
       let taximeterList = []
-      if (action.annualVerification.taximeterFile !== null) {
+      if (action.annualVerification.taximeterFile) {
         taximeterList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.taximeterFile, status: 'done' }]
       }
       return { ...state,
@@ -102,8 +102,8 @@ export default extend({
         drivingLicenseFileList: drivingLicenseList,
         taximeterFileList: taximeterList }
     },
-    toPage(state, { dataSource }) {
-      return { ...state, dataSource, pageState: false }
+    toPage(state) {
+      return { ...state, pageState: false }
     },
 
     synthesizeFileChange(state, { synthesizeFileList }) {
@@ -132,11 +132,6 @@ export default extend({
       yield formBindType({
       })
     },
-    * reload(playload, {get, put, select}) {  // eslint-disable-line
-      const page = yield select(state => state[`${prefix}Store`].page)
-      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
-      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
-    },
     * queryPage(playload, {get, put}) {  // eslint-disable-line
       const response = yield get(`${prefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
@@ -149,7 +144,7 @@ export default extend({
     * insert(playload, { post, put, select }) {
       const response = yield post(`${prefix}/insert`, playload)
       if (response.code === 200) {
-        ZMsg.info(response.msg)
+        ZMsg.success(response.msg)
         const page = yield select(state => state.annualVerificationStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       } else {
@@ -164,7 +159,7 @@ export default extend({
     * updateNotNull(playload, { post, put, select }) {
       const response = yield post(`${prefix}/update`, playload)
       if (response.code === 200) {
-        ZMsg.info(response.msg)
+        ZMsg.success(response.msg)
         const page = yield select(state => state.annualVerificationStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       } else {

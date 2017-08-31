@@ -100,7 +100,7 @@ axios.interceptors.response.use(response => {
           if (token) {
             Modal.error({
               title: '异常',
-              content: error.response.message,
+              content: error.response,
             })
           }
         }

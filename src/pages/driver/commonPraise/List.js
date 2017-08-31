@@ -2,7 +2,7 @@
  * @Author: zengyufei 
  * @Date: 2017-08-25 14:56:45 
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-29 09:40:23
+ * @Last Modified time: 2017-08-31 16:12:21
  */
 import { connect } from 'dva'
 import { Form, Button, Popconfirm, Table, Upload, Modal } from 'antd'
@@ -144,8 +144,9 @@ const mapDispatchToProps = (dispatch, { form }) => {
       onSearch(values) {
         if (values) {
           if (values.creditTime) {
-            values.startTime = moment(new Date(values.creditTime)).format('YYYY-MM-DD')
-            values.endTime = moment(new Date(values.creditTime)).format('YYYY-MM-DD')
+            console.log(values.creditTime)
+            values.startTime = values.creditTime
+            values.endTime = values.creditTime
             delete values.creditTime
           }
         }

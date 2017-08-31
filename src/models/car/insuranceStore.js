@@ -68,11 +68,11 @@ export default extend({
       if (action.insurance.plateImage) {
         plateList = [{ uid: 0, url: UPLOAD_URL + action.insurance.plateImage, status: 'done' }]
       }
-      let oneInsurance = false,
-        twoInsurance = false,
-        threeInsurance = false,
-        fourInsurance = false,
-        fiveInsurance = false
+      let oneInsurance = false
+      let twoInsurance = false
+      let threeInsurance = false
+      let fourInsurance = false
+      let fiveInsurance = false
       if (action.insurance.bizInsuranceStr) {
         action.insurance.bizInsuranceStr.split(',').forEach(value => {
           if (value.split('_').includes('车损险赔偿金额')) {
@@ -122,6 +122,9 @@ export default extend({
         insuranceList,
         plateList }
     },
+    toPage(state) {
+      return { ...state, pageState: false }
+    },
     traffic(state, actioin) {
       return { ...state, trafficState: actioin.trafficState }
     },
@@ -165,12 +168,6 @@ export default extend({
       yield formBindType({
       })
     },
-    * reload(playload, { get, put, select }) {
-      const page = yield select(state => state[`${prefix}Store`].page)
-      const response = yield get(`${prefix}/queryPage`, { pageNo: page.pageNo, pageSize: page.pageSize })
-      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
-    },
-
 
     *queryPage(playload, {get, put}) {  // eslint-disable-line
       const response = yield get(`${prefix}/queryPage`, playload)
@@ -203,7 +200,7 @@ export default extend({
         const response = yield post(`${prefix}/insert`, insurance)
         if (+response.code !== 200) {
           insertState = false
-          Modal.info({
+          Modal.error({
             title: '温馨提示',
             content: (
               `交强险：${response.msg}`
@@ -211,7 +208,7 @@ export default extend({
           })
           return
         }
-        ZMsg.info(`交强险：${response.msg}`)
+        ZMsg.success(`交强险：${response.msg}`)
       }
       if (playload.businessBoolean) {
         const insurance = {
@@ -232,7 +229,7 @@ export default extend({
         const response = yield post(`${prefix}/insert`, insurance)
         if (+response.code !== 200) {
           insertState = false
-          Modal.info({
+          Modal.error({
             title: '温馨提示',
             content: (
               `商业险：${response.msg}`
@@ -240,7 +237,7 @@ export default extend({
           })
           return
         }
-        ZMsg.info(`商业险：${response.msg}`)
+        ZMsg.success(`商业险：${response.msg}`)
       }
       if (insertState) {
         const page = yield select(state => state.insuranceStore.page)

@@ -1,6 +1,6 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 14:04:21 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 14:04:21
  * @Last Modified by: zengyufei
  * @Last Modified time: 2017-08-25 14:05:11
  */
@@ -44,7 +44,7 @@ const Info = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'insuranceStore/reload',
+      type: 'insuranceStore/toPage',
     })
   }
 
@@ -62,6 +62,8 @@ const Info = options => {
       type: 'insuranceStore/unlookPreview',
     })
   }
+
+  let insuranceType = insurance.insuranceType === 'BUSINESS' ? true : false;
 
   return (
     <div>
@@ -134,17 +136,21 @@ const Info = options => {
                 >
                   {insurance.insuranceCompany}
                 </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        保险种类 &nbsp;
-                    </span>
-                  )}
-                  hasFeedback
-                >
-                  {insurance.bizInsuranceStr.replace(/_/g, '=')}
-                </FormItem>
+                {
+                  insuranceType ?
+                    <FormItem
+                    {...formItemLayout}
+                    label={(
+                        <span>
+                            保险种类 &nbsp;
+                        </span>
+                      )}
+                    hasFeedback
+                  >
+                      {insurance.bizInsuranceStr.replace(/_/g, '=')}
+                    </FormItem>
+                    : ''
+                }
                 <FormItem
                   {...formItemLayout}
                   label={(

@@ -1,4 +1,5 @@
 import moment from 'moment'
+import _ from 'lodash'
 import { default as fieldTypes, formBindType, isBindFormType } from './fieldTypes'
 
 /*
@@ -232,8 +233,19 @@ const getFields = (originFields, fieldKeys, extraFields) => {
  * 创建antd fieldDecorator
  */
 const createFieldDecorator = (field, item, getFieldDecorator, placeholder, inputProps = {}, decoratorOpts = {}) => {
-  let { type, rules } = field
-  const { key, enums, meta, required, render } = field
+  let { type, rules, enums, render } = field
+  if (field.form) {
+    if (field.form.type) {
+      type = field.form.type
+    } else if (field.form.rules) {
+      rules = field.form.rules
+    } else if (field.form.enums) {
+      enums = field.form.enums
+    } else if (field.form.render) {
+      render = field.form.render
+    }
+  }
+  const { key, meta, required } = field
   type = (fieldTypes.hasOwnProperty(type) && type) || (enums && 'enum') || 'text'
   if (type === 'switch') {
     decoratorOpts = {
@@ -271,15 +283,36 @@ const createFieldDecorator = (field, item, getFieldDecorator, placeholder, input
  * @param form, antd form对象
  * @param 返回result函数，参数为: onSuccess, onError
  */
-const validate = form => {
-  const { validateFields, getFieldsValue } = form
+const validate = (form, fields) => {
+  const { validateFields } = form
 
   const transformValues = values => {
     const newValues = {}
     Object.keys(values).forEach(key => {
+      const item = _.find(fields, e => e.key === key)
       const value = values[key]
       const isDateTimeType = value && value instanceof moment
-      const newValue = isDateTimeType ? getDateValue(values[key]) : values[key]
+      let newValue
+      if (isDateTimeType) {
+        if (item) {
+          if (typeof item.format === 'boolean' && !item.format) {
+            newValue = values[key]
+          } else if (item.format) {
+            newValue = values[key].format(item.format)
+          } else if (/^date$/.test(item.type)) {
+            newValue = values[key].format('YYYY-MM-DD')
+          } else if (/^datetime$/.test(item.type)) {
+            newValue = values[key].format('YYYY-MM-DD hh:mm:ss')
+          } else {
+            newValue = getDateValue(values[key])
+          }
+        } else {
+          newValue = getDateValue(values[key])
+        }
+      } else {
+        newValue = values[key]
+      }
+
       // 如果value为undefined,则不赋值到values对象上
       if (newValue !== undefined) {
         newValues[key] = newValue
@@ -289,12 +322,11 @@ const validate = form => {
   }
 
   return (onSuccess, onError) => {
-    validateFields(errors => {
+    validateFields((errors, values) => {
       if (errors) {
         onError && onError(errors)
       } else {
-        const originValues = { ...getFieldsValue() }
-        onSuccess(transformValues(originValues), originValues)
+        onSuccess(transformValues(values), values)
       }
     })
   }

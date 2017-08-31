@@ -1,6 +1,6 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 13:59:17 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 13:59:17
  * @Last Modified by: zengyufei
  * @Last Modified time: 2017-08-25 16:16:43
  */
@@ -65,8 +65,10 @@ let Add = options => {
       }
     })
   }
+  let carno = form.getFieldValue('carNo');
   /** 模糊查询 车辆自编号 */
   const handleSearch = value => {
+    carno = value;
     dispatch({
       type: 'driverCommonStore/queryLikeCarNo',
       str: value,
@@ -82,13 +84,12 @@ let Add = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'carOperateLogStore/reload',
+      type: 'carOperateLogStore/toPage',
     })
   }
 
   // 预览图片
   const handlePreview = file => {
-    console.log('handlePreview')
     dispatch({
       type: 'carOperateLogStore/lookPreview',
       previewImage: file.url || file.thumbUrl,
@@ -97,7 +98,6 @@ let Add = options => {
   }
   // 删除图片
   const handleCancel = () => {
-    console.log('handleCancel')
     dispatch({
       type: 'carOperateLogStore/unlookPreview',
     })
@@ -150,7 +150,7 @@ let Add = options => {
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
-                    rules: [{ required: true, message: '请输入车牌号!' }], initialValue: car ? car.plateNumber : '',
+                    rules: [{ required: true, message: '请输入车牌号!' }], initialValue: car && car.carNo === carno ? car.plateNumber : '',
                   })(
                     <Input disabled />
                   )}
