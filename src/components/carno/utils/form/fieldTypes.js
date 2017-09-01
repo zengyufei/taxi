@@ -13,19 +13,19 @@ const fieldTypes = {
   yearMonth: ({ initialValue, inputProps }) => {
     return {
       input: <MonthPicker {...inputProps} />,
-      initialValue: initialValue ? moment(parseInt(initialValue, 10)) : null,
+      initialValue: initialValue ? moment(initialValue) : null,
     }
   },
   date: ({ initialValue, inputProps }) => {
     return {
       input: <DatePicker {...inputProps} />,
-      initialValue: initialValue ? moment(parseInt(initialValue, 10)) : null,
+      initialValue: initialValue ? moment(initialValue) : null,
     }
   },
   datetime: ({ initialValue, inputProps }) => {
     return {
       input: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" {...inputProps} />,
-      initialValue: initialValue ? moment(parseInt(initialValue, 10)) : null,
+      initialValue: initialValue ? moment(initialValue) : null,
     }
   },
   dateRange: ({ inputProps }) => {
@@ -71,6 +71,9 @@ const fieldTypes = {
   textarea: ({ meta = {}, field, placeholder, inputProps }) => {
     placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
     return <Input type="textarea" rows={meta.rows || 3} placeholder={placeholder} autosize={meta.autosize} {...inputProps} />
+  },
+  hidden: () => {
+    return <Input type="hidden" />
   },
   text: ({ meta = {}, field, placeholder, inputProps }) => {
     placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)

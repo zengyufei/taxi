@@ -7,29 +7,9 @@ import ZModal from 'ZModal'
 import { getFields, validate } from 'FormUtils'
 
 const Add = options => {
-  const { form, dispatch, sysOrgStore } = options
+  const { form, methods, sysOrgStore } = options
   const { confirmLoading, visible: { add } } = sysOrgStore
-
-  const onOk = () => {
-    validate(form, fields)(values => {
-      const { provinceAndCity: [province, city] } = values
-      values.province = province
-      values.city = city
-      dispatch({
-        type: 'sysOrgStore/add',
-        ...values,
-      })
-    })
-  }
-
-  const onCancel = () => {
-    dispatch({
-      type: 'sysOrgStore/updateState',
-      visible: {
-        add: false,
-      },
-    })
-  }
+  const { onOk, onCancel } = methods
 
   const addPageModalProps = {
     maskClosable: false,
@@ -67,34 +47,30 @@ function mapStateToProps({ sysOrgStore }) {
   }
 }
 
-/**
- * @param dispatch 从 connect 获得
- * @param form 从上层建筑获得
- */
 function mapDispatchToProps(dispatch, { form }) {
   return {
-
-    onOk() {
-      validate(form, fields)(values => {
-        const { provinceAndCity: [province, city] } = values
-        values.province = province
-        values.city = city
-        dispatch({
-          type: 'sysOrgStore/add',
-          ...values,
+    methods: {
+      onOk() {
+        validate(form, fields)(values => {
+          const { provinceAndCity: [province, city] } = values
+          values.province = province
+          values.city = city
+          dispatch({
+            type: 'sysOrgStore/add',
+            ...values,
+          })
         })
-      })
-    },
+      },
 
-    onCancel() {
-      dispatch({
-        type: 'sysOrgStore/updateState',
-        visible: {
-          add: false,
-        },
-      })
+      onCancel() {
+        dispatch({
+          type: 'sysOrgStore/updateState',
+          visible: {
+            add: false,
+          },
+        })
+      },
     },
-
   }
 }
 
@@ -140,5 +116,5 @@ const fields = [
 
 ]
 
-export default Form.create()(connect(mapStateToProps)(Add))
+export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(Add))
 

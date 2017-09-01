@@ -2,7 +2,7 @@
  * @Author: zengyufei
  * @Date: 2017-08-04 14:20:07
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-25 14:21:49
+ * @Last Modified time: 2017-09-01 13:42:52
  */
 import dva from 'dva'
 import createLoading from 'dva-loading'
@@ -24,9 +24,43 @@ const app = dva({
   onError (error) {
     message.error(error.message)
   },
+  onAction: [() => next => action => {
+    let isPage = false
+    Object.keys(action).forEach(e => {
+      if (/^page$/i.test(e)) {
+        isPage = true
+      }
+    })
+    if (isPage) {
+      action.page || (action.page = {
+        pageNo: 1,
+        pageSize: 10,
+        totalCount: 0,
+        dataList: [],
+      })
+    }
+    next(action)
+  }],
+  /* onReducer(reducer) {
+    return (state, action) => {
+      return reducer(state, action)
+    }
+  }, */
+  /* extraEnhancers(storeCreator) {
+    return (reducer, preloadedState, enhancer) => {
+      const store = storeCreator(reducer, preloadedState, enhancer)
+      const oldDispatch = store.dispatch
+      store.dispatch = action => {
+        oldDispatch(action)
+      }
+      return store
+    }
+  }, */
   onEffect(effect, { put, select }, model) {
     return function* (...args) {
-      const { init } = yield select(e => e[`${model.namespace}`])
+      const { init } = yield select(e => {
+        return e[`${model.namespace}`]
+      })
       if (init) {
         yield effect(...args)
       } else if (model.effects[`${model.namespace}/init`]) {

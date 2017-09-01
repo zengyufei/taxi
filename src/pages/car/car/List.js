@@ -1,5 +1,4 @@
-import { connect } from 'dva'
-import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
+import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
 
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
@@ -9,10 +8,12 @@ import Add from './Add'
 import Update from './Update'
 import Info from './Info'
 
-import { tokenSessionKey, storeName,
+import { tokenSessionKey, prefix, storeName,
   searchCacheKey, defaultSearchFields, allSearchFields, uploadAction, exportFileParam, // 搜索条
   defaultTableFields, // 表格
 } from './constant'
+
+import fields from './fields'
 
 const changeComponent = {
   Add: <Add key="Add" />,
@@ -22,7 +23,7 @@ const changeComponent = {
 
 const List = options => {
   const { loading, form, methods } = options
-  const { initValues, page: { pageNo = 1, pageSize = 10, dataList = [], totalCount = 0 }, pageState, res } = options[storeName]
+  const { initValues, page: { pageNo, pageSize, dataList, totalCount }, pageState, res } = options[storeName]
   const { toInfo, toEdit, exportFile, exportExample, toAdd, onSearch, onReset, onShowSizeChange, onChange, handlerUpload, roadTransporting, roadTransport, ownershiping, ownership } = methods
 
   /**
@@ -120,7 +121,6 @@ const List = options => {
 
 function mapStateToProps(state) {
   return {
-    loading: state.loading.models[storeName],
     [storeName]: state[storeName],
   }
 }
@@ -183,8 +183,17 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
       toAdd() {
         dispatch({
-          type: `${storeName}/toAdd`,
+          type: `${storeName}/updateState`,
           res: 'Add',
+          pageState: true,
+          plateList: [],
+          plateImage: '',
+          ownershipList: [],
+          ownershipImage: '',
+          roadTransportList: [],
+          roadTransportImage: '',
+          certificateList: [],
+          certificateImage: '',
         })
       },
 
@@ -264,83 +273,4 @@ const mapDispatchToProps = (dispatch, { form }) => {
   }
 }
 
-const fields = [
-  {
-    name: '自编号',
-    key: 'carNo',
-  }, {
-    name: '车牌号',
-    key: 'plateNumber',
-  }, {
-    name: '车辆类型',
-    key: 'carTypeName',
-  }, {
-    name: '车架号',
-    key: 'carFrame',
-  }, {
-    name: '产权证号',
-    key: 'ownershipNo',
-  }, {
-    name: '产权证日期',
-    key: 'ownershipBeginDate',
-  }, {
-    name: '产权证结束日期',
-    key: 'ownershipEndDate',
-  }, {
-    name: '发动机号',
-    key: 'engineNumber',
-  }, {
-    name: '行驶证注册日期',
-    key: 'drivingLicenseDate',
-  }, {
-    name: '道路运输证起止日期',
-    key: 'roadTransportBeginDate',
-  }, {
-    name: '道路运输证截止日期',
-    key: 'roadTransportEndDate',
-  }, {
-    name: '车身颜色',
-    key: 'carColor',
-    enums: {
-      BLUE: '蓝色',
-      RED: '红色',
-      GREEN: '绿色',
-      YELLOW: '黄色',
-      BLUEWHITE: '蓝白色',
-      LAKEBLUE: '湖青色',
-    },
-  }, {
-    name: '车辆营运状态',
-    key: 'carStatus',
-    enums: {
-      OPERATE_WAIT: '待营运',
-      OPERATE_USED: '营运中',
-      ACCIDENT_REPAIR: '事故维修',
-      ACCIDENT_SCRAP: '事故报废',
-      ROUTINE_SCRAP: '正常报废',
-      BUSINESS_CAR: '公务用车',
-      LONG_DISTANCE_LEASE: '长途租赁',
-    },
-  }, {
-    name: '机动车登记证号',
-    key: 'certificateNo',
-  }, {
-    name: '车辆类型',
-    key: 'carType',
-    enums: {
-      BYD_E6: '比亚迪E6',
-      BYD_E5: '比亚迪E5',
-      BM_EU220: '北汽EU220',
-    },
-  }]
-
-const formOptions = {
-  onValuesChange({ dispatch }, values) {
-    dispatch({
-      type: `${storeName}/updateState`,
-      initValues: values,
-    })
-  },
-}
-
-export default PageUtils.extend(List, { mapStateToProps, mapDispatchToProps, formOptions })
+export default PageUtils.extend(prefix, { mapStateToProps, mapDispatchToProps, formOptions: true })(List)

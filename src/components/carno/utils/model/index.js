@@ -294,13 +294,15 @@ const enhanceEffects = (effects = {}) => {
 
   function createSyncGetEffect() {
     return function syncGetEffect(url, params) {
-      return syncGet(url, params)
+      let result = syncGet(url, params)
+      return (!result || !Object.keys(result).length) ? { code: 0, result: {} } : result
     }
   }
 
   function createSyncPostEffect() {
     return function syncPostEffect(url, params) {
-      return syncPost(url, params)
+      let result = syncPost(url, params)
+      return (!result || !Object.keys(result).length) ? { code: 0, result: {} } : result
     }
   }
 
@@ -344,7 +346,7 @@ const enhanceEffects = (effects = {}) => {
         }
       }
 
-      return result
+      return (!result || !Object.keys(result).length) ? { code: 0, result: {} } : result
     }
   }
   function createPostEffect(sagaEffects, config = {}) {
@@ -387,7 +389,7 @@ const enhanceEffects = (effects = {}) => {
         }
       }
 
-      return result
+      return (!result || !Object.keys(result).length) ? { code: 0, result: {} } : result
     }
   }
 
@@ -429,7 +431,7 @@ const enhanceEffects = (effects = {}) => {
         }
       }
 
-      return result
+      return (!result || !Object.keys(result).length) ? { code: 0, result: {} } : result
     }
   }
 }

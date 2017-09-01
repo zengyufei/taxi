@@ -12,8 +12,13 @@ import { connect } from 'dva'
 import { Form, Row, Col,
   Button, Card, Upload, Modal } from 'antd'
 
+import ZForm from 'ZForm'
+import { getFields, validate, formBindType } from 'FormUtils'
+
+import { prefix, storeName } from './constant'
+import fields from './fields'
+
 const TweenOneGroup = TweenOne.TweenOneGroup
-const FormItem = Form.Item
 
 const Info = options => {
   const { dispatch, car } = options
@@ -45,14 +50,15 @@ const Info = options => {
   /* 返回分页 */
   const toPage = () => {
     dispatch({
-      type: 'carStore/toPage',
+      type: 'carStore/updateState',
+      pageState: false,
     })
   }
 
   // 预览图片
   const handlePreview = file => {
     dispatch({
-      type: 'carStore/lookPreview',
+      type: 'carStore/updateState',
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     })
@@ -60,8 +66,112 @@ const Info = options => {
   // 删除图片
   const handleCancel = () => {
     dispatch({
-      type: 'carStore/unlookPreview',
+      type: 'carStore/updateState',
+      previewVisible: false,
     })
+  }
+
+
+  formBindType({
+    // 参数：初始值,meta(字段meta数据，例如: rows,min,max等), field字段定义对象
+    /* plateImage: initialValue => {
+      return {
+        input: <div >
+          <Upload
+            action={`${BASE_URL}/fileupload/image.htm`}
+            listType="picture-card"
+            fileList={plateList}
+            onPreview={handlePreview}
+            onChange={plateChange}
+          >
+            { plateList.length >= 1 ? null : uploadButton}
+          </Upload>
+          <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
+            <img alt="example" style={{ width: '100%' }} src={previewImage} />
+          </Modal>
+        </div>,
+        initialValue,
+      }
+    },
+    ownershipImage: initialValue => {
+      return {
+        input: <div >
+          <Upload
+            action={`${BASE_URL}/fileupload/image.htm`}
+            listType="picture-card"
+            fileList={ownershipList}
+            onPreview={handlePreview}
+            onChange={ownershipChange}
+          >
+            { ownershipList.length >= 1 ? null : uploadButton}
+          </Upload>
+          <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
+            <img alt="example" style={{ width: '100%' }} src={previewImage} />
+          </Modal>
+        </div>,
+        initialValue,
+      }
+    },
+    roadTransportImage: initialValue => {
+      return {
+        input: <div >
+          <Upload
+            action={`${BASE_URL}/fileupload/image.htm`}
+            listType="picture-card"
+            fileList={roadTransportList}
+            onPreview={handlePreview}
+            onChange={roadTransportChange}
+          >
+            { roadTransportList.length >= 1 ? null : uploadButton}
+          </Upload>
+          <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
+            <img alt="example" style={{ width: '100%' }} src={previewImage} />
+          </Modal>
+        </div>,
+        initialValue,
+      }
+    },
+    certificateImage: initialValue => {
+      return {
+        input: <div >
+          <Upload
+            action={`${BASE_URL}/fileupload/image.htm`}
+            listType="picture-card"
+            fileList={certificateList}
+            onPreview={handlePreview}
+            onChange={certificateChange}
+          >
+            { certificateList.length >= 1 ? null : uploadButton}
+          </Upload>
+          <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
+            <img alt="example" style={{ width: '100%' }} src={previewImage} />
+          </Modal>
+        </div>,
+        initialValue,
+      }
+    }, */
+
+  })
+
+  const formProps = {
+    formType: 'update',
+    fields: getFields(fields).values(),
+    item: {
+      ...car,
+    },
+    layout: {
+      labelCol: {
+        xs: { span: 24 },
+        sm: { span: 6 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 14 },
+      },
+    },
+    btn: <div>
+      <Button key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }} onClick={toPage}>返回</Button>
+    </div>,
   }
 
   return (
@@ -69,228 +179,9 @@ const Info = options => {
       <TweenOneGroup>
         <Row key="0">
           <Col span={16}>
-            <Form style={{ maxWidth: '100%', marginTop: '10px' }}>
-              <Card title="车辆详情">
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        自编号&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.carNo}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        车牌号&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.plateNumber}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        车辆照片（45度角）&nbsp;
-                    </span>
-                  )}
-                >
-                  <Upload
-                    action=""
-                    listType="picture-card"
-                    fileList={plateList}
-                    onPreview={handlePreview}
-                  />
-                  <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                  </Modal>
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        车架号&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.carFrame}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        产权证&nbsp;
-                    </span>
-                  )}
-                >
-                  <Upload
-                    action=""
-                    listType="picture-card"
-                    fileList={ownershipList}
-                    onPreview={handlePreview}
-                  />
-                  <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                  </Modal>
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        产权证号&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.ownershipNo}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        产权证起始时间&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.ownershipBeginDate}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        产权证截止时间&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.ownershipEndDate}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        发动机号&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.engineNumber}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        行驶证登记日期&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.drivingLicenseDate}
-                </FormItem>
-
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        车辆类型&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.carTypeName}
-                </FormItem>
-
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        道路运输证&nbsp;
-                    </span>
-                  )}
-                >
-                  <Upload
-                    action=""
-                    listType="picture-card"
-                    fileList={roadTransportList}
-                    onPreview={handlePreview}
-                  />
-                  <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                  </Modal>
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        道路运输证起始时间&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.roadTransportBeginDate}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        道路运输证截止时间&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.roadTransportEndDate}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        车辆颜色&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.carColorName}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        机动车登记证书&nbsp;
-                    </span>
-                  )}
-                >
-                  <Upload
-                    action=""
-                    listType="picture-card"
-                    fileList={certificateList}
-                    onPreview={handlePreview}
-                  />
-                  <Modal visible={previewVisible} footer={null} onCancel={handleCancel}>
-                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
-                  </Modal>
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        机动车登记证号&nbsp;
-                    </span>
-                  )}
-
-                >
-                  {car.certificateNo}
-                </FormItem>
-                <FormItem
-                  {...formItemLayout}
-                  label={(
-                    <span>
-                        车辆营运状态&nbsp;
-                    </span>
-                  )}
-                >
-                  {car.carStatusName}
-                </FormItem>
-                <FormItem {...tailFormItemLayout}>
-                  <Button key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }} onClick={toPage}>返回</Button>
-                </FormItem>
-              </Card>
-            </Form>
+            <Card title="编辑车辆">
+              <ZForm {...formProps} style={{ maxWidth: '100%', marginTop: '10px' }} />
+            </Card>
           </Col>
           <Col span={12} />
         </Row>

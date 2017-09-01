@@ -233,19 +233,9 @@ const getFields = (originFields, fieldKeys, extraFields) => {
  * 创建antd fieldDecorator
  */
 const createFieldDecorator = (field, item, getFieldDecorator, placeholder, inputProps = {}, decoratorOpts = {}) => {
-  let { type, rules, enums, render } = field
-  if (field.form) {
-    if (field.form.type) {
-      type = field.form.type
-    } else if (field.form.rules) {
-      rules = field.form.rules
-    } else if (field.form.enums) {
-      enums = field.form.enums
-    } else if (field.form.render) {
-      render = field.form.render
-    }
-  }
-  const { key, meta, required } = field
+  const { key } = field
+  let { type, rules, enums, render, meta, required } = field
+
   type = (fieldTypes.hasOwnProperty(type) && type) || (enums && 'enum') || 'text'
   if (type === 'switch') {
     decoratorOpts = {
@@ -267,8 +257,10 @@ const createFieldDecorator = (field, item, getFieldDecorator, placeholder, input
       message: `请输入${field.name}`,
     }]
   }
-
-  return getFieldDecorator(key, { initialValue, rules, inputProps, ...decoratorOpts })(input)
+  if (getFieldDecorator) {
+    return getFieldDecorator(key, { initialValue, rules, inputProps, ...decoratorOpts })(input)
+  }
+  return initialValue
 }
 
 /*

@@ -2,6 +2,7 @@
   "extends": "airbnb", // 继承eslint-config-airbnb里面提供的lint规则
   "globals": {
     "React": true,
+    "qs": true,
     "assets": true,
     "PropTypes": true,
     "moment": true,

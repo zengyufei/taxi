@@ -1,8 +1,8 @@
-import { Form, Button } from 'antd';
-import { HForm } from 'carno';
-import Utils from 'utils';
+import { Form, Button } from 'antd'
+import { HForm } from 'carno'
+import Utils from 'utils'
 
-const { getFields, validate } = Utils.Form;
+const { getFields, validate } = Utils.Form
 
 const fields = [
   {
@@ -25,20 +25,20 @@ const fields = [
     name: '自我介绍',
     type: 'textarea',
   },
-];
+]
 
-let results = {};
+let results = {}
 
 function HFormGenBase({ form }) {
   const formProps = {
     fields: getFields(fields).values(),
     item: {},
     form,
-  };
+  }
   const onSubmit = () => {
-    validate(form, fields)((values) => {
-      results = values;
-    });
+    validate(form, fields)(values => {
+      results = values
+    })
   };
 
   return (
@@ -49,7 +49,7 @@ function HFormGenBase({ form }) {
         <pre>{JSON.stringify(results, null, 2)}</pre>
       </div>
     </div>
-  );
+  )
 }
 
-export default Form.create()(HFormGenBase);
+export default Form.create()(HFormGenBase)
