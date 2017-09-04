@@ -42,29 +42,95 @@ export default function (options) {
   const decoratorOpts = pick(options, DECORATOR_KEYS)
 
   let { formType, inputProps } = options
-  let { label, help, hasFeedback, disabled } = formItemProps
-  const { form, field, item, rules, initialValue, placeholder, onChange } = options
+  let { label, help, hasFeedback = true, disabled, placeholder } = formItemProps
+  const { showLabel = true, form, field, item, rules, initialValue, onChange } = options
   const { key, name } = field
 
+  let isText = false
   let newField
-  if (formType && field.form) {
+  // 当用户设置改属性时
+  if (formType !== undefined) {
+    // 需要判断是否需要取 field.form 来表达行为
+    if (typeof formType === 'boolean') {
+      // 为 boolean 且属性为 false，则只做表达使用。（使用双绑，不提交则是安全的）
+      if (!formType) {
+        isText = true
+        newField = _.cloneDeep(field)
+        delete newField.form
+      }
+    // 如果为 string ，则需要用 formType 作为 key 去 field.form 查找
+    } else if (typeof formType === 'string') {
+      if (field.form !== undefined) {
+        // 为 boolean 时，说明不想用双绑，后续只需要判断 field.form 的属性做判断
+        if (typeof field.form === 'boolean') {
+          if (!field.form) {
+            isText = true
+            newField = _.cloneDeep(field)
+          }
+        // 最正常的流程
+        } else if (typeof field.form === 'object') {
+          // formType 作为 key 有可能取不到值
+          newField = field.form[formType]
+
+          // 取到值之后移除其他属性
+          if (newField !== undefined) {
+            if (typeof newField === 'boolean' && !newField) {
+              isText = true
+              newField = { form: false }
+            } else {
+              Object.keys(field.form).forEach(e => e === formType || delete field.form[e])
+            }
+          // 当发生取不到值，就在 field.form 中查找这些属性
+          } else if (/type|rules|enums|render|meta|required|disabled|placeholder/i.test(Object.keys(field.form).toString())) {
+            newField = _.cloneDeep(field.form)
+            Object.keys(newField).forEach(e => {
+              /type|rules|enums|render|meta|required|disabled|placeholder/i.test(e) || delete newField[e]
+            })
+          } else {
+            newField = _.cloneDeep(field)
+            delete newField.form
+          }
+        // 为 string 的情况下， field.form 为空，则报错
+        } else {
+          throw new Error('field.form 只能是 boolean 或 object')
+        }
+      } else {
+        newField = field
+        delete newField.form
+      }
+    // 如果为 其他，则报错
+    } else {
+      throw new Error('formType 只能是 boolean 或 string')
+    }
+  } else {
+    // formType === undefined 时，则使用平级属性，不去 field.form 查找
+    newField = field
+  }
+
+
+  /* if (typeof formType === 'boolean' && !formType) {
+    isText = true
+    newField = field
+  } else if (formType && field.form) {
     newField = field.form[formType]
-    if (newField) {
+    if (typeof newField === 'boolean' && !newField) {
+      isText = true
+    } else if (newField) {
       Object.keys(field.form).forEach(e => e === formType || delete field.form[e])
-    } else if (/type|rules|enums|render|meta|required|disabled/i.test(Object.keys(field.form).toString())) {
+    } else if (/type|rules|enums|render|meta|required|disabled|placeholder/i.test(Object.keys(field.form).toString())) {
       newField = _.cloneDeep(field.form)
       Object.keys(newField).forEach(e => {
-        /type|rules|enums|render|meta|required|disabled/i.test(e) || delete newField[e]
+        /type|rules|enums|render|meta|required|disabled|placeholder/i.test(e) || delete newField[e]
       })
     } else {
       newField = _.cloneDeep(field)
       delete newField.form
     }
   } else if (field.form) {
-    if (/type|rules|enums|render|meta|required|disabled/i.test(Object.keys(field.form).toString())) {
+    if (/type|rules|enums|render|meta|required|disabled|placeholder/i.test(Object.keys(field.form).toString())) {
       newField = _.cloneDeep(field.form)
       Object.keys(newField).forEach(e => {
-        /type|rules|enums|render|meta|required|disabled/i.test(e) || delete newField[e]
+        /type|rules|enums|render|meta|required|disabled|placeholder/i.test(e) || delete newField[e]
       })
     } else {
       newField = _.cloneDeep(field)
@@ -72,26 +138,33 @@ export default function (options) {
     }
   } else {
     newField = field
+  } */
+
+  if (showLabel) {
+    label = label === undefined ? name : label
   }
 
-  label = label === undefined ? name : label
-  help = help === undefined ? newField.help : help
-
-  if (newField.hasFeedback === false || hasFeedback === false) {
-    hasFeedback = false
-  } else {
-    hasFeedback = true
-  }
-  if (newField.type === 'hidden') {
-    hasFeedback = false
-  }
-
-  if (newField.disabled) {
-    disabled = newField.disabled
-  }
+  help = help === undefined ? (newField && newField.help) : help
 
   const dataItem = item || { [key]: initialValue }
   const fieldItem = extend(field, { rules, ...newField })
+
+  if (isText || fieldItem.type === 'hidden') {
+    hasFeedback = false
+  }
+
+  if (fieldItem.hasFeedback !== undefined) {
+    hasFeedback = fieldItem.hasFeedback
+  }
+
+  if (fieldItem.disabled !== undefined) {
+    disabled = fieldItem.disabled
+  }
+
+  if (fieldItem.placeholder !== undefined) {
+    placeholder = fieldItem.placeholder
+  }
+
   delete fieldItem.form
 
   formItemProps = extend(formItemProps, { label, help, hasFeedback, key })
@@ -99,7 +172,7 @@ export default function (options) {
 
   return (
     <FormItem {...formItemProps} key={fieldItem.key}>
-      {FormUtil.createFieldDecorator(fieldItem, dataItem, (form && form.getFieldDecorator) || undefined, placeholder, inputProps, decoratorOpts)}
+      {FormUtil.createFieldDecorator(fieldItem, dataItem, (form && form.getFieldDecorator) || undefined, placeholder, inputProps, decoratorOpts, isText)}
     </FormItem>
   )
 }

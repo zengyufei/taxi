@@ -232,7 +232,7 @@ const getFields = (originFields, fieldKeys, extraFields) => {
 /*
  * 创建antd fieldDecorator
  */
-const createFieldDecorator = (field, item, getFieldDecorator, placeholder, inputProps = {}, decoratorOpts = {}) => {
+const createFieldDecorator = (field, item, getFieldDecorator, placeholder, inputProps = {}, decoratorOpts = {}, isText = false) => {
   const { key } = field
   let { type, rules, enums, render, meta, required } = field
 
@@ -243,7 +243,7 @@ const createFieldDecorator = (field, item, getFieldDecorator, placeholder, input
     }
   }
 
-  const typedItem = (fieldTypes[type] || render)({ initialValue: item[key] || null, meta, field, inputProps, placeholder })
+  const typedItem = (fieldTypes[type] || render)({ initialValue: item[key] || null, meta, field, inputProps, placeholder, isText })
   let { input, initialValue } = typedItem
 
   if (React.isValidElement(typedItem)) {
@@ -257,10 +257,8 @@ const createFieldDecorator = (field, item, getFieldDecorator, placeholder, input
       message: `请输入${field.name}`,
     }]
   }
-  if (getFieldDecorator) {
-    return getFieldDecorator(key, { initialValue, rules, inputProps, ...decoratorOpts })(input)
-  }
-  return initialValue
+
+  return getFieldDecorator(key, { initialValue, rules, inputProps, ...decoratorOpts })(input)
 }
 
 /*

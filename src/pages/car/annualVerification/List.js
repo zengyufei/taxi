@@ -2,94 +2,98 @@
  * @Author: zengyufei
  * @Date: 2017-08-22 17:50:34
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-31 15:52:52
+ * @Last Modified time: 2017-09-04 14:10:18
  */
-import { connect } from 'dva'
-import { Form, Button, Table, Popconfirm, Upload, Modal } from 'antd'
-import qs from 'qs'
+import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
 
 import ZSearch from 'ZSearch'
 import { getColumns } from 'TableUtils'
 import { getFields, getSearchFields } from 'FormUtils'
 
-import Add from './Add.js'
-import Update from './Update.js'
-import Info from './Info.js'
+import Add from './Add'
+import Update from './Update'
+import Info from './Info'
 
-const { tokenSessionKey } = constant
+import { tokenSessionKey, prefix, name, storeName,
+  searchCacheKey, defaultSearchFields, allSearchFields, importAction, exportFileParam, exportFileAction, // 搜索条
+  defaultTableFields, // 表格
+} from './constant'
+
+import fields from './fields'
+
+const changeComponent = {
+  Add: <Add key="Add" />,
+  Update: <Update key="Update" />,
+  Info: <Info key="Info" />,
+}
 
 const List = options => {
-  const { loading, form, page, methods, res, pageState } = options
-  const { onSearch, toAdd, toEdit, toInfo, exportAnnualVerification, onShowSizeChange, onChange, handlerUpload
-    , synthesizeing, synthesize, drivingLicenseing, drivingLicense, taximetering, taximeter } = methods
+  const { loading, form, methods } = options
+  const { initValues, page: { pageNo, pageSize, dataList, totalCount }, pageState, res } = options[storeName]
+
+  const { onSearch, onReset, toAdd, toEdit, toInfo, exportFile, exportExample, onShowSizeChange, onChange } = methods
+
+  const { handlerUpload, synthesizeing, synthesize, drivingLicenseing, drivingLicense, taximetering, taximeter } = methods
 
   /**
-   * 导入文件
+   * 搜索条
    */
-  const importAnnualVerification = {
+  const uploadProps = {
     name: 'file',
-    action: `${BASE_URL}/annualVerification/import.htm?token=${session.get(tokenSessionKey)}`,
+    action: importAction,
     headers: {
-      authorization: 'authorization-text',
+      token: session.get(tokenSessionKey),
     },
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        // console.log('uploading')
-      }
-      if (info.file.status === 'done') {
-        // console.log(`${info.file.name} file uploaded successfully`);
-        Modal.info({
-          title: '导入结果',
-          content: (
-            info.file.response.msg
-          ),
-          onOk: handlerUpload,
-        })
-      } else if (info.file.status === 'error') {
-        Modal.error({
-          title: '上传失败',
-          content: (
-            info.file.response.msg
-          ),
-        })
-      }
-    },
+    onChange: handlerUpload,
   }
 
 
   const btns = (
-    <div>
-      <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
-      <Button type="primary" icon="clock-circle-o" onClick={synthesizeing}>营运证年审即将过期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={synthesize}>营运证年审已过期</Button>&nbsp;
-      <Button type="primary" icon="clock-circle-o" onClick={drivingLicenseing}>行驶证即将过期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={drivingLicense}>行驶证已过期</Button>&nbsp;
-      <Button type="primary" icon="clock-circle-o" onClick={taximetering}>计价器即将过期</Button>&nbsp;
-      <Button type="primary" icon="close-circle-o" onClick={taximeter}>计价器已过期</Button>&nbsp;
-      <Popconfirm title="是否确定要导出" onConfirm={exportAnnualVerification} >
-        <Button type="primary" icon="export" >导出</Button>&nbsp;
-      </Popconfirm>
-      <Upload {...importAnnualVerification} style={{ display: 'inline-block' }}>
-        <Button type="primary" icon="download" >导入</Button>
-      </Upload>
+    <div style={{ marginTop: '-30px' }}>
+      <div style={{ marginBottom: '3px' }}>
+        <Button type="primary" icon="clock-circle-o" onClick={synthesizeing}>营运证年审即将过期</Button>&nbsp;
+        <Button type="primary" icon="close-circle-o" onClick={synthesize}>营运证年审已过期</Button>&nbsp;
+        <Button type="primary" icon="clock-circle-o" onClick={drivingLicenseing}>行驶证即将过期</Button>&nbsp;
+        <Button type="primary" icon="close-circle-o" onClick={drivingLicense}>行驶证已过期</Button>&nbsp;
+      </div>
+      <div style={{ marginBottom: '3px' }}>
+        <ZButton permission="car:annualVerification:insert">
+          <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增{name}</Button>&nbsp;
+        </ZButton>
+        <ZButton permission="car:annualVerification:export">
+          <Popconfirm title="是否确定要导出" onConfirm={exportFile} >
+            <Button type="primary" icon="export" >导出</Button>&nbsp;
+          </Popconfirm>
+        </ZButton>
+        <ZButton permission="car:annualVerification:import">
+          <Upload {...uploadProps} style={{ display: 'inline-block' }}>
+            <Button type="primary" icon="download" >导入</Button>
+          </Upload>
+          <Button type="primary" icon="export" onClick={exportExample}>下载导入模板</Button>&nbsp;
+        </ZButton>
+        <Button type="primary" icon="clock-circle-o" onClick={taximetering}>计价器即将过期</Button>&nbsp;
+        <Button type="primary" icon="close-circle-o" onClick={taximeter}>计价器已过期</Button>&nbsp;
+      </div>
     </div>
   )
 
   const searchBarProps = {
     form,
-    showLabel: true,
-    showReset: true,
+    showReset: !!Object.keys(initValues).length,
     btns,
-    searchCacheKey: 'annualVerification_condin',
-    searchFields: getSearchFields(searchFields).values(),
-    fields: getFields(searchFields, local.get('annualVerification_condin') || ['carNo', 'plateNumber']).values(),
+    searchCacheKey,
+    searchFields: getSearchFields(fields, allSearchFields).values(),
+    fields: getFields(fields, local.get(searchCacheKey) || defaultSearchFields).values(),
     item: {
+      ...initValues, // 搜索框查询后 回显
     },
     onSearch,
-    onReset: onSearch,
+    onReset,
   }
 
-
+  /**
+   * 表格
+   */
   const operatorColumn = [{
     key: 'operator',
     name: '操作',
@@ -105,42 +109,33 @@ const List = options => {
       )
     },
   }]
-  const tableColumns = getColumns(fields).enhance(operatorColumn).values()
+  const tableColumns = getColumns(fields, defaultTableFields).enhance(operatorColumn).values()
 
-
-  let pageSwitch
-  if (res === 'annualVerificationAdd') {
-    pageSwitch = <Add key="annualVerificationAdd" />
-  } else if (res === 'annualVerificationUpdate') {
-    pageSwitch = <Update key="annualVerificationUpdate" />
-  } else if (res === 'annualVerificationInfo') {
-    pageSwitch = <Info key="annualVerificationInfo" />
-  }
 
   return (
     <div>
       {
-        pageState ? pageSwitch : <div>
+        pageState ? changeComponent[res] : <div>
           <div style={{ padding: '20px' }}>
             <ZSearch {...searchBarProps} />
           </div>
 
           <Table
             rowKey="id"
-            dataSource={(page && page.dataList) || []}
+            dataSource={dataList}
             columns={tableColumns}
             loading={loading}
             bordered
             pagination={{ // 分页
-              current: (page && +page.pageNo),
-              total: (page && +page.totalCount) || 0, // 总数量
-              pageSize: (page && +page.pageSize) || 10, // 显示几条一页
+              current: pageNo,
+              total: totalCount, // 总数量
+              pageSize, // 显示几条一页
               defaultPageSize: 10, // 默认显示几条一页
               showSizeChanger: true, // 是否显示可以设置几条一页的选项
               onShowSizeChange,
               onChange,
               showTotal() { // 设置显示一共几条数据
-                return `共${(page && page.totalCount) || 0}  条数据`
+                return `共 ${totalCount} 条数据`
               },
             }}
           />
@@ -150,166 +145,173 @@ const List = options => {
   )
 }
 
-function mapStateToProps({ loading, annualVerificationStore }) {
+function mapStateToProps(state) {
   return {
-    loading: loading.models.annualVerificationStore,
-    page: annualVerificationStore.page,
-    pageState: annualVerificationStore.pageState,
-    res: annualVerificationStore.res,
+    [storeName]: state[storeName],
   }
 }
 
 const mapDispatchToProps = (dispatch, { form }) => {
   return {
-    methods: {
 
-      onSearch(values) {
-        dispatch({
-          type: 'annualVerificationStore/queryPage',
-          ...values,
-        })
-      },
-
-      /** 即将到期和已到期 */
-      synthesizeing() {
-        dispatch({
-          type: 'annualVerificationStore/warnList',
-          warningEnum: 'synthesizeDate',
-          startDate: moment().format('YYYY-MM-DD'),
-          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
-        })
-      },
-      synthesize() {
-        dispatch({
-          type: 'annualVerificationStore/warnList',
-          warningEnum: 'synthesizeDate',
-          endDate: moment().format('YYYY-MM-DD'),
-        })
-      },
-      drivingLicenseing() {
-        dispatch({
-          type: 'annualVerificationStore/warnList',
-          warningEnum: 'drivingLicenseDate',
-          startDate: moment().format('YYYY-MM-DD'),
-          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
-        })
-      },
-      drivingLicense() {
-        dispatch({
-          type: 'annualVerificationStore/warnList',
-          warningEnum: 'drivingLicenseDate',
-          endDate: moment().format('YYYY-MM-DD'),
-        })
-      },
-      taximetering() {
-        dispatch({
-          type: 'annualVerificationStore/warnList',
-          warningEnum: 'taximeterDate',
-          startDate: moment().format('YYYY-MM-DD'),
-          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
-        })
-      },
-      taximeter() {
-        dispatch({
-          type: 'annualVerificationStore/warnList',
-          warningEnum: 'taximeterDate',
-          endDate: moment().format('YYYY-MM-DD'),
-        })
-      },
-
-      toAdd() {
-        dispatch({
-          type: 'carStore/setCarNull',
-        })
-        dispatch({
-          type: 'annualVerificationStore/toAdd',
-          res: 'annualVerificationAdd',
-        })
-      },
-
-      toEdit(annualVerification) {
-        dispatch({
-          annualVerification,
-          type: 'annualVerificationStore/toEdit',
-          res: 'annualVerificationUpdate',
-        })
-      },
-
-      toInfo(annualVerification) {
-        dispatch({
-          annualVerification,
-          type: 'annualVerificationStore/toInfo',
-          res: 'annualVerificationInfo',
-        })
-      },
-
-      exportAnnualVerification() {
-        const carNo = form.getFieldValue('carNo')
-        const plateNumber = form.getFieldValue('plateNumber')
-        const params = {
-          carNo,
-          plateNumber,
-        }
-        // 删除空值、undefind
-        Object.keys(params).map(v => params[v] || delete params[v])
-        const paramsForGet = (params && qs.stringify(params)) || ''
-        window.location.href = `${BASE_URL}/annualVerification/export.htm?token=${session.get(tokenSessionKey)}&${paramsForGet}`
-      },
-
-      onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
-        let values = form.getFieldsValue()
-        dispatch({
-          type: 'annualVerificationStore/queryPage',
-          pageNo: current,
-          pageSize,
-          ...values,
-        })
-      },
-
-      onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
-        let values = form.getFieldsValue()
-        dispatch({
-          type: 'annualVerificationStore/queryPage',
-          pageNo: current,
-          pageSize,
-          ...values,
-        })
-      },
-
-      handlerUpload() {
-        dispatch({
-          type: 'annualVerificationStore/queryPage',
-        })
-      },
-
-
+    onSearch(values) {
+      dispatch({
+        type: `${storeName}/queryPage`,
+        ...values,
+      })
     },
+
+    onReset() {
+      dispatch({
+        type: `${storeName}/queryPage`,
+      })
+      dispatch({
+        type: `${storeName}/updateState`,
+        initValues: {},
+      })
+    },
+
+
+    /** 即将到期和已到期 */
+    synthesizeing() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'synthesizeDate',
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+      })
+    },
+    synthesize() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'synthesizeDate',
+        endDate: moment().format('YYYY-MM-DD'),
+      })
+    },
+    drivingLicenseing() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'drivingLicenseDate',
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+      })
+    },
+    drivingLicense() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'drivingLicenseDate',
+        endDate: moment().format('YYYY-MM-DD'),
+      })
+    },
+    taximetering() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'taximeterDate',
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+      })
+    },
+    taximeter() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'taximeterDate',
+        endDate: moment().format('YYYY-MM-DD'),
+      })
+    },
+
+    toAdd() {
+      dispatch({
+        type: 'carStore/updateState',
+        car: {},
+        plateList: [],
+      })
+      dispatch({
+        type: `${storeName}/updateState`,
+        res: 'Add',
+        pageState: true,
+        synthesizeFileList: [],
+        synthesizeFile: '',
+        drivingLicenseFileList: [],
+        drivingLicenseFile: '',
+        taximeterFileList: [],
+        taximeterFile: '',
+      })
+    },
+
+    toEdit(annualVerification) {
+      dispatch({
+        annualVerification,
+        type: `${storeName}/toEdit`,
+        res: 'Update',
+      })
+    },
+
+    toInfo(annualVerification) {
+      dispatch({
+        annualVerification,
+        type: `${storeName}/toInfo`,
+        res: 'Info',
+      })
+    },
+
+    exportFile() {
+      const token = session.get(tokenSessionKey)
+      const params = form.getFieldsValue(exportFileParam)
+      // 删除空值、undefind
+      Object.keys(params).map(v => params[v] || delete params[v])
+      const paramsForGet = (params && qs.stringify(params)) || ''
+      window.location.href = `${exportFileAction}?token=${token}&${paramsForGet}`
+    },
+
+    exportExample() {
+      window.location.href = `${exportFileAction}?token=${session.get(tokenSessionKey)}&carNo=-1`
+    },
+
+    onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+      let values = form.getFieldsValue()
+      dispatch({
+        type: `${storeName}/queryPage`,
+        pageNo: current,
+        pageSize,
+        ...values,
+      })
+    },
+
+    onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+      let values = form.getFieldsValue()
+      dispatch({
+        type: `${storeName}/queryPage`,
+        pageNo: current,
+        pageSize,
+        ...values,
+      })
+    },
+
+    handlerUpload(info) {
+      if (info.file.status !== 'uploading') {
+        console.log('uploading')
+      }
+      if (info.file.status === 'done') {
+        // console.log(`${info.file.name} file uploaded successfully`);
+        Modal.info({
+          title: '导入结果',
+          content: (
+            info.file.response.msg
+          ),
+          onOk() {
+            dispatch({
+              type: `${storeName}/queryPage`,
+            })
+          },
+        })
+      } else if (info.file.status === 'error') {
+        console.log('error')
+      }
+    },
+
+
   }
 }
 
-const fields = [{
-  name: '自编号',
-  key: 'carNo',
-}, {
-  name: '车牌号',
-  key: 'plateNumber',
-}, {
-  name: '营运证年审有效期截止时间',
-  key: 'synthesizeDate',
-}, {
-  name: '行驶证有效期截止时间',
-  key: 'drivingLicenseDate',
-}, {
-  name: '计价器年审有效期截止时间',
-  key: 'taximeterDate',
-}]
 
-const searchFields = [{
-  name: '自编号',
-  key: 'carNo',
-}, {
-  name: '车牌号',
-  key: 'plateNumber',
-}]
-
-export default Form.create()(connect(mapStateToProps, mapDispatchToProps)(List))
+export default PageUtils.extend({ prefix, mapStateToProps, mapDispatchToProps, formOptions: true })(List)

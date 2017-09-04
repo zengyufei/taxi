@@ -14,7 +14,9 @@ const isDev = process.env.NODE_ENV.indexOf('dev') > -1
 const Login = option => {
   const { dispatch, form } = option
 
-  const itemProps = { form,
+  const itemProps = {
+    showLabel: false,
+    form,
     item: {
       account: isDev ? 'admin' : '',
       password: isDev ? 'admin' : '',
@@ -60,12 +62,14 @@ const Login = option => {
 const fields = [
   {
     key: 'account',
+    name: '账号',
     rules: [{
       required: true,
       message: '请输入账号!',
     }],
   }, {
     key: 'password',
+    name: '密码',
     type: 'password',
     rules: [{
       required: true,

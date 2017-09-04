@@ -2,72 +2,48 @@ import { extend } from 'ModelUtils'
 import { Modal } from 'antd'
 
 const prefix = 'annualVerification'
+const storeName = `${prefix}Store`
 
 export default extend({
 
-  namespace: `${prefix}Store`,
+  namespace: storeName,
 
   state: {
-    page: {
-      pageNo: 1,
-      pageSize: 10,
-      totalCount: 0,
-      dataList: [],
-    },
+    page: {},
 
-    dataSource: [],
     // 是否跳转页面
     pageState: false,
     // 跳转哪种页面(新增，修改，详情，分页  默认分页)
-    res: 'annualVerification',
+    res: prefix,
     synthesizeFileList: [],
     drivingLicenseFileList: [],
     taximeterFileList: [],
   },
 
   reducers: {
-    queryPageSuccess(state, { page = {
-      pageNo: 1,
-      pageSize: 10,
-      totalCount: 0,
-      dataList: [],
-    } }) {
-      return { ...state, page, pageState: false }
-    },
     // 异步跳转页面
-    toAdd(state, action) {
-      return { ...state,
-        pageState: true,
-        res: action.res,
-        synthesizeFileList: [],
-        synthesizeFile: '',
-        drivingLicenseFileList: [],
-        drivingLicenseFile: '',
-        taximeterFileList: [],
-        taximeterFile: '' }
-    },
     toEdit(state, action) {
       let plateList = []
-      if (action.annualVerification.plateImage) {
-        plateList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.plateImage, status: 'done' }]
+      if (action[prefix].plateImage) {
+        plateList = [{ uid: 0, url: UPLOAD_URL + action[prefix].plateImage, status: 'done' }]
       }
       let synthesizeList = []
-      if (action.annualVerification.synthesizeFile) {
-        synthesizeList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.synthesizeFile, status: 'done' }]
+      if (action[prefix].synthesizeFile) {
+        synthesizeList = [{ uid: 0, url: UPLOAD_URL + action[prefix].synthesizeFile, status: 'done' }]
       }
       let drivingLicenseList = []
-      if (action.annualVerification.drivingLicenseFile) {
-        drivingLicenseList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.drivingLicenseFile, status: 'done' }]
+      if (action[prefix].drivingLicenseFile) {
+        drivingLicenseList = [{ uid: 0, url: UPLOAD_URL + action[prefix].drivingLicenseFile, status: 'done' }]
       }
       let taximeterList = []
-      if (action.annualVerification.taximeterFile) {
-        taximeterList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.taximeterFile, status: 'done' }]
+      if (action[prefix].taximeterFile) {
+        taximeterList = [{ uid: 0, url: UPLOAD_URL + action[prefix].taximeterFile, status: 'done' }]
       }
 
       return { ...state,
         pageState: true,
         res: action.res,
-        annualVerification: action.annualVerification,
+        [prefix]: action[prefix],
         plateList,
         synthesizeFileList: synthesizeList,
         synthesizeFile: '',
@@ -78,25 +54,25 @@ export default extend({
     },
     toInfo(state, action) {
       let plateList = []
-      if (action.annualVerification.plateImage) {
-        plateList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.plateImage, status: 'done' }]
+      if (action[prefix].plateImage) {
+        plateList = [{ uid: 0, url: UPLOAD_URL + action[prefix].plateImage, status: 'done' }]
       }
       let synthesizeList = []
-      if (action.annualVerification.synthesizeFile) {
-        synthesizeList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.synthesizeFile, status: 'done' }]
+      if (action[prefix].synthesizeFile) {
+        synthesizeList = [{ uid: 0, url: UPLOAD_URL + action[prefix].synthesizeFile, status: 'done' }]
       }
       let drivingLicenseList = []
-      if (action.annualVerification.drivingLicenseFile) {
-        drivingLicenseList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.drivingLicenseFile, status: 'done' }]
+      if (action[prefix].drivingLicenseFile) {
+        drivingLicenseList = [{ uid: 0, url: UPLOAD_URL + action[prefix].drivingLicenseFile, status: 'done' }]
       }
       let taximeterList = []
-      if (action.annualVerification.taximeterFile) {
-        taximeterList = [{ uid: 0, url: UPLOAD_URL + action.annualVerification.taximeterFile, status: 'done' }]
+      if (action[prefix].taximeterFile) {
+        taximeterList = [{ uid: 0, url: UPLOAD_URL + action[prefix].taximeterFile, status: 'done' }]
       }
       return { ...state,
         pageState: true,
         res: action.res,
-        annualVerification: action.annualVerification,
+        [prefix]: action[prefix],
         plateList,
         synthesizeFileList: synthesizeList,
         drivingLicenseFileList: drivingLicenseList,
@@ -132,43 +108,32 @@ export default extend({
       yield formBindType({
       })
     },
-    * queryPage(playload, {get, put}) {  // eslint-disable-line
+
+    * queryPage(playload, { get, update }) {
       const response = yield get(`${prefix}/queryPage`, playload)
-      yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
+      yield update({ page: response.result, pageState: false })
     },
+
     // 提醒 查询
-    * warnList(playload, { get, put }) {
+    * warnList(playload, { get, update }) {
       const response = yield get(`${prefix}/warnList`, playload)
-      yield put({ type: 'queryPageSuccess', page: response.result, register: false })
+      yield update({ page: response.result, register: false })
     },
+
     * insert(playload, { post, put, select }) {
       const response = yield post(`${prefix}/insert`, playload)
       if (response.code === 200) {
         ZMsg.success(response.msg)
-        const page = yield select(state => state.annualVerificationStore.page)
+        const page = yield select(state => state[storeName].page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
     * updateNotNull(playload, { post, put, select }) {
       const response = yield post(`${prefix}/update`, playload)
       if (response.code === 200) {
         ZMsg.success(response.msg)
-        const page = yield select(state => state.annualVerificationStore.page)
+        const page = yield select(state => state[storeName].page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
-      } else {
-        Modal.info({
-          title: '温馨提示',
-          content: (
-            response.msg
-          ),
-        })
       }
     },
     // 删除车辆信息
@@ -176,7 +141,7 @@ export default extend({
       const response = yield get(`${prefix}/deleteById`, { id })
       ZMsg.info(response.msg)
       if (response.code === 200) {
-        const page = yield select(state => state.annualVerificationStore.page)
+        const page = yield select(state => state[storeName].page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       }
     },

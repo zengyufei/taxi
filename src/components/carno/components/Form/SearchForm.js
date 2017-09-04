@@ -1,4 +1,3 @@
-import qs from 'qs'
 import Utils from 'carno/utils'
 import { Form, Button, Row, Col } from 'antd'
 import styles from './index.less'

@@ -104,7 +104,7 @@ export default extend({
       const response = yield post(`${urlPrefix}/update`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
-        const page = yield select(state => state.complainStore.page)
+        const page = yield select(state => state.lostAndFoundStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       }
     },
@@ -114,7 +114,7 @@ export default extend({
       const response = yield get(`${urlPrefix}/deleteById`, id)
       if (+response.code === 200) {
         ZMsg.success(response.msg)
-        const page = yield select(state => state.complainStore.page)
+        const page = yield select(state => state.lostAndFoundStore.page)
         yield put({ type: 'queryPage', pageNo: page.pageNo, pageSize: page.pageSize })
       }
     },

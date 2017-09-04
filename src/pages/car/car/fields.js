@@ -9,11 +9,7 @@ module.exports = [
       add: {
         rules: [{ required: true, message: '请输入自编号!', whitespace: true }, { max: 16, message: '自编号最多长度16', whitespace: true }],
       },
-      update: {
-        hasFeedback: false,
-        disabled: true,
-        rules: [{ required: true, message: '请输入自编号!', whitespace: true }, { max: 16, message: '自编号最多长度16', whitespace: true }],
-      },
+      update: false,
     },
   }, {
     name: '车牌号',
@@ -22,11 +18,7 @@ module.exports = [
       add: {
         rules: [{ required: true, message: '请输入车牌号!' }, { max: 16, message: '车牌号最多长度16', whitespace: true }],
       },
-      update: {
-        hasFeedback: false,
-        disabled: true,
-        rules: [{ required: true, message: '请输入车牌号!' }, { max: 16, message: '车牌号最多长度16', whitespace: true }],
-      },
+      update: false,
     },
   }, {
     name: '车辆照片（45度角）',
@@ -41,9 +33,6 @@ module.exports = [
     name: '车架号',
     key: 'carFrame',
     form: {
-      info: {
-        type: 'info',
-      },
       rules: [{ required: true, message: '请输入车架号!' }, { max: 32, message: '车架号最多长度32', whitespace: true }],
     },
   }, {
@@ -64,9 +53,6 @@ module.exports = [
     key: 'ownershipBeginDate',
     type: 'date',
     form: {
-      info: {
-        type: 'info',
-      },
       rules: [{ required: true, message: '请选择产权证起始时间!' }],
     },
   }, {

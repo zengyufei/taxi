@@ -10,31 +10,37 @@ const MonthPicker = DatePicker.MonthPicker
  * 表单字段类型
  */
 const fieldTypes = {
-  yearMonth: ({ initialValue, inputProps }) => {
-    return {
+  yearMonth: ({ initialValue, inputProps, isText }) => {
+    return isText ? <span>{initialValue}</span> : {
       input: <MonthPicker {...inputProps} />,
       initialValue: initialValue ? moment(initialValue) : null,
     }
   },
-  date: ({ initialValue, inputProps }) => {
-    return {
+  date: ({ initialValue, inputProps, isText }) => {
+    return isText ? <span>{initialValue}</span> : {
       input: <DatePicker {...inputProps} />,
       initialValue: initialValue ? moment(initialValue) : null,
     }
   },
-  datetime: ({ initialValue, inputProps }) => {
-    return {
+  datetime: ({ initialValue, inputProps, isText }) => {
+    return isText ? <span>{initialValue}</span> : {
       input: <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" {...inputProps} />,
       initialValue: initialValue ? moment(initialValue) : null,
     }
   },
-  dateRange: ({ inputProps }) => {
-    return <RangePicker showTime format="YYYY-MM-DD" {...inputProps} />
+  dateRange: ({ initialValue, inputProps, isText }) => {
+    return isText ? <span>{initialValue}</span> : {
+      input: <RangePicker showTime format="YYYY-MM-DD" {...inputProps} />,
+      initialValue: initialValue ? moment(initialValue) : null,
+    }
   },
-  datetimeRange: ({ inputProps }) => {
-    return <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" {...inputProps} />
+  datetimeRange: ({ initialValue, inputProps, isText }) => {
+    return isText ? <span>{initialValue}</span> : {
+      input: <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" {...inputProps} />,
+      initialValue: initialValue ? moment(initialValue) : null,
+    }
   },
-  enum: ({ field, placeholder, inputProps }) => {
+  enum: ({ initialValue, field, placeholder, inputProps, isText }) => {
     let enums
     if (field.form && field.form.enums) {
       enums = field.form.enums
@@ -49,7 +55,7 @@ const fieldTypes = {
       return occ
     }, [])
     placeholder = placeholder === false ? '' : (placeholder || `请选择${field.name}`)
-    return (
+    return isText ? <span>{enums[initialValue]}</span> : (
       <Select allowClear placeholder={placeholder} {...inputProps} >
         {enumsArray.map(item =>
           (<Option key={item.key}>
@@ -59,33 +65,36 @@ const fieldTypes = {
       </Select>
     )
   },
-  boolean: ({ inputProps }) => {
+  boolean: ({ inputProps, isText }) => {
     return <Checkbox {...inputProps} />
   },
-  switch: ({ inputProps }) => {
+  switch: ({ inputProps, isText }) => {
     return <Switch {...inputProps} />
   },
-  number: ({ meta = {}, inputProps }) => {
-    return <InputNumber min={meta.min || -Infinity} max={meta.max || Infinity} step={meta.step || 1} {...inputProps} />
+  number: ({ meta = {}, initialValue, inputProps, isText }) => {
+    return isText ? <span>{initialValue}</span> : <InputNumber min={meta.min || -Infinity} max={meta.max || Infinity} step={meta.step || 1} {...inputProps} />
   },
-  textarea: ({ meta = {}, field, placeholder, inputProps }) => {
+  textarea: ({ meta = {}, initialValue, field, placeholder, inputProps, isText }) => {
     placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
-    return <Input type="textarea" rows={meta.rows || 3} placeholder={placeholder} autosize={meta.autosize} {...inputProps} />
+    return isText ? <span>{initialValue}</span> : <Input type="textarea" rows={meta.rows || 3} placeholder={placeholder} autosize={meta.autosize} {...inputProps} />
   },
-  hidden: () => {
-    return <Input type="hidden" />
+  hidden: ({ initialValue }) => {
+    return {
+      input: <Input type="hidden" />,
+      initialValue,
+    }
   },
-  text: ({ meta = {}, field, placeholder, inputProps }) => {
+  text: ({ meta = {}, initialValue, field, placeholder, inputProps, isText }) => {
     placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
     const disabled = inputProps.disabled || meta.disabled || false
-    return <Input type="text" placeholder={placeholder} {...inputProps} disabled={disabled} />
+    return isText ? <span>{initialValue}</span> : <Input type="text" placeholder={placeholder} {...inputProps} disabled={disabled} />
   },
-  password: ({ meta = {}, field, placeholder, inputProps }) => {
+  password: ({ meta = {}, field, placeholder, inputProps, isText }) => {
     placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
     const disabled = inputProps.disabled || meta.disabled || false
     return <Input type="password" placeholder={placeholder} {...inputProps} disabled={disabled} />
   },
-  textNumber: ({ meta = {}, field, placeholder, inputProps }) => {
+  textNumber: ({ meta = {}, field, placeholder, inputProps, isText }) => {
     placeholder = placeholder === false ? '' : (placeholder || meta.placeholder || `请输入${field.name}`)
     return <Input type="text" placeholder={placeholder} {...inputProps} />
   },

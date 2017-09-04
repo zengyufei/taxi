@@ -92,7 +92,7 @@ export default extend({
      * 获取用户列表分页
      * @param playload 包含 pageNo pageSize account mobile roleId
      */
-    *queryPage(playload, {get, put}) {  // eslint-disable-line
+    *queryPage(playload, {get, put}) {  
       const response = yield get(`${prefix}/queryPage`, playload)
       yield put({ type: 'queryPageSuccess', page: response.result, pageState: false })
     },

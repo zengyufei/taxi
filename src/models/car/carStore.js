@@ -11,7 +11,6 @@ export default extend({
 
     page: {},
 
-    dataSource: [],
     // 是否跳转页面
     pageState: false,
     // 跳转哪种页面(新增，修改，详情，分页  默认分页)

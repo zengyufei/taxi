@@ -21,9 +21,12 @@ Item组件，是对`antd`中`FormItem`以及`getFieldDecorator`的封装，提�
 
 | 参数      | 说明                                     | 类型       | 默认值 |
 |-----------|------------------------------------------|------------|-------|
+| formType | 如果为boolean，则整个表单都为文本text模式；与Field.form 属性关联，这里值 Field.form 为 object时的 key | boolean/string |  |
 | fields | 表单控件定义数组,详细属性请参考Field说明 | array |  |
 | item | 默认数据对象 | object | - |
 | form | antd form对象 | object | - |
+| btn | 表单最下边提交按钮 antd 所有对象，一般都是 Button | JSX | - |
+| formLayout | 表单横向或纵向，默认横向 horizontal | JSX | - |
 | layout | 表单控件布局属性,参考antd formitem中的布局，示例: {labelCol: {span: 3, offset: 0}, wrapperCol: { span: 20 }} | object | - |
 | ...others | 传递给antd form的其它属性, 请参考ant.form属性 | - | - |
 
@@ -56,6 +59,7 @@ Item组件，是对`antd`中`FormItem`以及`getFieldDecorator`的封装，提�
 | enums | 字段枚举定义, 如果字段拥有此属性，则字段类型为enmu,示例: enums:{ ENABLED: '启用', DISABLED: '禁用'} | {} | - |
 | required | form专用属性，是否必填字段 | boolean | - |
 | render | table专用属性，自定义渲染 | boolean | - |
+| form | 自定义表单行为,支持除key、name 以外的属性 | boolean/object/undefined | - |
 
 
 

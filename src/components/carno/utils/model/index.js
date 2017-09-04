@@ -73,6 +73,12 @@ const getDefaultModel = () => {
           ...payload,
         }
       },
+      updateInitValues(state, { initValues }) {
+        return {
+          ...state,
+          ..._.assign(state.initValues, initValues),
+        }
+      },
     },
   }
 }

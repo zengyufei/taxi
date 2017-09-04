@@ -1,13 +1,13 @@
 const { tokenSessionKey } = constant
 
-const prefix = 'car'
-const name = '车辆'
+const prefix = 'annualVerification'
+const name = '年审'
 const storeName = `${prefix}Store`
 
 // 搜索条
 const searchCacheKey = `${prefix}_condin`
-const defaultSearchFields = ['carNo', 'plateNumber', 'carType']
-const allSearchFields = ['carNo', 'plateNumber', 'carType', 'carFrame', 'ownershipNo', 'engineNumber', 'carColor', 'carStatus', 'certificateNo']
+const defaultSearchFields = ['carNo', 'plateNumber']
+const allSearchFields = ['carNo', 'plateNumber']
 // 上传文件
 const importAction = `${BASE_URL}/${prefix}/import.htm`
 // 上传图片
@@ -17,7 +17,7 @@ const exportFileParam = ['carNo', 'plateNumber']
 const exportFileAction = `${BASE_URL}/${prefix}/export.htm`
 
 // 表格
-const defaultTableFields = ['carNo', 'plateNumber', 'carType', 'carFrame', 'ownershipNo', 'ownershipBeginDate', 'ownershipEndDate', 'engineNumber', 'drivingLicenseDate', 'roadTransportBeginDate', 'roadTransportEndDate', 'carColor', 'carStatus', 'certificateNo']
+const defaultTableFields = ['carNo', 'plateNumber', 'synthesizeDate', 'drivingLicenseDate', 'taximeterDate']
 
 module.exports = {
   tokenSessionKey,

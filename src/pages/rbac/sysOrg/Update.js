@@ -40,6 +40,7 @@ let UpdatePage = option => {
   }
 
   const formProps = {
+    formType: 'update',
     fields: getFields(fields).values(),
     item: {
       ...sysOrg,
@@ -70,9 +71,8 @@ const fields = [
   {
     key: 'orgNo',
     name: '组织编号',
-    hasFeedback: false,
-    meta: {
-      disabled: true,
+    form: {
+      update: false,
     },
   },
   {

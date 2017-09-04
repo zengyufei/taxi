@@ -1,3 +1,9 @@
+/*
+ * @Author: zengyufei 
+ * @Date: 2017-09-04 11:12:25 
+ * @Last Modified by: zengyufei 
+ * @Last Modified time: 2017-09-04 11:12:25 
+ */
 import { Button, Table, Popconfirm, Upload, Modal } from 'antd'
 
 import ZSearch from 'ZSearch'
@@ -8,8 +14,8 @@ import Add from './Add'
 import Update from './Update'
 import Info from './Info'
 
-import { tokenSessionKey, prefix, storeName,
-  searchCacheKey, defaultSearchFields, allSearchFields, uploadAction, exportFileParam, // 搜索条
+import { tokenSessionKey, prefix, name, storeName,
+  searchCacheKey, defaultSearchFields, allSearchFields, importAction, exportFileParam, exportFileAction, // 搜索条
   defaultTableFields, // 表格
 } from './constant'
 
@@ -24,14 +30,17 @@ const changeComponent = {
 const List = options => {
   const { loading, form, methods } = options
   const { initValues, page: { pageNo, pageSize, dataList, totalCount }, pageState, res } = options[storeName]
-  const { toInfo, toEdit, exportFile, exportExample, toAdd, onSearch, onReset, onShowSizeChange, onChange, handlerUpload, roadTransporting, roadTransport, ownershiping, ownership } = methods
+
+  const { onSearch, onReset, toInfo, toEdit, toAdd, exportFile, exportExample, onShowSizeChange, onChange } = methods
+
+  const { handlerUpload, roadTransporting, roadTransport, ownershiping, ownership } = methods
 
   /**
    * 搜索条
    */
   const uploadProps = {
     name: 'file',
-    action: uploadAction,
+    action: importAction,
     headers: {
       token: session.get(tokenSessionKey),
     },
@@ -39,7 +48,7 @@ const List = options => {
   }
   const btns = (
     <div>
-      <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增</Button>&nbsp;
+      <Button type="primary" icon="plus-circle-o" onClick={toAdd}>新增{name}</Button>&nbsp;
       <Button type="primary" icon="clock-circle-o" onClick={roadTransporting}>道路运输证即将过期</Button>&nbsp;
       <Button type="primary" icon="close-circle-o" onClick={roadTransport}>道路运输证已过期</Button>&nbsp;
       <Button type="primary" icon="clock-circle-o" onClick={ownershiping}>产权证即将过期</Button>&nbsp;
@@ -127,150 +136,149 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch, { form }) => {
   return {
-    methods: {
 
-      onSearch(values) {
-        dispatch({
-          type: `${storeName}/queryPage`,
-          ...values,
-        })
-        dispatch({
-          type: `${storeName}/updateState`,
-          initValues: values,
-        })
-      },
-
-      onReset() {
-        dispatch({
-          type: `${storeName}/queryPage`,
-        })
-        dispatch({
-          type: `${storeName}/updateState`,
-          initValues: {},
-        })
-      },
-      /** 即将到期和已到期 */
-      roadTransporting() {
-        dispatch({
-          type: `${storeName}/warnList`,
-          warningEnum: 'roadTransportEndDate',
-          startDate: moment().format('YYYY-MM-DD'),
-          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
-        })
-      },
-      roadTransport() {
-        dispatch({
-          type: `${storeName}/warnList`,
-          warningEnum: 'roadTransportEndDate',
-          endDate: moment().format('YYYY-MM-DD'),
-        })
-      },
-      ownershiping() {
-        dispatch({
-          type: `${storeName}/warnList`,
-          warningEnum: 'ownershipEndDate',
-          startDate: moment().format('YYYY-MM-DD'),
-          endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
-        })
-      },
-      ownership() {
-        dispatch({
-          type: `${storeName}/warnList`,
-          warningEnum: 'ownershipEndDate',
-          endDate: moment().format('YYYY-MM-DD'),
-        })
-      },
-
-      toAdd() {
-        dispatch({
-          type: `${storeName}/updateState`,
-          res: 'Add',
-          pageState: true,
-          plateList: [],
-          plateImage: '',
-          ownershipList: [],
-          ownershipImage: '',
-          roadTransportList: [],
-          roadTransportImage: '',
-          certificateList: [],
-          certificateImage: '',
-        })
-      },
-
-      toEdit(car) {
-        dispatch({
-          car,
-          type: `${storeName}/toEdit`,
-          res: 'Update',
-        })
-      },
-
-      toInfo(car) {
-        dispatch({
-          car,
-          type: `${storeName}/toInfo`,
-          res: 'Info',
-        })
-      },
-
-
-      exportFile() {
-        const token = session.get(tokenSessionKey)
-        const params = form.getFieldsValue(exportFileParam)
-        // 删除空值、undefind
-        Object.keys(params).map(v => params[v] || delete params[v])
-        const paramsForGet = (params && qs.stringify(params)) || ''
-        window.location.href = `${BASE_URL}/car/export.htm?token=${token}&${paramsForGet}`
-      },
-
-      exportExample() {
-        window.location.href = `${BASE_URL}/car/export.htm?token=${session.get(tokenSessionKey)}&carNo=-1`
-      },
-
-
-      onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
-        dispatch({
-          type: `${storeName}/queryPage`,
-          pageNo: current,
-          pageSize,
-          ...form.getFieldsValue(),
-        })
-      },
-
-      onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
-        dispatch({
-          type: `${storeName}/queryPage`,
-          pageNo: current,
-          pageSize,
-          ...form.getFieldsValue(),
-        })
-      },
-
-
-      handlerUpload(info) {
-        if (info.file.status !== 'uploading') {
-          console.log('uploading')
-        }
-        if (info.file.status === 'done') {
-          // console.log(`${info.file.name} file uploaded successfully`);
-          Modal.info({
-            title: '导入结果',
-            content: (
-              info.file.response.msg
-            ),
-            onOk() {
-              dispatch({
-                type: `${storeName}/queryPage`,
-              })
-            },
-          })
-        } else if (info.file.status === 'error') {
-          console.log('error')
-        }
-      },
-
+    onSearch(values) {
+      dispatch({
+        type: `${storeName}/queryPage`,
+        ...values,
+      })
+      dispatch({
+        type: `${storeName}/updateState`,
+        initValues: values,
+      })
     },
+
+    onReset() {
+      dispatch({
+        type: `${storeName}/queryPage`,
+      })
+      dispatch({
+        type: `${storeName}/updateState`,
+        initValues: {},
+      })
+    },
+
+    /** 即将到期和已到期 */
+    roadTransporting() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'roadTransportEndDate',
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+      })
+    },
+    roadTransport() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'roadTransportEndDate',
+        endDate: moment().format('YYYY-MM-DD'),
+      })
+    },
+    ownershiping() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'ownershipEndDate',
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().add(1, 'M').format('YYYY-MM-DD'),
+      })
+    },
+    ownership() {
+      dispatch({
+        type: `${storeName}/warnList`,
+        warningEnum: 'ownershipEndDate',
+        endDate: moment().format('YYYY-MM-DD'),
+      })
+    },
+
+    toAdd() {
+      dispatch({
+        type: `${storeName}/updateState`,
+        res: 'Add',
+        pageState: true,
+        plateList: [],
+        plateImage: '',
+        ownershipList: [],
+        ownershipImage: '',
+        roadTransportList: [],
+        roadTransportImage: '',
+        certificateList: [],
+        certificateImage: '',
+      })
+    },
+
+    toEdit(car) {
+      dispatch({
+        car,
+        type: `${storeName}/toEdit`,
+        res: 'Update',
+      })
+    },
+
+    toInfo(car) {
+      dispatch({
+        car,
+        type: `${storeName}/toInfo`,
+        res: 'Info',
+      })
+    },
+
+
+    exportFile() {
+      const token = session.get(tokenSessionKey)
+      const params = form.getFieldsValue(exportFileParam)
+      // 删除空值、undefind
+      Object.keys(params).map(v => params[v] || delete params[v])
+      const paramsForGet = (params && qs.stringify(params)) || ''
+      window.location.href = `${exportFileAction}?token=${token}&${paramsForGet}`
+    },
+
+    exportExample() {
+      window.location.href = `${exportFileAction}?token=${session.get(tokenSessionKey)}&carNo=-1`
+    },
+
+
+    onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+      dispatch({
+        type: `${storeName}/queryPage`,
+        pageNo: current,
+        pageSize,
+        ...form.getFieldsValue(),
+      })
+    },
+
+    onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+      dispatch({
+        type: `${storeName}/queryPage`,
+        pageNo: current,
+        pageSize,
+        ...form.getFieldsValue(),
+      })
+    },
+
+
+    handlerUpload(info) {
+      if (info.file.status !== 'uploading') {
+        console.log('uploading')
+      }
+      if (info.file.status === 'done') {
+        // console.log(`${info.file.name} file uploaded successfully`);
+        Modal.info({
+          title: '导入结果',
+          content: (
+            info.file.response.msg
+          ),
+          onOk() {
+            dispatch({
+              type: `${storeName}/queryPage`,
+            })
+          },
+        })
+      } else if (info.file.status === 'error') {
+        console.log('error')
+      }
+    },
+
   }
 }
 
-export default PageUtils.extend(prefix, { mapStateToProps, mapDispatchToProps, formOptions: true })(List)
+export default PageUtils.extend({ prefix, mapStateToProps, mapDispatchToProps, formOptions: true })(List)

@@ -1,5 +1,5 @@
-import { Button, Input, Row, Col } from 'antd';
-import { FilterBox } from 'carno';
+import { Button, Input, Row, Col } from 'antd'
+import { FilterBox } from 'carno'
 
 function Base() {
   const btns = (
@@ -7,7 +7,7 @@ function Base() {
       <Button type="primary" style={{ marginLeft: '10px' }}>刷新</Button>
       <Button style={{ float: 'right' }} type="primary">发布应用</Button>
     </div>
-  );
+  )
 
   return (
     <FilterBox overlay={btns}>
@@ -17,7 +17,7 @@ function Base() {
         </Col>
       </Row>
     </FilterBox>
-  );
+  )
 }
 
-export default Base;
+export default Base
