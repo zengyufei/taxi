@@ -273,20 +273,42 @@ const mapDispatchToProps = (dispatch, { form }) => {
       },
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+        let values = form.getFieldsValue();
+        if (values) {
+          if (values.entryDate) {
+            values.entryStartDate = moment(new Date(values.entryDate)).format('YYYY-MM-DD')
+            values.entryEndDate = moment(new Date(values.entryDate)).format('YYYY-MM-DD')
+          }
+          if (values.leaveDate) {
+            values.leaveStartDate = moment(new Date(values.leaveDate)).format('YYYY-MM-DD')
+            values.leaveEndDate = moment(new Date(values.leaveDate)).format('YYYY-MM-DD')
+          }
+        }
         dispatch({
           type: 'driverStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+        let values = form.getFieldsValue();
+        if (values) {
+          if (values.entryDate) {
+            values.entryStartDate = moment(new Date(values.entryDate)).format('YYYY-MM-DD')
+            values.entryEndDate = moment(new Date(values.entryDate)).format('YYYY-MM-DD')
+          }
+          if (values.leaveDate) {
+            values.leaveStartDate = moment(new Date(values.leaveDate)).format('YYYY-MM-DD')
+            values.leaveEndDate = moment(new Date(values.leaveDate)).format('YYYY-MM-DD')
+          }
+        }
         dispatch({
           type: 'driverStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
@@ -399,9 +421,11 @@ const fields = [{
       false: '否',
     },
   },
-  enums: {
-    1: '是',
-    0: '否',
+  form: {
+    enums: {
+      1: '是',
+      0: '否',
+    },
   },
 }]
 

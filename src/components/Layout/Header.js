@@ -1,16 +1,19 @@
 import { connect } from 'dva'
-import { Menu, Icon, Form } from 'antd'
+import { Popover, Menu, Icon, Form } from 'antd'
 
 import ZForm from 'ZForm'
 import ZModal from 'ZModal'
 import { getFields, validate } from 'FormUtils'
+import { menus } from 'src/menus'
 
+import Menus from './Menu'
 import styles from './Header.less'
 
 const SubMenu = Menu.SubMenu
 
 const Header = option => {
   const { form, dispatch, logout, appStore } = option
+  const { siderFold, openKeys, isNavbar, menuPopoverVisible, switchMenuPopover, switchSider, changeOpenKeys } = option
   const currentRole = session.get(constant.roleSessionKey)
 
   let handleClickMenu = e => {
@@ -53,31 +56,52 @@ const Header = option => {
     form,
   }
 
+  const menusProps = {
+    menus,
+    openKeys,
+    siderFold: false,
+    isNavbar,
+    handleClickNavMenu: switchMenuPopover,
+    location,
+    changeOpenKeys,
+  }
+
   return (
-    <div className={styles.header}>
-      <ZModal title="修改密码" {...modifyPasswordPageModalProps} >
-        <ZForm {...formProps} />
-      </ZModal>
-      <div style={{ float: 'left' }} />
-      <div className={styles.rightWarpper} style={{ float: 'right' }}>
-        <Menu mode="horizontal" onClick={handleClickMenu}>
-          <SubMenu
-            style={{
-              float: 'right',
-            }}
-            title={<span>
-              <Icon type="user" />
-              {currentRole ? currentRole.roleName : ''}
-            </span>}
-          >
-            <Menu.Item key="modifyPassword">
+    <div>
+      <div>
+        <ZModal title="修改密码" {...modifyPasswordPageModalProps} >
+          <ZForm {...formProps} />
+        </ZModal>
+      </div>
+      <div className={styles.header}>
+        {isNavbar
+          ? <Popover placement="bottomLeft" onVisibleChange={switchMenuPopover} visible={menuPopoverVisible} overlayClassName={styles.popovermenu} trigger="click" content={<Menus {...menusProps} />}>
+            <div className={styles.button}>
+              <Icon type="bars" />
+            </div>
+          </Popover>
+          : ''}
+        <div style={{ float: 'left' }} />
+        <div className={styles.rightWarpper} style={{ float: 'right' }}>
+          <Menu mode="horizontal" onClick={handleClickMenu}>
+            <SubMenu
+              style={{
+                float: 'right',
+              }}
+              title={<span>
+                <Icon type="user" />
+                {currentRole ? currentRole.roleName : ''}
+              </span>}
+            >
+              <Menu.Item key="modifyPassword">
               修改密码
-            </Menu.Item>
-            <Menu.Item key="logout">
+              </Menu.Item>
+              <Menu.Item key="logout">
               注销
-            </Menu.Item>
-          </SubMenu>
-        </Menu>
+              </Menu.Item>
+            </SubMenu>
+          </Menu>
+        </div>
       </div>
     </div>
   )

@@ -1,8 +1,8 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-28 17:56:24 
+ * @Author: zengyufei
+ * @Date: 2017-08-28 17:56:24
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-09-04 15:20:29
+ * @Last Modified time: 2017-09-05 17:43:45
  */
 import TweenOne from 'rc-tween-one'
 import { Icon, Row, Col, Button, Card, Upload, Modal, AutoComplete } from 'antd'
@@ -149,7 +149,7 @@ const Add = options => {
       handlerInsert(e, synthesizeFile, drivingLicenseFile, taximeterFile)
     },
     btn: <div>
-      <Button key="registerButton" type="primary" htmlType="submit" size="large">保存编辑</Button>
+      <Button key="registerButton" type="primary" htmlType="submit" size="large">保存</Button>
       <Button key="returnLoginButton" htmlType="button" size="large" style={{ marginLeft: '30px' }} onClick={toPage}>返回</Button>
     </div>,
   }

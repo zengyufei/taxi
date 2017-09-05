@@ -2,7 +2,7 @@
  * @Author: zengyufei 
  * @Date: 2017-09-01 14:13:29 
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-09-04 15:58:21
+ * @Last Modified time: 2017-09-05 17:51:00
  */
 import TweenOne from 'rc-tween-one'
 
@@ -159,7 +159,7 @@ const mapDispatchToProps = (dispatch, { form }) => {
     /* 提交事件 */
     carUpdate(e, plateImage, ownershipImage, roadTransportImage, certificateImage) {
       e.preventDefault()
-      validate(form, fields)(values => {
+      validate(form, fields, 'update')(values => {
         dispatch({
           type: `${storeName}/update`,
           ...values,

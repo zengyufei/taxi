@@ -1,10 +1,11 @@
 import pathToRegexp from 'path-to-regexp'
 import { Menu, Icon } from 'antd'
 import { Link } from 'dva/router'
+import { menus } from 'src/menus'
 import { hasPermission } from 'utils/auth'
 
 const Menus = option => {
-  const { location, isDarkTheme, openKeys, changeOpenKeys, menus } = option
+  const { location, isDarkTheme, openKeys, changeOpenKeys, handleClickNavMenu } = option
 
   // 生成树状
   const menuTree = menus
@@ -111,8 +112,8 @@ const Menus = option => {
   }
 
   const onClick = e => {
-    const localKey = 'taxi_openkeys'
-    localStorage.setItem(localKey, e.keyPath[1] || 0)
+    local.set('openkeys', e.keyPath[1] || 0)
+    handleClickNavMenu && handleClickNavMenu()
   }
 
   return (
@@ -121,7 +122,7 @@ const Menus = option => {
       mode="inline"
       theme={isDarkTheme ? 'dark' : 'light'}
       onClick={onClick}
-
+      style={{ maxHeight: '460px', overflow: 'auto' }}
     >
       <Menu.Item key="0">
         <Link to="/">

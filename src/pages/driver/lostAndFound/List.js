@@ -1,8 +1,8 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 15:02:18 
- * @Last Modified by: zengyufei 
- * @Last Modified time: 2017-08-25 15:02:18 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 15:02:18
+ * @Last Modified by: zengyufei
+ * @Last Modified time: 2017-08-25 15:02:18
  */
 import { connect } from 'dva'
 import { Form, Button, Popconfirm, Table, Upload, Modal } from 'antd'
@@ -141,7 +141,9 @@ const mapDispatchToProps = (dispatch, { form }) => {
       onSearch(values) {
         if (values) {
           if (values.handTime) {
-            values.handTime = form.getFieldValue('handTime').format('YYYY-MM-DD')
+            values.startTime = form.getFieldValue('handTime').format('YYYY-MM-DD')
+            values.endTime = form.getFieldValue('handTime').format('YYYY-MM-DD')
+            delete values.handTime
           }
         }
         dispatch({
@@ -199,20 +201,36 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+        let values = form.getFieldsValue();
+        if (values) {
+          if (values.handTime) {
+            values.startTime = form.getFieldValue('handTime').format('YYYY-MM-DD')
+            values.endTime = form.getFieldValue('handTime').format('YYYY-MM-DD')
+            delete values.handTime
+          }
+        }
         dispatch({
           type: 'lostAndFoundStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+        let values = form.getFieldsValue();
+        if (values) {
+          if (values.handTime) {
+            values.startTime = form.getFieldValue('handTime').format('YYYY-MM-DD')
+            values.endTime = form.getFieldValue('handTime').format('YYYY-MM-DD')
+            delete values.handTime
+          }
+        }
         dispatch({
           type: 'lostAndFoundStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 

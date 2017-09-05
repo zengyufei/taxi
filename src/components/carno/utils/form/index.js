@@ -20,7 +20,7 @@ const getDateValue = (value, defaultValue = undefined) => {
  * @param extraFields 扩展的fields
  * @result 链式写法，返回链式对象(包含pick,excludes,enhance,values方法), 需要调用values返回最终的数据
  */
-const getSearchFields = (originFields, fieldKeys, extraFields) => {
+const getSearchFields = (originFields, fieldKeys) => {
   const chain = {}
   let fields = [...originFields]
 
@@ -159,13 +159,14 @@ const getFields = (originFields, fieldKeys, extraFields) => {
         })
       })
     }
+
     _extraFields.forEach(extraField => {
       let field
 
       for (let i in fields) {
         const item = fields[i]
         if (item.key === extraField.key) {
-          field = key
+          field = item
         }
       }
 
@@ -234,9 +235,9 @@ const getFields = (originFields, fieldKeys, extraFields) => {
  */
 const createFieldDecorator = (field, item, getFieldDecorator, placeholder, inputProps = {}, decoratorOpts = {}, isText = false) => {
   const { key } = field
-  let { type, rules, enums, render, meta, required } = field
+  let { type, rules, enums, render, meta, required, form } = field
 
-  type = (fieldTypes.hasOwnProperty(type) && type) || (enums && 'enum') || 'text'
+  type = (Object.prototype.hasOwnProperty.call(fieldTypes, type) && type) || ((form && form.enums) && 'enum') || (enums && 'enum') || 'text'
   if (type === 'switch') {
     decoratorOpts = {
       valuePropName: 'checked',
@@ -273,7 +274,7 @@ const createFieldDecorator = (field, item, getFieldDecorator, placeholder, input
  * @param form, antd form对象
  * @param 返回result函数，参数为: onSuccess, onError
  */
-const validate = (form, fields) => {
+const validate = (form, fields, formType) => {
   const { validateFields } = form
 
   const transformValues = values => {
@@ -305,6 +306,12 @@ const validate = (form, fields) => {
 
       // 如果value为undefined,则不赋值到values对象上
       if (newValue !== undefined) {
+        if (item.submit !== undefined && !item.submit) {
+          return
+        } else if (formType !== undefined && item[formType].submit !== undefined && !item[formType].submit) {
+          return
+        }
+
         newValues[key] = newValue
       }
     })

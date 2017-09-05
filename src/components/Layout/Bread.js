@@ -2,10 +2,11 @@ import { Breadcrumb, Icon } from 'antd'
 import { Link } from 'dva/router'
 import { flatten } from 'utils/treeFlatten'
 import _ from 'lodash'
+import { menus } from 'src/menus'
 import styles from './Bread.less'
 
 const Bread = option => {
-  const { menus, location } = option
+  const { location } = option
   let pathArray = []
 
   const menuArray = flatten(_.cloneDeep(menus),

@@ -14,6 +14,7 @@ class FilterBox extends React.Component {
       visible: true,
       filterIcon: false,
       newFields: [],
+      isSmall: document.body.clientWidth < 769,
     }
 
     this.timer = ''
@@ -38,7 +39,7 @@ class FilterBox extends React.Component {
   }
 
   render() {
-    const { visible, filterIcon, newFields } = this.state
+    const { visible, filterIcon, newFields, isSmall } = this.state
     const { searchCacheKey, searchFields, btns, formProps } = this.props
 
     const btnsCls = classNames({
@@ -57,6 +58,11 @@ class FilterBox extends React.Component {
 
     return (
       <div>
+        {
+          isSmall && <div style={{ float: 'left', marginLeft: '10px' }}>
+            {btns}
+          </div>
+        }
         <div className={btnsCls} style={{ width: 1400 }}>
           {
             newFields && <Button className={filterBtnCls} onClick={() => this.handleFilterClick(visible)} style={{ float: 'left' }}>过滤<Icon type="down" /></Button>
@@ -85,14 +91,16 @@ class FilterBox extends React.Component {
               >过滤条件<Icon type={filterIcon ? 'down' : 'up'} /></Button>
             </Popover>
           }
-          <span style={{ float: 'left', marginLeft: '10px' }}>
-            {btns}
-          </span>
+          {
+            !isSmall && <span style={{ float: 'left', marginLeft: '10px' }}>
+              {btns}
+            </span>
+          }
         </div>
         {newFields && visible &&
           <div className={filterBoxCls}>
             {
-              newFields && <HSearchForm className={styles.searchForm} fields={newFields} {...formProps} />
+              newFields && <HSearchForm className={styles.searchForm} fields={newFields} {...formProps} isSmall={isSmall} />
             }
           </div>
         }

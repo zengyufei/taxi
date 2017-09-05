@@ -92,7 +92,6 @@ export default extend({
     },
     // 新增驾驶员过户
     * insert(playload, { post, put }) {
-      console.log(playload);return;
       const response = yield post(`${urlPrefix}/insert`, playload)
       if (+response.code === 200) {
         ZMsg.success(response.msg)

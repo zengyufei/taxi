@@ -71,7 +71,6 @@ export default function (options) {
         } else if (typeof field.form === 'object') {
           // formType 作为 key 有可能取不到值
           newField = field.form[formType]
-
           // 取到值之后移除其他属性
           if (newField !== undefined) {
             if (typeof newField === 'boolean' && !newField) {

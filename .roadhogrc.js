@@ -14,7 +14,7 @@ export default {
       "production": {
         "extraBabelPlugins": [
           "transform-runtime",
-  		    ["import", { "libraryName": "antd", "style": "css" }]
+  		    ["import", { "libraryName": "antd", "style": true }]
         ]
       },
       

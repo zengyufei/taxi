@@ -1,8 +1,8 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 15:43:07 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 15:43:07
  * @Last Modified by: zengyufei
- * @Last Modified time: 2017-08-25 15:43:29
+ * @Last Modified time: 2017-09-05 12:47:59
  */
 import TweenOne from 'rc-tween-one'
 
@@ -49,14 +49,14 @@ let Add = options => {
         dispatch({
           type: 'transferStore/insert',
           ...values,
-          transferDate: form.getFieldValue('transferDate') != undefined ? form.getFieldValue('transferDate').format('YYYY-MM-DD') : undefined,
+          transferDate: form.getFieldValue('transferDate') !== undefined ? form.getFieldValue('transferDate').format('YYYY-MM-DD') : undefined,
         })
       }
     })
   }
 
   /* 返回分页 */
-  const toPage = e => {
+  const toPage = () => {
     dispatch({
       type: 'transferStore/toPage',
     })
@@ -76,8 +76,8 @@ let Add = options => {
       carNo: form.getFieldValue('carNo'),
     })
   }
-  let carNo,
-    rbs = []
+  let carNo
+  let rbs = []
   const onCancel = () => {
     dispatch({
       type: 'driverCommonStore/onCancel',
@@ -86,7 +86,7 @@ let Add = options => {
     })
   }
 
-  if (drivers.length == 1) {
+  if (drivers.length === 1) {
     dispatch({
       type: 'driverCommonStore/queryDriver',
       drivers,
@@ -114,7 +114,7 @@ let Add = options => {
     })
     onCancel()
   }
-  if (driver.features != undefined || driver.features != null) {
+  if (driver.features !== undefined || driver.features != null) {
     carNo = JSON.parse(driver.features).carNo
   }
 
@@ -150,9 +150,9 @@ let Add = options => {
           <Col span={12}>
             <Form onSubmit={handleSubmit} style={{ maxWidth: '100%', marginTop: '10px' }}>
               <Card title="新增驾驶员过户">
-                {getFieldDecorator('carId', { initialValue: driver != undefined ? driver.carId : '' })(<Input type="hidden" />)}
-                {getFieldDecorator('oldDriverId', { initialValue: driver != undefined ? driver.id : '' })(<Input type="hidden" />)}
-                {getFieldDecorator('newDriverId', { initialValue: newDriver != undefined ? newDriver.id : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('carId', { initialValue: driver !== undefined ? driver.carId : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('oldDriverId', { initialValue: driver !== undefined ? driver.id : '' })(<Input type="hidden" />)}
+                {getFieldDecorator('newDriverId', { initialValue: newDriver !== undefined ? newDriver.id : '' })(<Input type="hidden" />)}
                 <FormItem
                   {...formItemLayout}
                   label={(
@@ -187,7 +187,7 @@ let Add = options => {
                   hasFeedback
                 >
                   {getFieldDecorator('plateNumber', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver.features != undefined ? JSON.parse(driver.features).plateNumber : '',
+                    initialValue: form.getFieldValue('carNo') === carNo && driver.features !== undefined ? JSON.parse(driver.features).plateNumber : '',
                   })(
                     <Input disabled />
                   )}
@@ -202,10 +202,10 @@ let Add = options => {
                   hasFeedback
                 >
                   <Col span={18}>
-                    {getFieldDecorator('qualificationNo', {
-                      initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.qualificationNo : '',
+                    {getFieldDecorator('oldQualificationNo', {
+                      initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.qualificationNo : '',
                     })(
-                      <Input disabled />
+                      <Input />
                     )}
                   </Col>
                 </FormItem>
@@ -218,8 +218,8 @@ let Add = options => {
                   )}
                   hasFeedback
                 >
-                  {getFieldDecorator('userName', {
-                    initialValue: form.getFieldValue('carNo') == carNo && driver != undefined ? driver.userName : '',
+                  {getFieldDecorator('oldUserName', {
+                    initialValue: form.getFieldValue('carNo') === carNo && driver !== undefined ? driver.userName : '',
                   })(
                     <Input disabled />
                   )}
@@ -253,7 +253,7 @@ let Add = options => {
                   )}
                 >
                   {getFieldDecorator('newUserName', {
-                    initialValue: newDriver != undefined ? newDriver.userName : '',
+                    initialValue: newDriver !== undefined ? newDriver.userName : '',
                   })(
                     <Input disabled />
                   )}

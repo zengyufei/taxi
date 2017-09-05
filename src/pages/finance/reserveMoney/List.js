@@ -49,8 +49,8 @@ let index = option => {
     showReset: true,
     btns,
     searchCacheKey: 'sreserveMoney_condin',
-    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'createTime']).values(),
-    fields: getFields(fields, local.get('sreserveMoney_condin') || ['carNo', 'plateNumber', 'createTime']).values(),
+    searchFields: getSearchFields(fields, ['carNo', 'plateNumber', 'submitDate']).values(),
+    fields: getFields(fields, local.get('sreserveMoney_condin') || ['carNo', 'plateNumber', 'submitDate']).values(),
     item: {
     },
     onSearch,
@@ -183,10 +183,10 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
       onSearch(values) {
         if (values) {
-          if (values.createTime) {
-            values.submitDateStart = moment(new Date(values.createTime)).format('YYYY-MM-DD')
-            values.submitDateEnd = moment(new Date(values.createTime)).format('YYYY-MM-DD')
-            delete values.createTime
+          if (values.submitDate) {
+            values.submitDateStart = moment(new Date(values.submitDate)).format('YYYY-MM-DD')
+            values.submitDateEnd = moment(new Date(values.submitDate)).format('YYYY-MM-DD')
+            delete values.submitDate
           }
         }
         dispatch({
@@ -269,10 +269,10 @@ const mapDispatchToProps = (dispatch, { form }) => {
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
         let values = form.getFieldsValue()
         if (values) {
-          if (values.createTime) {
-            values.submitDateStart = moment(new Date(values.createTime)).format('YYYY-MM-DD')
-            values.submitDateEnd = moment(new Date(values.createTime)).format('YYYY-MM-DD')
-            delete values.createTime
+          if (values.submitDate) {
+            values.submitDateStart = moment(new Date(values.submitDate)).format('YYYY-MM-DD')
+            values.submitDateEnd = moment(new Date(values.submitDate)).format('YYYY-MM-DD')
+            delete values.submitDate
           }
         }
         dispatch({
@@ -286,10 +286,10 @@ const mapDispatchToProps = (dispatch, { form }) => {
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
         let values = form.getFieldsValue()
         if (values) {
-          if (values.createTime) {
-            values.submitDateStart = moment(new Date(values.createTime)).format('YYYY-MM-DD')
-            values.submitDateEnd = moment(new Date(values.createTime)).format('YYYY-MM-DD')
-            delete values.createTime
+          if (values.submitDate) {
+            values.submitDateStart = moment(new Date(values.submitDate)).format('YYYY-MM-DD')
+            values.submitDateEnd = moment(new Date(values.submitDate)).format('YYYY-MM-DD')
+            delete values.submitDate
           }
         }
         dispatch({
@@ -358,11 +358,11 @@ const fields = [{
   name: '退款金额',
   key: 'refundAmount',
 }, {
-  name: '扣减日期',
+  name: '退款日期',
   key: 'payDate',
 }, {
   name: '缴纳日期',
-  key: 'createTime',
+  key: 'submitDate',
   type: 'date',
 }, {
   name: '离职日期',

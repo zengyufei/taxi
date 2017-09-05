@@ -19,7 +19,7 @@ const FormItem = Form.Item
  *
  */
 const HSearchForm = option => {
-  const { fields, item = {}, form, showLabel = true, showReset, onSearch, onReset, formItemLayout = {} } = option
+  const { fields, item = {}, form, showLabel = true, showReset, onSearch, onReset, formItemLayout = {}, isSmall } = option
 
   const assginFormItemLayout = {
     btnCol: {
@@ -46,7 +46,7 @@ const HSearchForm = option => {
       <Row>
         {fields.map((field, index) => {
           const finalFormItemLayout = { assginFormItemLayout, ...field.formItemLayout }
-          const itemCol = finalFormItemLayout.itemCol || { span: 8 }
+          const itemCol = (isSmall && { span: 24 }) || finalFormItemLayout.itemCol || { span: 8 }
           const labelCol = finalFormItemLayout.labelCol || { span: showLabel ? 7 : 0 }
           const wrapperCol = finalFormItemLayout.wrapperCol || { span: showLabel ? 16 : 24 }
           return (<Col {...itemCol} key={`itemKey${index}`}>

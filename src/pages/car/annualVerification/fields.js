@@ -36,7 +36,7 @@ module.exports = [
     key: 'plateImage',
     type: 'plateImage',
     hasFeedback: false,
-    form: false,
+    submit: false,
   }, {
     name: '营运证年审有效期截止时间',
     key: 'synthesizeDate',

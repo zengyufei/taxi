@@ -9,7 +9,9 @@ module.exports = [
       add: {
         rules: [{ required: true, message: '请输入自编号!', whitespace: true }, { max: 16, message: '自编号最多长度16', whitespace: true }],
       },
-      update: false,
+      update: {
+        submit: false,
+      },
     },
   }, {
     name: '车牌号',
@@ -18,7 +20,9 @@ module.exports = [
       add: {
         rules: [{ required: true, message: '请输入车牌号!' }, { max: 16, message: '车牌号最多长度16', whitespace: true }],
       },
-      update: false,
+      update: {
+        submit: false,
+      },
     },
   }, {
     name: '车辆照片（45度角）',

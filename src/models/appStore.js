@@ -12,12 +12,16 @@ const getResourceUrl = '/sysResource/getResource'
 export default extend({
   namespace: `${prefix}Store`,
   state: {
+    menuPopoverVisible: false,
+    siderFold: false,
+    isNavbar: document.body.clientWidth < 769,
+    openKeys: local.get('openKeys') || [],
+
     sysMember: {},
     sysRole: session.get(roleSessionKey) || {},
     currentPermission: session.get(resourceSessionKey) || {},
     sysResource: {},
   },
-  subscriptions: {},
   effects: {
 
     * loadRole({}, { getMessage, put, update, sessionCache }) {
@@ -59,5 +63,24 @@ export default extend({
     },
   },
   reducers: {
+    switchSider(state) {
+      return { ...state, siderFold: !state.siderFold }
+    },
+    changeNavbar(state) {
+      return { ...state, isNavbar: document.body.clientWidth < 769 }
+    },
+    switchMenuPopver(state) {
+      return { ...state, menuPopoverVisible: !state.menuPopoverVisible }
+    },
+    changeOpenKeys(state, { openKeys }) {
+      return { ...state, openKeys }
+    },
+  },
+  subscriptions: {
+    setup({ dispatch }) {
+      window.onresize = function() {
+        dispatch({ type: 'changeNavbar' })
+      }
+    },
   },
 })

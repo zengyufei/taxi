@@ -19,7 +19,7 @@ let index = options => {
 
   /**
    * 上传文件
-   
+
    */
   const importCar = {
     name: 'file',
@@ -197,20 +197,36 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+        let values = form.getFieldsValue();
+        if (values) {
+          if (values.violationTime) {
+            values.startTime = form.getFieldValue('violationTime').format('YYYY-MM-DD 00:00:00')
+            values.endTime = form.getFieldValue('violationTime').format('YYYY-MM-DD 23:59:59')
+            delete values.violationTime
+          }
+        }
         dispatch({
           type: 'trafficViolationStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+        let values = form.getFieldsValue();
+        if (values) {
+          if (values.violationTime) {
+            values.startTime = form.getFieldValue('violationTime').format('YYYY-MM-DD 00:00:00')
+            values.endTime = form.getFieldValue('violationTime').format('YYYY-MM-DD 23:59:59')
+            delete values.violationTime
+          }
+        }
         dispatch({
           type: 'trafficViolationStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 

@@ -42,7 +42,7 @@ export const tableBindType = types => {
  * 判断是否已经扩展column类型定义
  */
 export const isBindTableType = text => {
-  return fieldTypes.hasOwnProperty(text)
+  return Object.prototype.hasOwnProperty.call(fieldTypes, text)
 }
 
 export default fieldTypes

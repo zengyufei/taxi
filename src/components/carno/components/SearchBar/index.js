@@ -14,7 +14,7 @@ function SearchBar(props) {
     btns, searchCacheKey, fields, searchFields,
   }
   return (
-    <FilterBox key={qs.stringify(formProps.item || {})} {...filterBoxProps} formProps={formProps} />
+    <FilterBox {...filterBoxProps} formProps={formProps} />
   )
 }
 

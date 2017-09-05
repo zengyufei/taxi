@@ -1,6 +1,6 @@
 /*
- * @Author: zengyufei 
- * @Date: 2017-08-25 14:56:45 
+ * @Author: zengyufei
+ * @Date: 2017-08-25 14:56:45
  * @Last Modified by: zengyufei
  * @Last Modified time: 2017-08-31 16:12:21
  */
@@ -26,7 +26,7 @@ let index = option => {
 
   /**
    * 上传文件
-   
+
    */
   const importCar = {
     name: 'file',
@@ -144,7 +144,6 @@ const mapDispatchToProps = (dispatch, { form }) => {
       onSearch(values) {
         if (values) {
           if (values.creditTime) {
-            console.log(values.creditTime)
             values.startTime = values.creditTime
             values.endTime = values.creditTime
             delete values.creditTime
@@ -197,20 +196,36 @@ const mapDispatchToProps = (dispatch, { form }) => {
 
 
       onShowSizeChange(current, pageSize) { // 当几条一页的值改变后调用函数，current：改变显示条数时当前数据所在页；pageSize:改变后的一页显示条数
+        let values = form.getFieldsValue();
+        if (values) {
+          if (values.creditTime) {
+            values.startTime = values.creditTime
+            values.endTime = values.creditTime
+            delete values.creditTime
+          }
+        }
         dispatch({
           type: 'commonPraiseStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 
       onChange(current, pageSize) { // 点击改变页数的选项时调用函数，current:将要跳转的页数
+        let values = form.getFieldsValue();
+        if (values) {
+          if (values.creditTime) {
+            values.startTime = values.creditTime
+            values.endTime = values.creditTime
+            delete values.creditTime
+          }
+        }
         dispatch({
           type: 'commonPraiseStore/queryPage',
           pageNo: current,
           pageSize,
-          ...form.getFieldsValue(),
+          ...values,
         })
       },
 

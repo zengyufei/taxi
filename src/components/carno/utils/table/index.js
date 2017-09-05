@@ -4,8 +4,8 @@ import { default as fieldTypes, tableBindType, isBindTableType } from './fieldTy
  * 获取column中显示的filedValue
  */
 function getFieldValue(value, field = {}) {
-  let type = field.type || (field.enums && 'enum')
-  type = fieldTypes.hasOwnProperty(type) ? type : 'normal'
+  let type = field.type || (field.enums && 'enum') || ((field.table && field.table.enums) && 'enum')
+  type = Object.prototype.hasOwnProperty.call(fieldTypes, type) ? type : 'normal'
   return fieldTypes[type](value, field)
 }
 
